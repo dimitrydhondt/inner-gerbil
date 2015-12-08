@@ -1,5 +1,6 @@
 var Q = require('q');
 var common = require('./common.js');
+var bcrypt = require('bcrypt');
 var cl = common.cl;
 
 exports = module.exports = function (sri4node, extra) {
@@ -70,6 +71,22 @@ exports = module.exports = function (sri4node, extra) {
   function inLatLong(value, select) {
     common.filterLatLong($u, value, select, 'parties', 'latlongcontactdetails');
     select.sql(' and key in (select key from latlongcontactdetails) ');
+  }
+  
+  function conditionLogin(key,e){
+    if (!e[key] || e.type !== 'person') {
+      $m.remove(key, e);
+    }
+  }
+
+  function conditionPassword(key, e) {
+    var salt;
+    if (e[key] && e.type === 'person') {
+      salt = bcrypt.genSaltSync(10);
+      e[key] = bcrypt.hashSync(e[key], salt);
+    } else {
+      $m.remove(key, e);
+    }
   }
 
   var ret = {
@@ -173,10 +190,14 @@ exports = module.exports = function (sri4node, extra) {
         onread: $m.removeifnull
       },
       login: {
-        onread: $m.removeifnull
+        onread: $m.removeifnull,
+        oninsert: conditionLogin,
+        onwrite: conditionLogin
       },
       password: {
-        onread: $m.remove
+        onread: $m.remove,
+        oninsert: conditionPassword,
+        onwrite: conditionPassword
       },
       secondsperunit: {
         onread: $m.removeifnull

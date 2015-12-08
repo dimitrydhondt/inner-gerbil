@@ -1,45 +1,56 @@
 /* Configuration for sri4node, used for our server.js, but also for mocha tests */
 var Q = require('q');
+var bcrypt = require('bcrypt');
 var common = require('./common.js');
 var fs = require('fs');
 var cl = common.cl;
 var knownIdentities = {};
-var knownPasswords = {};
+var hashCache = {};
 
 exports = module.exports = function (sri4node, verbose) {
   'use strict';
   var $u = sri4node.utils;
 
-  var myAuthenticator = function (db, username, password) {
-    var deferred = Q.defer();
-    var q;
-
-    if (knownPasswords[username]) {
-      if (knownPasswords[username] === password) {
-        deferred.resolve(true);
-      } else {
-        deferred.resolve(false);
-      }
-    } else {
-      q = $u.prepareSQL('select-count-from-persons-where-email-and-password');
-      q.sql('select count(*) from parties where login = ').param(username).sql(' and password = ').param(password);
-      $u.executeSQL(db, q).then(function (result) {
-        var count = parseInt(result.rows[0].count, 10);
-        if (count === 1) {
-          // Found matching record, add to cache for subsequent requests.
-          knownPasswords[username] = password;
-          deferred.resolve(true);
+ var saltedPasswordAuthenticator = function (db, username, password) {
+      var deferred = Q.defer();
+        var q;
+        if (hashCache[username]) {
+            if (bcrypt.compareSync(password, hashCache[username])) {
+              cl('login succeed');
+                deferred.resolve(true);
+            } else {
+              cl('login fail');
+                deferred.resolve(false);
+            }
         } else {
-          deferred.resolve(false);
+            q = $u.prepareSQL('select-count-from-persons-where-email-and-password');
+            q.sql('select password from parties where login = ')
+             .param(username)
+             .sql(' and status = ')
+             .param('active')
+             .sql(' and "$$meta.deleted" <> true');
+            $u.executeSQL(db, q).then(function (result) {
+                var count = parseInt(result.rows.length, 10);
+                if (count === 1) {
+                    // Found matching record, add to cache for subsequent requests.
+                    hashCache[username] = result.rows[0].password;
+                    if (bcrypt.compareSync(password, hashCache[username])) {
+                      cl('login succeed');
+                        deferred.resolve(true);
+                    } else {
+                       cl('login fail');
+                        deferred.resolve(false);
+                    }
+                }else {
+                    deferred.resolve(false);
+                }
+            }).fail(function (err) {
+                cl('Error checking user on database : ');
+                cl(err);
+                deferred.reject(err);
+            });
         }
-      }).fail(function (err) {
-        cl('Error checking user on database : ');
-        cl(err);
-        deferred.reject(err);
-      });
-    }
-
-    return deferred.promise;
+        return deferred.promise;
   };
 
   var identity = function (username, database) {
@@ -112,7 +123,7 @@ exports = module.exports = function (sri4node, verbose) {
 
 
   var extraResourceConfig = {
-    cacheconfig: {
+    cacheconfig: {  
       ttl: 60,
       type: 'local'
     }
@@ -121,7 +132,7 @@ exports = module.exports = function (sri4node, verbose) {
   var description = fs.readFileSync(__dirname + '/api-description.html');
 
   return {
-    authenticate: $u.basicAuthentication(myAuthenticator),
+    authenticate: $u.basicAuthentication(saltedPasswordAuthenticator),
     identify: getMe,
 
     logrequests: true,

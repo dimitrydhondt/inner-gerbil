@@ -20,7 +20,8 @@
     "sri4node-client": "1.0.1",
     "uuid": "2.0.x",
     "csvtojson": "0.4.3",
-    "moment": "2.10.x"
+    "moment": "2.10.x",
+    "bcrypt": "^0.8.5"
   },
   "engines": {
     "node": "4.1.1",
