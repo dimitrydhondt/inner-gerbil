@@ -1,7 +1,5 @@
 /*eslint-env node*/
 var common = require('../test/common.js');
-var Q = require('q');
-var deferred = Q.defer();
 
 var port = 5000;
 var base = 'http://localhost:' + port;
@@ -9,86 +7,84 @@ var base = 'http://localhost:' + port;
 var sriclient = require('sri4node-client');
 var doPut = sriclient.put;
 
-exports = module.exports = function (fileName) {
+exports = module.exports = function (user, partyUrl) {
   'use strict';
-  var importUser = function (user) {
-    var uuid = common.generateUUID();
-    var party = {
-      type: 'person',
-      name: user.name,
-      alias: user.letscode.toString(),
-      status: 'inactive'
-    };
-
-    switch (user.status) {
+  var uuid = common.generateUUID();
+  var convUserStatusToPartyStatus = function (status) {
+    switch (status) {
     case 0: // inactief
-      party.status = 'inactive';
-      break;
+      return 'inactive';
     case 1: // actieve letser
-      party.status = 'active';
-      break;
+      return 'active';
     case 2: // uitstapper
-      party.status = 'active';
-      break;
+      return 'active';
     case 3: // instapper
-      party.status = 'active';
-      break;
+      return 'active';
     case 4: // secretariaat
-      party.status = 'active';
-      break;
+      return 'active';
     case 5: // infopakket
-      party.status = 'inactive';
-      break;
+      return 'inactive';
     case 6: // instap gevolgd
-      party.status = 'inactive';
-      break;
+      return 'inactive';
     case 7: // extern
-      party.status = 'active';
-      break;
+      return 'active';
     default:
-      party.status = 'inactive';
+      return 'inactive';
     }
-    console.log(party);
-    return doPut(base + '/parties/' + uuid, party, 'annadv', 'test').then(function (
-      response) {
-      if (response.statusCode !== 200 && response.statusCode !== 201) {
-        console.log('PUT failed, response = ' + JSON.stringify(response));
-      } else {
-        console.log('PUT successful');
-      }
-    }).catch(function(e) {
-      console.log('importUser failed');
-      console.log(e);
-      throw e;
-    });
   };
+  var convElasAccountroleToPartyrelType = function (accountrole) {
+    if (accountrole === 'user') {
+      return 'member';
+    } else if (accountrole === 'admin') {
+      return 'administrator';
+    }
+  };
+  var party = {
+    type: 'person',
+    name: user.name,
+    alias: user.letscode.toString(),
+    login: user.login,
+    password: user.password,
+    status: convUserStatusToPartyStatus(user.status)
+  };
+  console.log(party);
+  var partyrelation = {
+    from: {
+      href: '/parties/' + uuid
+    },
+    to: {
+      href: partyUrl
+    },
+    type: convElasAccountroleToPartyrelType(user.accountrole),
+    balance: 0,
+    code: user.letscode.toString(),
+    status: convUserStatusToPartyStatus(user.status)
 
-  //Converter Class
-  var Converter = require('csvtojson').Converter;
-  var converter = new Converter({});
+  };
+  console.log(partyrelation);
+  var batchBody = [
+    {
+      href: '/parties/' + uuid,
+      verb: 'PUT',
+      body: party
+          },
+    {
+      href: '/partyrelations/' + common.generateUUID(),
+      verb: 'PUT',
+      body: partyrelation
+          }
+    ];
 
-  //end_parsed will be emitted once parsing finished
-  converter.on('end_parsed', function (jsonArray) {
-    console.log(jsonArray); //here is your result jsonarray
-    var promises = [];
-    jsonArray.forEach(function (user) {
-      console.log('User=' + JSON.stringify(user));
-      console.log('Start import');
-      //promises.push(importUser(user));
-      promises.push(importUser(user).then(function () {
-        console.log('End import');
-      }));
-    });
-    return Q.all(promises).then(function () {
-      deferred.resolve();
-    }).catch(function(e) {
-      console.log('Q.all failed !');
-      console.log(e);
-    });
+  return doPut(base + '/batch', batchBody, 'annadv', 'test').then(function (
+    response) {
+    if (response.statusCode !== 200 && response.statusCode !== 201) {
+      console.log('PUT failed, response = ' + JSON.stringify(response));
+    } else {
+      console.log('PUT successful');
+    }
+  }).catch(function (e) {
+    console.log('importUser failed');
+    console.log(e);
+    throw e;
   });
-
-  //read from file
-  console.log('Reading file: ' + fileName);
-  require('fs').createReadStream(fileName).pipe(converter);
-  return deferred.promise;
 };

@@ -31,7 +31,7 @@ exports = module.exports = function (sri4node, extra) {
         type: {
           type: 'string',
           description: 'The type of relationship. ' +
-          'Together with the type of party for "from" and "to", it determines the semantics of this relationship.',
+            'Together with the type of party for "from" and "to", it determines the semantics of this relationship.',
           enum: ['member', 'administrator']
         },
         balance: $s.numeric(
@@ -71,6 +71,7 @@ exports = module.exports = function (sri4node, extra) {
       },
       type: {},
       balance: {},
+      code: {},
       status: {}
     },
     afterupdate: [],

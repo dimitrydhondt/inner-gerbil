@@ -8,7 +8,7 @@ var sri4node = require('sri4node');
 var common = require('./common.js');
 var cl = common.cl;
 
-var verbose = false;
+var verbose = true;
 
 var app = express();
 var mapping = require('../js/config.js')(sri4node, verbose);
@@ -33,6 +33,6 @@ describe('Inner gerbil testing', function () {
   require('./testParties.js')(base, verbose);
   require('./testMessages.js')(base, verbose);
   require('./testPlugins.js')(base, verbose);
-  require('./elas-import/testImport.js')();
+  require('./elas-import/testImport.js')(base, verbose);
   //require('./testIsolated.js')(base, verbose);
 });

@@ -220,6 +220,51 @@ exports = module.exports = function (base, logverbose) {
               });
           });
       });
+      it('should allow batch insertions of new message and its relation.', function () {
+        var uuid = common.generateUUID();
+        debug('Generated UUID=' + uuid);
+        var body = [
+          {
+            href: '/messages/' + uuid,
+            verb: 'PUT',
+            body: {
+              author: {
+                href: common.hrefs.PARTY_ANNA
+              },
+              description: 'test message',
+              tags: [],
+              photos: [],
+              created: moment(),
+              modified: moment()
+            }
+          },
+          {
+            href: '/messages/' + common.generateUUID(),
+            verb: 'PUT',
+            body: {
+              author: {
+                href: common.hrefs.PARTY_ANNA
+              },
+              description: 'test message2',
+              tags: [],
+              photos: [],
+              created: moment(),
+              modified: moment()
+            }
+          }
+        ];
+        return doPut(base + '/batch', body, 'annadv', 'test').then(
+          function (response) {
+            assert.equal(response.statusCode, 201);
+            return doGet(base + '/messages/' + uuid, 'annadv', 'test').then(
+              function (responseGet) {
+                assert.equal(responseGet.statusCode, 200);
+                var message = responseGet.body;
+                assert.equal(message.description, 'test message');
+                assert.equal(message.author.href, common.hrefs.PARTY_ANNA);
+              });
+          });
+      });
     });
   });
 };
