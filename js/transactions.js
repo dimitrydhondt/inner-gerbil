@@ -272,6 +272,8 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       update = $u.prepareSQL('update-party-relation-on-transaction-from');
       update.sql('update partyrelations set balance = balance - ').param(transaction.amount)
         .sql(' where key = ').param(route.from[i].key);
+      debug('UPDATING balance on /partyrelation :');
+      debug(update);
       promises.push($u.executeSQL(database, update));
     }
 
@@ -279,6 +281,8 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       update = $u.prepareSQL('update-party-relation-on-transaction-to');
       update.sql('update partyrelations set balance = balance + ').param(transaction.amount)
         .sql(' where key = ').param(route.to[i].key);
+      debug('UPDATING balance on /partyrelation :');
+      debug(update);
       promises.push($u.executeSQL(database, update));
     }
   }
@@ -299,6 +303,8 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       insert = $u.prepareSQL('insert-transactionrelations-on-transaction');
       insert.sql('insert into transactionrelations (').keys(tr).sql(') values (')
         .values(tr).sql(')');
+      debug('CREATING /transactionrelation :');
+      debug(insert);
       promises.push($u.executeSQL(database, insert));
     }
 
@@ -312,6 +318,8 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       insert = $u.prepareSQL('insert-transactionrelations-on-transaction');
       insert.sql('insert into transactionrelations (').keys(tr).sql(') values (')
         .values(tr).sql(')');
+      debug('CREATING /transactionrelation :');
+      debug(insert);
       promises.push($u.executeSQL(database, insert));
     }
   }

@@ -33,12 +33,14 @@ exports = module.exports = {
   hrefs: {
     PARTY_LETSDENDERMONDE: '/parties/8bf649b4-c50a-4ee9-9b02-877aa0a71849',
     PARTY_LETSLEBBEKE: '/parties/aca5e15d-9f4c-4c79-b906-f7e868b3abc5',
+    PARTY_LETSAPPELS: '/parties/63f34927-0b86-4753-aaa3-02920a9660a5',
     PARTY_LETSHAMME: '/parties/0a98e68d-1fb9-4a31-a4e2-9289ee2dd301',
 
     PARTY_ANNA: '/parties/5df52f9f-e51f-4942-a810-1496c51e64db',
     PARTY_STEVEN: '/parties/fa17e7f5-ade9-49d4-abf3-dc3722711504',
     PARTY_RUDI: '/parties/eb6e3ad7-066f-4357-a582-dfb31e173606',
     PARTY_EDDY: '/parties/437d9b64-a3b4-467c-9abe-e9410332c1e5',
+    PARTY_GEERT: '/parties/c0755044-b0a5-4d36-8396-7bede4f63468',
     PARTY_LEEN: '/parties/abcb3c6e-721e-4f7c-ae4a-935e1980f15e',
     PARTY_EMMANUELLA: '/parties/508f9ec9-df73-4a55-ad42-32839abd1760',
 

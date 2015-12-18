@@ -6,6 +6,7 @@ SET search_path TO innergerbil;
 
 INSERT INTO "parties" VALUES ('8bf649b4-c50a-4ee9-9b02-877aa0a71849','group','LETS Regio Dendermonde',null,null,null,null,null,180,'duim','active');
 INSERT INTO "parties" VALUES ('aca5e15d-9f4c-4c79-b906-f7e868b3abc5','subgroup','LETS Lebbeke',null,null,null,null,null,180,'duim','active');
+INSERT INTO "parties" VALUES ('63f34927-0b86-4753-aaa3-02920a9660a5','subgroup','LETS Appels',null,null,null,null,null,180,'duim','active');
 INSERT INTO "parties" VALUES ('0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','group','LETS Hamme',null,null,null,null,null,180,'zaadje','active');
 
 -- People
@@ -13,6 +14,8 @@ INSERT INTO "parties" VALUES ('0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','group','LE
 INSERT INTO "parties" VALUES ('5df52f9f-e51f-4942-a810-1496c51e64db','person','Anna De Vlaming',null,'1980-10-11 00:00:00',null,'annadv','test',null,null,'active');
 -- Steven Butink is member of LETS Lebbeke
 INSERT INTO "parties" VALUES ('fa17e7f5-ade9-49d4-abf3-dc3722711504','person','Steven Buytink',null,'1979-04-01 00:00:00',null,'stevenb','test',null,null,'active');
+-- Geert Gijsbrecht is member of LETS Wieze
+INSERT INTO "parties" VALUES ('c0755044-b0a5-4d36-8396-7bede4f63468','person','Geert Gijsbrecht',null,'1972-09-22 00:00:00',null,'geertg','test',null,null,'active');
 -- Rudi Rudolf is member of LETS Dendermonde
 INSERT INTO "parties" VALUES ('eb6e3ad7-066f-4357-a582-dfb31e173606','person','Rudi Rudolf',null,'1968-10-23 00:00:00',null,'rudir','test',null,null,'active');
 -- Eddy is not a member of any group/subgroup/...
@@ -25,6 +28,8 @@ INSERT INTO "parties" VALUES ('508f9ec9-df73-4a55-ad42-32839abd1760','person','E
 -- partyrelations -- key, from, to, type, balance, status
 -- LETS Lebbeke is a member of LETS Dendermonde
 INSERT INTO "partyrelations" VALUES('cddffa35-6a2f-46c4-aa39-5b9040b4f429','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,'active');
+-- LETS Appels is a member of LETS Dendermonde
+INSERT INTO "partyrelations" VALUES('42bdfaf2-718b-4f92-b90d-810d9f5cb5b3','63f34927-0b86-4753-aaa3-02920a9660a5','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,'active');
 -- Rudi Rudolf is a member of LETS Dendermonde
 INSERT INTO "partyrelations" VALUES('c67139c2-779f-4d5c-9183-bbb9252574de','eb6e3ad7-066f-4357-a582-dfb31e173606','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,'active');
 -- Anna in LETS Lebbeke
@@ -33,6 +38,8 @@ INSERT INTO "partyrelations" VALUES('419e6446-9b3e-4e7d-9381-0c38af0b316a','5df5
 INSERT INTO "partyrelations" VALUES('db41c12a-a521-443a-97f1-f0e14658fb78','fa17e7f5-ade9-49d4-abf3-dc3722711504','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',20,null,'active');
 -- Eddy USED to be member of LETS Lebbeke, but is not any longer.
 INSERT INTO "partyrelations" VALUES('cf6267a8-f24e-48fe-a6b8-2356a1ab8e6b','437d9b64-a3b4-467c-9abe-e9410332c1e5','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',0,null,'inactive');
+-- Geert is a member of LETS Appels
+INSERT INTO "partyrelations" VALUES('84b24ab8-4022-4fcb-92f7-64bcb24a17e0','c0755044-b0a5-4d36-8396-7bede4f63468','63f34927-0b86-4753-aaa3-02920a9660a5','member',0,null,'active');
 -- Leen DB is a member of LETS Hamme
 INSERT INTO "partyrelations" VALUES('912ae080-29fa-4387-b031-c594167601e0','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','member',-20,null,'active');
 -- Emmanuella is a member of LETS Hamme
