@@ -10,6 +10,8 @@ INSERT INTO "parties" VALUES ('63f34927-0b86-4753-aaa3-02920a9660a5','subgroup',
 INSERT INTO "parties" VALUES ('0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','group','LETS Hamme',null,null,null,null,null,180,'zaadje','active');
 INSERT INTO "parties" VALUES ('bf5995c1-802c-4b69-a5ad-6f193d40c6e3','group','LETS Zonnedorp',null,null,null,null,null,180,'medaille','active');
 INSERT INTO "parties" VALUES ('25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','group','LETS Maandorp',null,null,null,null,null,180,'apollo','active');
+-- Connector group 'Jef Nys'
+INSERT INTO "parties" VALUES ('4a3cabca-ecde-4fc3-830f-050891affbce','connector','Connector Jef Nys',null,null,null,null,null,null,null,'active');
 
 -- People
 -- Anna De Vlaming is member of LETS Lebbeke
@@ -26,6 +28,10 @@ INSERT INTO "parties" VALUES ('437d9b64-a3b4-467c-9abe-e9410332c1e5','person','E
 INSERT INTO "parties" VALUES ('abcb3c6e-721e-4f7c-ae4a-935e1980f15e','person','Leen De Baere',null,'1980-04-01',null,'leendb','test',null,null,'active');
 -- Emmanuella of LETS Hamme
 INSERT INTO "parties" VALUES ('508f9ec9-df73-4a55-ad42-32839abd1760','person','Emmanuella',null,'1982-05-01',null,'emmanuella','test',null,null,'active');
+-- Jommeke is part of LETS Zonnedorp
+INSERT INTO "parties" VALUES ('7495029b-1dc5-4eaa-baa6-8f2af029b2b6','person','Jommeke',null,'1955-10-30',null,'jommeke','test',null,null,'active');
+-- Filiberke is part of LETS Maandorp
+INSERT INTO "parties" VALUES ('c512a350-0d55-4ddb-ab49-5e0c6645a0a6','person','Filiberke',null,'1955-10-30',null,'filiberke','test',null,null,'active');
 
 -- partyrelations -- key, from, to, type, balance, status
 -- LETS Lebbeke is a member of LETS Dendermonde
@@ -46,6 +52,14 @@ INSERT INTO "partyrelations" VALUES('84b24ab8-4022-4fcb-92f7-64bcb24a17e0','c075
 INSERT INTO "partyrelations" VALUES('912ae080-29fa-4387-b031-c594167601e0','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','member',-20,null,'active');
 -- Emmanuella is a member of LETS Hamme
 INSERT INTO "partyrelations" VALUES('d7669476-91ef-420b-99cd-ac906f985481','508f9ec9-df73-4a55-ad42-32839abd1760','0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','member',20,null,'active');
+-- Jommeke is part of LETS Zonnedorp
+INSERT INTO "partyrelations" VALUES('e96262d9-e825-40c3-86ff-09a0d31fda1a','7495029b-1dc5-4eaa-baa6-8f2af029b2b6','bf5995c1-802c-4b69-a5ad-6f193d40c6e3','member',0,null,'active');
+-- Filiberke is part of LETS Maandorp
+INSERT INTO "partyrelations" VALUES('d3bed9ac-5b10-4561-803f-930aa6f086a3','c512a350-0d55-4ddb-ab49-5e0c6645a0a6','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','member',0,null,'active');
+-- LETS Zonnedorp is member of connector 'Conector Jef Nys'
+INSERT INTO "partyrelations" VALUES('a87dd13f-4f81-4761-b150-d0612aac72ed','bf5995c1-802c-4b69-a5ad-6f193d40c6e3','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,'active');
+-- LETS Maandorp is member of connector 'Conector Jef Nys'
+INSERT INTO "partyrelations" VALUES('21b0fba9-336e-49b8-afa5-3b6a7988bdc1','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,'active');
 
 -- Contactdetails key,type,label,street,streetnumber,streetbus,zipcode,city,latitude,longitude,value,public
 -- Anna De Vlaming
