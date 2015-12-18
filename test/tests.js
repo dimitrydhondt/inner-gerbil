@@ -15,7 +15,7 @@ var mapping = require('../js/config.js')(sri4node, verbose);
 var port = 5000;
 var base = 'http://localhost:' + port;
 
-describe('Sri4node testing', function () {
+describe('Inner gerbil testing', function () {
   'use strict';
   before(function (done) {
     sri4node.configure(app, pg, mapping).then(function () {
@@ -28,6 +28,7 @@ describe('Sri4node testing', function () {
   });
 
   require('./testTransactions.js')(base, verbose);
+  require('./testTransactionCreate.js')(base, verbose);
   require('./testContactdetails.js')(base, verbose);
   require('./testParties.js')(base, verbose);
   require('./testMessages.js')(base, verbose);

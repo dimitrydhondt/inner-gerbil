@@ -139,7 +139,7 @@ exports = module.exports = function (sri4node, verbose) {
       require('./messageparties')(sri4node, extraResourceConfig),
       require('./messagetransactions')(sri4node, extraResourceConfig),
       require('./messagerelations')(sri4node, extraResourceConfig),
-      require('./transactions')(sri4node, extraResourceConfig),
+      require('./transactions')(sri4node, extraResourceConfig, verbose),
       require('./transactionrelations')(sri4node, extraResourceConfig),
 
       require('./plugins.js')(sri4node, extraResourceConfig),

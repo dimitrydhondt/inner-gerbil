@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "dev": "env $(cat .env) nodemon --debug=15454 --watch ./js js/server.js",
+    "dev": "env $(cat .env) nodemon --debug --watch ./js js/server.js",
     "lint": "eslint js test",
     "start": "node js/server.js",
     "createdb": "./create-database.sh"
