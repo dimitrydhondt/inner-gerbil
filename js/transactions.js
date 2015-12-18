@@ -16,6 +16,12 @@ exports = module.exports = function (sri4node, extra, logverbose) {
     }
   }
 
+  function addLinks(database, elements) { /* eslint-disable-line */
+    elements.forEach(function (element) {
+      element.$$transactionrelations = {href: '/transactionrelations?transaction=' + element.$$meta.permalink};
+    });
+  }
+
   function involvingParties(value, select) {
     var permalinks = value.split(',');
     var keys = [];
@@ -511,7 +517,8 @@ exports = module.exports = function (sri4node, extra, logverbose) {
     },
     afterread: [
       common.addRelatedManyToMany($u, 'messagetransactions', 'transaction', 'message',
-                                  '/messages', '$$messages')
+                                  '/messages', '$$messages'),
+      addLinks
     ],
     afterupdate: [
       rejectOperation
