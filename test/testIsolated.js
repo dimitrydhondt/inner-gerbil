@@ -17,11 +17,11 @@ exports = module.exports = function (base, logverbose) {
 
   describe('/transactions', function () {
     describe('PUT', function () {
-      it('should be capable of routing a transaction between a subgroup and a group', function () {
+      it('should be capable of routing a transaction between over a connectorgroup', function () {
         var body = {
-          from: {href: common.hrefs.PARTY_ANNA},
-          to: {href: common.hrefs.PARTY_RUDI},
-          amount: 20
+          from: {href: common.hrefs.PARTY_JOMMEKE},
+          to: {href: common.hrefs.PARTY_FILIBERKE},
+          amount: 10
         };
         var uuid = common.generateUUID();
         var transaction;
@@ -29,27 +29,27 @@ exports = module.exports = function (base, logverbose) {
         var i;
 
         debug('Generated UUID=' + uuid);
-        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function (response) {
+        return doPut(base + '/transactions/' + uuid, body, 'jommeke', 'test').then(function (response) {
           debug('response of PUT');
           debug(response.body);
           assert.equal(response.statusCode, 201);
-          return doGet(base + '/transactions/' + uuid, 'annadv', 'test');
+          return doGet(base + '/transactions/' + uuid, 'jommeke', 'test');
         }).then(function (response) {
           debug('response of GET');
           debug(response.body);
           assert.equal(response.statusCode, 200);
-          assert.equal(response.body.from.href, common.hrefs.PARTY_ANNA);
-          assert.equal(response.body.to.href, common.hrefs.PARTY_RUDI);
-          assert.equal(response.body.amount, 20);
+          assert.equal(response.body.from.href, common.hrefs.PARTY_JOMMEKE);
+          assert.equal(response.body.to.href, common.hrefs.PARTY_FILIBERKE);
+          assert.equal(response.body.amount, 10);
           //Store for use in later steps
           transaction = response.body;
           return doGet(base + '/transactionrelations?transaction=/transactions/' + uuid,
-            'annadv', 'test');
+            'jommeke', 'test');
         }).then(function (response) {
           debug('response of GET of /transactionrelations for the transaction');
           debug(response.body);
           assert.equal(response.statusCode, 200);
-          assert.equal(response.body.results.length, 3);
+          assert.equal(response.body.results.length, 4);
           for (i = 0; i < response.body.results.length; i++) {
             assert.equal(response.body.results[i].$$expanded.transaction.href, transaction.$$meta.permalink);
           }
@@ -58,19 +58,17 @@ exports = module.exports = function (base, logverbose) {
             partyrelations.push(response.body.results[i].$$expanded.partyrelation.href);
           }
           return doGet(base + '/partyrelations?hrefs=' + partyrelations.join(','),
-            'annadv', 'test');
+            'jommeke', 'test');
         }).then(function (response) {
           debug('reponse of GET of /partyrelations involved in the transaction');
           debug(response.body);
           assert.equal(response.statusCode, 200);
-          assert.equal(response.body.results.length, 3);
+          assert.equal(response.body.results.length, 4);
         });
       });
     });
   });
 
-  // TODO : Check a PUT from subgroup to group level.
-  // TODO : Check a PUT over a connector group (interlets)
   // TODO : Check that UPDATE on /transactionrelations is blocked.
   // TODO : Check that CREATE on /transactionrelations is blocked.
 
