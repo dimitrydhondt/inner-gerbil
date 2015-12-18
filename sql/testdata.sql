@@ -8,6 +8,8 @@ INSERT INTO "parties" VALUES ('8bf649b4-c50a-4ee9-9b02-877aa0a71849','group','LE
 INSERT INTO "parties" VALUES ('aca5e15d-9f4c-4c79-b906-f7e868b3abc5','subgroup','LETS Lebbeke',null,null,null,null,null,180,'duim','active');
 INSERT INTO "parties" VALUES ('63f34927-0b86-4753-aaa3-02920a9660a5','subgroup','LETS Appels',null,null,null,null,null,180,'duim','active');
 INSERT INTO "parties" VALUES ('0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','group','LETS Hamme',null,null,null,null,null,180,'zaadje','active');
+INSERT INTO "parties" VALUES ('bf5995c1-802c-4b69-a5ad-6f193d40c6e3','group','LETS Zonnedorp',null,null,null,null,null,180,'medaille','active');
+INSERT INTO "parties" VALUES ('25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','group','LETS Maandorp',null,null,null,null,null,180,'apollo','active');
 
 -- People
 -- Anna De Vlaming is member of LETS Lebbeke

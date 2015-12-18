@@ -176,7 +176,6 @@ exports = module.exports = function (base, logverbose) {
     });
   });
 
-  // TODO : Check a PUT from subgroup to group level.
   // TODO : Check a PUT over a connector group (interlets)
   // TODO : Check that UPDATE on /transactionrelations is blocked.
   // TODO : Check that CREATE on /transactionrelations is blocked.
