@@ -35,6 +35,10 @@ exports = module.exports = {
     PARTY_LETSLEBBEKE: '/parties/aca5e15d-9f4c-4c79-b906-f7e868b3abc5',
     PARTY_LETSAPPELS: '/parties/63f34927-0b86-4753-aaa3-02920a9660a5',
     PARTY_LETSHAMME: '/parties/0a98e68d-1fb9-4a31-a4e2-9289ee2dd301',
+    PARTY_LETSZONNEDORP: '/parties/bf5995c1-802c-4b69-a5ad-6f193d40c6e3',
+    PARTY_LETSMAANDORP: '/parties/25416be3-850d-4a70-8f4e-bb4c2ef7b0f5',
+
+    PARTY_CONNECTOR_JEF_NYS: '/parties/4a3cabca-ecde-4fc3-830f-050891affbce',
 
     PARTY_ANNA: '/parties/5df52f9f-e51f-4942-a810-1496c51e64db',
     PARTY_STEVEN: '/parties/fa17e7f5-ade9-49d4-abf3-dc3722711504',
@@ -43,6 +47,8 @@ exports = module.exports = {
     PARTY_GEERT: '/parties/c0755044-b0a5-4d36-8396-7bede4f63468',
     PARTY_LEEN: '/parties/abcb3c6e-721e-4f7c-ae4a-935e1980f15e',
     PARTY_EMMANUELLA: '/parties/508f9ec9-df73-4a55-ad42-32839abd1760',
+    PARTY_JOMMEKE: '/parties/7495029b-1dc5-4eaa-baa6-8f2af029b2b6',
+    PARTY_FILIBERKE: '/parties/c512a350-0d55-4ddb-ab49-5e0c6645a0a6',
 
     PLUGIN_MAIL: '/plugins/7bd68a4b-138e-4228-9826-a002468222de',
 
