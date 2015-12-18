@@ -386,6 +386,8 @@ exports = module.exports = function (sri4node, extra, logverbose) {
 
       return Q.allSettled(promises);
     }).then(function (results) {
+      var checksum;
+
       for (i = 0; i < results.length; i++) {
         if (results[i].state === 'rejected') {
           msg = 'Unable to execute all UPDATE/INSERT statements to route transaction.';
@@ -395,9 +397,45 @@ exports = module.exports = function (sri4node, extra, logverbose) {
         }
       }
 
-      return true;
+      checksum = $u.prepareSQL('check-total-sum-zero');
+      checksum.sql(
+        'with inandout as (' +
+        '  select pr."from" as party, sum(pr."balance") ' +
+        '  from partyrelations pr, parties p ' +
+        '  where ' +
+        '   pr."from" = p.key and ' +
+        '   p.type != \'person\' ' +
+        '   and pr.type = \'member\' ' +
+        '   and pr.status = \'active\' ' +
+        '  group by pr."from" ' +
+        ' union all ' +
+        '  select "to" as party, - sum("balance") ' +
+        '  from partyrelations pr, parties p ' +
+        '  where ' +
+        '   pr."to" = p.key and ' +
+        '   p.type != \'person\' and ' +
+        '   pr.type = \'member\' and ' +
+        '   pr.status = \'active\' ' +
+        '  group by "to"' +
+        '), totals as (' +
+        ' select i.party, sum(i.sum) from inandout i group by party' +
+        ')' +
+        'select p.name, t.sum::int from totals t, parties p where t.party = p.key'
+      );
+      return $u.executeSQL(database, checksum);
+    }).then(function (results) {
+      debug('checksum : ');
+      debug(results.rows);
+      for (i = 0; i < results.rows.length; i++) {
+        if (results.rows[i].sum !== 0) {
+          throw new Error('Total sum of balances for party [' +
+              results.rows[i].name +
+              '] is not 0 ! Current value : ' +
+              results.rows[i].sum);
+        }
+      }
     }).catch(function (error) {
-      msg = 'Unable to find parent of parties involved in (batch of) transactions !';
+      msg = 'Unable to process transaction !';
       cl(msg);
       cl(error);
       cl(error.stack);

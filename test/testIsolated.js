@@ -17,16 +17,16 @@ exports = module.exports = function (base, logverbose) {
 
   describe('/transactions', function () {
     describe('PUT', function () {
-      it('should route a transaction between 2 subgroup over the common group', function () {
+      it('should be capable of routing a transaction between a subgroup and a group', function () {
         var body = {
           from: {href: common.hrefs.PARTY_ANNA},
-          to: {href: common.hrefs.PARTY_GEERT},
+          to: {href: common.hrefs.PARTY_RUDI},
           amount: 20
         };
         var uuid = common.generateUUID();
         var transaction;
         var partyrelations;
-        var i, sum = 0;
+        var i;
 
         debug('Generated UUID=' + uuid);
         return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function (response) {
@@ -39,7 +39,7 @@ exports = module.exports = function (base, logverbose) {
           debug(response.body);
           assert.equal(response.statusCode, 200);
           assert.equal(response.body.from.href, common.hrefs.PARTY_ANNA);
-          assert.equal(response.body.to.href, common.hrefs.PARTY_GEERT);
+          assert.equal(response.body.to.href, common.hrefs.PARTY_RUDI);
           assert.equal(response.body.amount, 20);
           //Store for use in later steps
           transaction = response.body;
@@ -49,15 +49,10 @@ exports = module.exports = function (base, logverbose) {
           debug('response of GET of /transactionrelations for the transaction');
           debug(response.body);
           assert.equal(response.statusCode, 200);
-          assert.equal(response.body.results.length, 4);
+          assert.equal(response.body.results.length, 3);
           for (i = 0; i < response.body.results.length; i++) {
             assert.equal(response.body.results[i].$$expanded.transaction.href, transaction.$$meta.permalink);
           }
-          // Check total balance == 0
-          for (i = 0; i < response.body.results.length; i++) {
-            sum += response.body.results[i].$$expanded.amount;
-          }
-          assert.equal(sum, 0);
           partyrelations = [];
           for (i = 0; i < response.body.results.length; i++) {
             partyrelations.push(response.body.results[i].$$expanded.partyrelation.href);
@@ -68,7 +63,7 @@ exports = module.exports = function (base, logverbose) {
           debug('reponse of GET of /partyrelations involved in the transaction');
           debug(response.body);
           assert.equal(response.statusCode, 200);
-          assert.equal(response.body.results.length, 4);
+          assert.equal(response.body.results.length, 3);
         });
       });
     });
