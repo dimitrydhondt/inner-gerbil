@@ -2,7 +2,7 @@ var assert = require('assert');
 var sriclient = require('sri4node-client');
 var doGet = sriclient.get;
 var doPut = sriclient.put;
-var doDelete = sriclient.delete;
+//var doDelete = sriclient.delete;
 var common = require('./common.js');
 var common2 = require('../js/common.js');
 var cl = common2.cl;
@@ -20,68 +20,55 @@ exports = module.exports = function (base, logverbose) {
 
   describe('/transactions', function () {
     describe('PUT', function () {
-      it('should not be possible to update /transactions.', function () {
-        // First create a transaction.
+      it('should create /transactionrelations for 2 members of the same subgroup.', function () {
         var body = {
           from: {href: common.hrefs.PARTY_ANNA},
           to: {href: common.hrefs.PARTY_STEVEN},
           amount: 20
         };
         var uuid = common.generateUUID();
-        debug('Generated UUID=' + uuid);
+        var transaction;
+        var partyrelations;
 
-        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function () {
-          body.amount = 10;
-          return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test');
-        }).then(function (response) {
-          debug('response of update PUT');
+        debug('Generated UUID=' + uuid);
+        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function (response) {
+          debug('response of PUT');
           debug(response.body);
-          debug('Status code :');
-          debug(response.statusCode);
-          if (response.statusCode === 201) {
-            assert.fail('creation of /transactionrelations MUST fail !');
-          }
-          assert.equal(response.body.errors[0].code, 'not.allowed.to.update.transactions');
+          assert.equal(response.statusCode, 201);
           return doGet(base + '/transactions/' + uuid, 'annadv', 'test');
         }).then(function (response) {
-          debug('response of GET of original transaction');
+          debug('response of GET');
           debug(response.body);
           assert.equal(response.statusCode, 200);
+          assert.equal(response.body.from.href, common.hrefs.PARTY_ANNA);
+          assert.equal(response.body.to.href, common.hrefs.PARTY_STEVEN);
           assert.equal(response.body.amount, 20);
-        }).catch(function (err) {
-          cl(err);
-          throw err;
-        });
-      });
-
-      it('should not be possible to delete /transactions.', function () {
-        // First create a transaction.
-        var body = {
-          from: {href: common.hrefs.PARTY_ANNA},
-          to: {href: common.hrefs.PARTY_STEVEN},
-          amount: 20
-        };
-        var uuid = common.generateUUID();
-        debug('Generated UUID=' + uuid);
-
-        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function () {
-          return doDelete(base + '/transactions/' + uuid, 'annadv', 'test');
+          //Store for use in later steps
+          transaction = response.body;
+          return doGet(base + '/transactionrelations?transaction=/transactions/' + uuid,
+            'annadv', 'test');
         }).then(function (response) {
-          assert.equal(response.statusCode, 403);
-          return doGet(base + '/transactions/' + uuid, 'annadv', 'test');
-        }).then(function (response) {
-          debug('response of GET of original transaction');
+          debug('response of GET of /transactionrelations for the transaction');
           debug(response.body);
           assert.equal(response.statusCode, 200);
-          assert.equal(response.body.amount, 20);
-        }).catch(function (err) {
-          cl(err);
-          throw err;
+          assert.equal(response.body.results.length, 2);
+          assert.equal(response.body.results[0].$$expanded.transaction.href, transaction.$$meta.permalink);
+          assert.equal(response.body.results[1].$$expanded.transaction.href, transaction.$$meta.permalink);
+          // Check total balance == 0
+          assert.equal(response.body.results[0].$$expanded.amount +
+                        response.body.results[1].$$expanded.amount, 0);
+          partyrelations = [];
+          partyrelations.push(response.body.results[0].$$expanded.partyrelation.href);
+          partyrelations.push(response.body.results[1].$$expanded.partyrelation.href);
+          return doGet(base + '/partyrelations?hrefs=' + partyrelations[0] + ',' + partyrelations[1],
+            'annadv', 'test');
+        }).then(function (response) {
+          debug('reponse of GET of /partyrelations involved in the transaction');
+          debug(response.body);
+          assert.equal(response.statusCode, 200);
+          assert.equal(response.body.results.length, 2);
         });
       });
     });
   });
-
-
-  // TODO : Check that update of balance on /partyrelations are ignored !
 };

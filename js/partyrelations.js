@@ -3,7 +3,8 @@ var common = require('./common.js');
 exports = module.exports = function (sri4node, extra) {
   'use strict';
   var $s = sri4node.schemaUtils,
-    $q = sri4node.queryUtils;
+    $q = sri4node.queryUtils,
+    $m = sri4node.mapUtils;
 
   var ret = {
     type: '/partyrelations',
@@ -70,8 +71,8 @@ exports = module.exports = function (sri4node, extra) {
         references: '/parties'
       },
       type: {},
-      balance: {},
-      code: {},
+      balance: {onupdate: $m.remove, oninsert: $m.remove},
+      code: {onread: $m.removeifnull},
       status: {}
     },
     afterupdate: [],
