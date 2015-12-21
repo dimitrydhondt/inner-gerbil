@@ -221,5 +221,26 @@ exports = module.exports = {
     recursive.sql('SELECT r."from" FROM messagerelations r, ' + virtualtablename + ' c ' +
                   'where r."to" = c.key');
     select.with(nonrecursive, 'UNION', recursive, virtualtablename + '(key)');
+  },
+
+  rejectOperation: function (code, description) {
+    'use strict';
+    return function (database, elements) {
+      var deferred = Q.defer();
+
+      deferred.reject({
+        statusCode: 403,
+        body: {
+          errors: [{
+            code: code,
+            type: 'ERROR',
+            description: description
+          }],
+          document: elements[0].body
+        }
+      });
+
+      return deferred.promise;
+    };
   }
 };

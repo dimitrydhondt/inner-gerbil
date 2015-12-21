@@ -327,9 +327,42 @@ exports = module.exports = function (base, logverbose) {
           throw err;
         });
       });
+
+      it('should not be possible to update /transactions.', function () {
+        // First create a transaction.
+        var body = {
+          from: {href: common.hrefs.PARTY_ANNA},
+          to: {href: common.hrefs.PARTY_STEVEN},
+          amount: 20
+        };
+        var uuid = common.generateUUID();
+        debug('Generated UUID=' + uuid);
+
+        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function () {
+          body.amount = 10;
+          return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test');
+        }).then(function (response) {
+          debug('response of update PUT');
+          debug(response.body);
+          debug('Status code :');
+          debug(response.statusCode);
+          if (response.statusCode === 201) {
+            assert.fail('creation of /transactionrelations MUST fail !');
+          }
+          assert.equal(response.body.errors[0].code, 'not.allowed.to.update.transactions');
+          return doGet(base + '/transactions/' + uuid, 'annadv', 'test');
+        }).then(function (response) {
+          debug('response of GET of original transaction');
+          debug(response.body);
+          assert.equal(response.statusCode, 200);
+          assert.equal(response.body.amount, 20);
+        }).catch(function (err) {
+          cl(err);
+          throw err;
+        });
+      });
     });
   });
 
-  // TODO : Check that UPDATE / DELETE from on /transactions. They are create-once-read-many.
   // TODO : Check that update of balance on /partyrelations are ignored !
 };

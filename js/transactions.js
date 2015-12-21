@@ -1,5 +1,6 @@
 var common = require('./common.js');
 var cl = common.cl;
+var rejectOperation = common.rejectOperation;
 var Q = require('q');
 var uuid = require('uuid');
 
@@ -54,10 +55,6 @@ exports = module.exports = function (sri4node, extra, logverbose) {
   function toDescendantsOfParties(value, select) {
     common.descendantsOfParties($u, value, select, 'descendantsOfParties');
     select.sql(' and "to" in (select key from descendantsOfParties) ');
-  }
-
-  function rejectOperation() {
-    throw new Error('Invalid PUT.');
   }
 
   function findParentPartyRelations(database, partyKeys, partyRelations) {
@@ -521,13 +518,15 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       addLinks
     ],
     afterupdate: [
-      rejectOperation
+      rejectOperation('not.allowed.to.update.transactions',
+        'PUT a compensating /transactions resource instead.')
     ],
     afterinsert: [
       onInsertTransaction
     ],
     afterdelete: [
-      rejectOperation
+      rejectOperation('not.allowed.to.delete.transactions',
+        'PUT a compensating /transactions resource instead.')
     ]
   };
 
