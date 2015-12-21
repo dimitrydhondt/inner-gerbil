@@ -35,31 +35,31 @@ INSERT INTO "parties" VALUES ('c512a350-0d55-4ddb-ab49-5e0c6645a0a6','person','F
 
 -- partyrelations -- key, from, to, type, balance, status
 -- LETS Lebbeke is a member of LETS Dendermonde
-INSERT INTO "partyrelations" VALUES('cddffa35-6a2f-46c4-aa39-5b9040b4f429','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('cddffa35-6a2f-46c4-aa39-5b9040b4f429','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,180000,-180000,'active');
 -- LETS Appels is a member of LETS Dendermonde
-INSERT INTO "partyrelations" VALUES('42bdfaf2-718b-4f92-b90d-810d9f5cb5b3','63f34927-0b86-4753-aaa3-02920a9660a5','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('42bdfaf2-718b-4f92-b90d-810d9f5cb5b3','63f34927-0b86-4753-aaa3-02920a9660a5','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,180000,-180000,'active');
 -- Rudi Rudolf is a member of LETS Dendermonde
-INSERT INTO "partyrelations" VALUES('c67139c2-779f-4d5c-9183-bbb9252574de','eb6e3ad7-066f-4357-a582-dfb31e173606','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('c67139c2-779f-4d5c-9183-bbb9252574de','eb6e3ad7-066f-4357-a582-dfb31e173606','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,180000,-180000,'active');
 -- Anna in LETS Lebbeke
-INSERT INTO "partyrelations" VALUES('419e6446-9b3e-4e7d-9381-0c38af0b316a','5df52f9f-e51f-4942-a810-1496c51e64db','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',-20,null,'active');
+INSERT INTO "partyrelations" VALUES('419e6446-9b3e-4e7d-9381-0c38af0b316a','5df52f9f-e51f-4942-a810-1496c51e64db','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',-20,null,180000,-180000,'active');
 -- Steven in LETS Lebbeke
-INSERT INTO "partyrelations" VALUES('db41c12a-a521-443a-97f1-f0e14658fb78','fa17e7f5-ade9-49d4-abf3-dc3722711504','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',20,null,'active');
+INSERT INTO "partyrelations" VALUES('db41c12a-a521-443a-97f1-f0e14658fb78','fa17e7f5-ade9-49d4-abf3-dc3722711504','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',20,null,180000,-180000,'active');
 -- Eddy USED to be member of LETS Lebbeke, but is not any longer.
-INSERT INTO "partyrelations" VALUES('cf6267a8-f24e-48fe-a6b8-2356a1ab8e6b','437d9b64-a3b4-467c-9abe-e9410332c1e5','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',0,null,'inactive');
+INSERT INTO "partyrelations" VALUES('cf6267a8-f24e-48fe-a6b8-2356a1ab8e6b','437d9b64-a3b4-467c-9abe-e9410332c1e5','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',0,null,180000,-180000,'inactive');
 -- Geert is a member of LETS Appels
-INSERT INTO "partyrelations" VALUES('84b24ab8-4022-4fcb-92f7-64bcb24a17e0','c0755044-b0a5-4d36-8396-7bede4f63468','63f34927-0b86-4753-aaa3-02920a9660a5','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('84b24ab8-4022-4fcb-92f7-64bcb24a17e0','c0755044-b0a5-4d36-8396-7bede4f63468','63f34927-0b86-4753-aaa3-02920a9660a5','member',0,null,180000,-180000,'active');
 -- Leen DB is a member of LETS Hamme
-INSERT INTO "partyrelations" VALUES('912ae080-29fa-4387-b031-c594167601e0','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','member',-20,null,'active');
+INSERT INTO "partyrelations" VALUES('912ae080-29fa-4387-b031-c594167601e0','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','member',-20,null,180000,-180000,'active');
 -- Emmanuella is a member of LETS Hamme
-INSERT INTO "partyrelations" VALUES('d7669476-91ef-420b-99cd-ac906f985481','508f9ec9-df73-4a55-ad42-32839abd1760','0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','member',20,null,'active');
+INSERT INTO "partyrelations" VALUES('d7669476-91ef-420b-99cd-ac906f985481','508f9ec9-df73-4a55-ad42-32839abd1760','0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','member',20,null,180000,-180000,'active');
 -- Jommeke is part of LETS Zonnedorp
-INSERT INTO "partyrelations" VALUES('e96262d9-e825-40c3-86ff-09a0d31fda1a','7495029b-1dc5-4eaa-baa6-8f2af029b2b6','bf5995c1-802c-4b69-a5ad-6f193d40c6e3','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('e96262d9-e825-40c3-86ff-09a0d31fda1a','7495029b-1dc5-4eaa-baa6-8f2af029b2b6','bf5995c1-802c-4b69-a5ad-6f193d40c6e3','member',0,null,180000,-180000,'active');
 -- Filiberke is part of LETS Maandorp
-INSERT INTO "partyrelations" VALUES('d3bed9ac-5b10-4561-803f-930aa6f086a3','c512a350-0d55-4ddb-ab49-5e0c6645a0a6','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('d3bed9ac-5b10-4561-803f-930aa6f086a3','c512a350-0d55-4ddb-ab49-5e0c6645a0a6','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','member',0,null,180000,-180000,'active');
 -- LETS Zonnedorp is member of connector 'Conector Jef Nys'
-INSERT INTO "partyrelations" VALUES('a87dd13f-4f81-4761-b150-d0612aac72ed','bf5995c1-802c-4b69-a5ad-6f193d40c6e3','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('a87dd13f-4f81-4761-b150-d0612aac72ed','bf5995c1-802c-4b69-a5ad-6f193d40c6e3','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,180000,-180000,'active');
 -- LETS Maandorp is member of connector 'Conector Jef Nys'
-INSERT INTO "partyrelations" VALUES('21b0fba9-336e-49b8-afa5-3b6a7988bdc1','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,'active');
+INSERT INTO "partyrelations" VALUES('21b0fba9-336e-49b8-afa5-3b6a7988bdc1','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,180000,-180000,'active');
 
 -- Contactdetails key,type,label,street,streetnumber,streetbus,zipcode,city,latitude,longitude,value,public
 -- Anna De Vlaming

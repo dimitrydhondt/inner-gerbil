@@ -66,6 +66,8 @@ CREATE TABLE "partyrelations" (
     "type" text not null,
     "balance" integer,
     "code" text,
+    "upperlimit" integer default(180000), /* 50 hours, in seconds */
+    "lowerlimit" integer default(-180000), /* 50 hours, in seconds */
     "status" text not null, /* active/inactive */
 
     "$$meta.deleted" boolean not null default false,

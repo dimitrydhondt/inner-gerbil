@@ -44,6 +44,12 @@ exports = module.exports = function (sri4node, extra) {
           'over how people are identified in the UI. Groups can select to show the name or alias chosen ' +
           'by people, but they can also choose to show this group controlled code.'
         ),
+        upperlimit: $s.numeric('The upper limit (in seconds) for this partyrelation.' +
+          'Transactions that would make the balance on this partyrelation ' +
+          'exceed this limit will be rejected.'),
+        lowerlimit: $s.numeric('The lower limit (in seconds) for this partyrelation.' +
+          'Transactions that would make the balance on this partyrelation ' +
+          'exceed this limit will be rejected.'),
         status: {
           type: 'string',
           description: 'The status of this relation. Is it active / inactive ?',
@@ -73,6 +79,8 @@ exports = module.exports = function (sri4node, extra) {
       type: {},
       balance: {onupdate: $m.remove, oninsert: $m.remove},
       code: {onread: $m.removeifnull},
+      upperlimit: {onread: $m.removeifnull},
+      lowerlimit: {onread: $m.removeifnull},
       status: {}
     },
     afterupdate: [],
