@@ -237,7 +237,7 @@ exports = module.exports = function (base, logverbose) {
         var uuid = common.generateUUID();
         debug('Generated UUID=' + uuid);
 
-        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function (results) {
+        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function () {
           var trr;
           trr = {
             key: common.generateUUID(),
@@ -271,7 +271,7 @@ exports = module.exports = function (base, logverbose) {
         var uuid = common.generateUUID();
         debug('Generated UUID=' + uuid);
 
-        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function (results) {
+        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function () {
           return doGet(base + '/transactionrelations?transaction=/transactions/' + uuid, 'annadv', 'test');
         }).then(function (response) {
           debug('/transactionrelations that were created :');
@@ -309,7 +309,7 @@ exports = module.exports = function (base, logverbose) {
         var uuid = common.generateUUID();
         debug('Generated UUID=' + uuid);
 
-        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function (results) {
+        return doPut(base + '/transactions/' + uuid, body, 'annadv', 'test').then(function () {
           return doGet(base + '/transactionrelations?transaction=/transactions/' + uuid, 'annadv', 'test');
         }).then(function (response) {
           debug('/transactionrelations that were created :');

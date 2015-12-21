@@ -7,7 +7,7 @@ exports = module.exports = function (sri4node, extra) {
     $q = sri4node.queryUtils;
 
   function rejectOperation(code, description) {
-    return function (database, elements, me) {
+    return function (database, elements) {
       var deferred = Q.defer();
 
       deferred.reject({
