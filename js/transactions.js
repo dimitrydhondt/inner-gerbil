@@ -73,6 +73,16 @@ exports = module.exports = function (sri4node, extra, logverbose) {
     select.sql(' and "to" in (select key from descendantsOfParties) ');
   }
 
+  function fromAncestorsOfParties(value, select) {
+    common.ancestorsOfParties($u, value, select, 'ancestorsOfParties');
+    select.sql(' and "from" in (select key from ancestorsOfParties) ');
+  }
+
+  function toAncestorsOfParties(value, select) {
+    common.ancestorsOfParties($u, value, select, 'ancestorsOfParties');
+    select.sql(' and "to" in (select key from ancestorsOfParties) ');
+  }
+
   function findParentPartyRelations(database, partyKeys, partyRelations) {
     var q = $u.prepareSQL();
     var nonrecursive = $u.prepareSQL();
@@ -505,8 +515,8 @@ exports = module.exports = function (sri4node, extra, logverbose) {
 
       fromDescendantsOfParties: fromDescendantsOfParties,
       toDescendantsOfParties: toDescendantsOfParties,
-//      fromAncestorsOfParties: fromAncestorsOfParties,
-//      toAncestorsOfParties: toAncestorsOfParties,
+      fromAncestorsOfParties: fromAncestorsOfParties,
+      toAncestorsOfParties: toAncestorsOfParties,
       fromPartiesReachableFromParties: fromPartiesReachableFromParties,
       toPartiesReachableFromParties: toPartiesReachableFromParties,
       defaultFilter: $q.defaultFilter
@@ -534,6 +544,10 @@ exports = module.exports = function (sri4node, extra, logverbose) {
         'direct or indirect member of a comma separated list of parties.',
       toDescendantsOfParties: 'Returns transaction benefitting any ' +
         'direct or indirect member of a comma separated list of parties.',
+      fromAncestorsOfParties: 'Return transactions originating from any ' +
+        'direct or indirect parent of a comma separated list of parties.',
+      toAncestorsOfParties: 'Returns transaction benefitting any ' +
+        'direct or indirect parent of a comma separated list of parties.',
       fromPartiesReachableFromParties: 'Returns transactions originating from any ' +
         'parties that are reachable from a comma separated list of parties.',
       toPartiesReachableFromParties: 'Returns transactions beefitting any ' +

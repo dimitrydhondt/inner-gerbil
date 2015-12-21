@@ -84,6 +84,10 @@ INSERT INTO "partycontactdetails" VALUES('5e47192d-1957-4959-89bb-3418ab296080',
 INSERT INTO "transactions" VALUES('e068c284-26f1-4d11-acf3-8942610b26e7','5df52f9f-e51f-4942-a810-1496c51e64db','fa17e7f5-ade9-49d4-abf3-dc3722711504',20,null);
 -- Leen -> Emmanuella 20, related to message by Leen
 INSERT INTO "transactions" VALUES('1ffc9267-b51f-4970-91a2-ae20f4487f78','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','508f9ec9-df73-4a55-ad42-32839abd1760',20,'Merci voor de courgette');
+-- Steven -> Geert 22
+INSERT INTO "transactions" VALUES('f4967944-e1a4-40b2-aafd-c4c8602bf8c7','fa17e7f5-ade9-49d4-abf3-dc3722711504','eb6e3ad7-066f-4357-a582-dfb31e173606',22,'Bedankt voor het roodneuzig rendier.');
+INSERT INTO "transactions" VALUES('2af8884a-53fd-4231-8a35-49b735716c96','eb6e3ad7-066f-4357-a582-dfb31e173606','fa17e7f5-ade9-49d4-abf3-dc3722711504',22,'Te veel pakskes');
+-- Geert -> Steven 22
 
 -- Transaction trace
 -- Anna -> Steven 20
@@ -92,7 +96,12 @@ INSERT INTO "transactionrelations" VALUES('525fbf3b-5886-47e3-a08a-8b5273a944cb'
 -- Leen -> Emmanuella 20
 INSERT INTO "transactionrelations" VALUES('1fda908c-66c1-4b42-921c-562c3c4a2e56','1ffc9267-b51f-4970-91a2-ae20f4487f78','912ae080-29fa-4387-b031-c594167601e0',-20);
 INSERT INTO "transactionrelations" VALUES('ebf2b62d-684f-4f60-bcd0-c94c56e9129f','1ffc9267-b51f-4970-91a2-ae20f4487f78','d7669476-91ef-420b-99cd-ac906f985481',20);
-
+-- Steven -> Geert 22
+INSERT INTO "transactionrelations" VALUES('52624d67-fd84-47c3-83e3-d42bc2c15213','f4967944-e1a4-40b2-aafd-c4c8602bf8c7','db41c12a-a521-443a-97f1-f0e14658fb78',-22);
+INSERT INTO "transactionrelations" VALUES('75daf7d6-5eea-4d03-a15a-e1afb53eab70','f4967944-e1a4-40b2-aafd-c4c8602bf8c7','c67139c2-779f-4d5c-9183-bbb9252574de',22);
+-- Geert -> Steven 22
+INSERT INTO "transactionrelations" VALUES('485e8ab7-3385-428a-87b6-9d4b6a3e7c9a','2af8884a-53fd-4231-8a35-49b735716c96','c67139c2-779f-4d5c-9183-bbb9252574de',-22);
+INSERT INTO "transactionrelations" VALUES('2b5a0585-58ec-4d76-8e0f-567ad1517a95','2af8884a-53fd-4231-8a35-49b735716c96','db41c12a-a521-443a-97f1-f0e14658fb78',22);
 -- key,author,title,description,eventdate,amount,unit,tags[], photos[], created, modified, expires
 -- Messages
 -- For Anna

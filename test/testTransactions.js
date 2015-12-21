@@ -195,6 +195,30 @@ exports = module.exports = function (base, logverbose) {
           }
         });
       });
+
+      it('its should allow /transactions?fromAncestorsOfParties=...', function () {
+        return doGet(base + '/transactions?fromAncestorsOfParties=' +
+                     common.hrefs.PARTY_ANNA, 'annadv', 'test').then(function (response) {
+          debug('All transactions involving parties that are ancestors of Anna :');
+          debug(response.body);
+          assert.equal(response.statusCode, 200);
+          // Should return at least the default test data suite's transactions between :
+          // Anna -> Steven : 20
+          assert.equal(response.body.results.length, 0);
+        });
+      });
+
+      it('its should allow /transactions?toAncestorsOfParties=...', function () {
+        return doGet(base + '/transactions?toAncestorsOfParties=' +
+                     common.hrefs.PARTY_ANNA, 'annadv', 'test').then(function (response) {
+          debug('All transactions involving parties that are ancestors of Anna :');
+          debug(response.body);
+          assert.equal(response.statusCode, 200);
+          // Should return at least the default test data suite's transactions between :
+          // Anna -> Steven : 20
+          assert.equal(response.body.results.length, 0);
+        });
+      });
     });
   });
 };
