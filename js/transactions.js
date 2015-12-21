@@ -53,6 +53,16 @@ exports = module.exports = function (sri4node, extra, logverbose) {
                ' or "to" in (select key from partiesReachableFromParties)) ');
   }
 
+  function fromPartiesReachableFromParties(value, select) {
+    common.reachableFromParties($u, value, select, 'partiesReachableFromParties');
+    select.sql(' and "from" in (select key from partiesReachableFromParties)');
+  }
+
+  function toPartiesReachableFromParties(value, select) {
+    common.reachableFromParties($u, value, select, 'partiesReachableFromParties');
+    select.sql(' and "to" in (select key from partiesReachableFromParties)');
+  }
+
   function fromDescendantsOfParties(value, select) {
     common.descendantsOfParties($u, value, select, 'descendantsOfParties');
     select.sql(' and "from" in (select key from descendantsOfParties) ');
@@ -495,6 +505,10 @@ exports = module.exports = function (sri4node, extra, logverbose) {
 
       fromDescendantsOfParties: fromDescendantsOfParties,
       toDescendantsOfParties: toDescendantsOfParties,
+//      fromAncestorsOfParties: fromAncestorsOfParties,
+//      toAncestorsOfParties: toAncestorsOfParties,
+      fromPartiesReachableFromParties: fromPartiesReachableFromParties,
+      toPartiesReachableFromParties: toPartiesReachableFromParties,
       defaultFilter: $q.defaultFilter
     },
     queryDocs: {
@@ -513,11 +527,17 @@ exports = module.exports = function (sri4node, extra, logverbose) {
         'comma separated list of parties.',
       involvingDescendantsOfParties: 'Returns transactions involving any ' +
         'direct or indirect members of a comma separated list of parties.',
+      involvingPartiesReachableFromParties: 'Return transactions involving any ' +
+        'parties that are reachable from a comma separated list of parties.',
 
       fromDescendantsOfParties: 'Returns transactions originating from any ' +
         'direct or indirect member of a comma separated list of parties.',
       toDescendantsOfParties: 'Returns transaction benefitting any ' +
-        'direct or indirect member of a comma separated list of parties.'
+        'direct or indirect member of a comma separated list of parties.',
+      fromPartiesReachableFromParties: 'Returns transactions originating from any ' +
+        'parties that are reachable from a comma separated list of parties.',
+      toPartiesReachableFromParties: 'Returns transactions beefitting any ' +
+        'parties that are reachable from a comma separated list of parties.'
     },
     afterread: [
       common.addRelatedManyToMany($u, 'messagetransactions', 'transaction', 'message',

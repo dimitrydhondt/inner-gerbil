@@ -16,8 +16,8 @@ exports = module.exports = function (base, logverbose) {
 
   describe('/transactions', function () {
     describe('GET', function () {
-      it('its should allow /transactions?involvingPartiesReachableFromParties=...', function () {
-        return doGet(base + '/transactions?involvingPartiesReachableFromParties=' +
+      it('its should allow /transactions?fromPartiesReachableFromParties=...', function () {
+        return doGet(base + '/transactions?fromPartiesReachableFromParties=' +
                      common.hrefs.PARTY_GEERT, 'geertg', 'test').then(function (response) {
           var i, current, found;
           debug('All transactions involving parties reachable from GeertG :');
