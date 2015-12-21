@@ -18,7 +18,7 @@ INSERT INTO "parties" VALUES ('4a3cabca-ecde-4fc3-830f-050891affbce','connector'
 INSERT INTO "parties" VALUES ('5df52f9f-e51f-4942-a810-1496c51e64db','person','Anna De Vlaming',null,'1980-10-11 00:00:00',null,'annadv','test',null,null,'active');
 -- Steven Butink is member of LETS Lebbeke
 INSERT INTO "parties" VALUES ('fa17e7f5-ade9-49d4-abf3-dc3722711504','person','Steven Buytink',null,'1979-04-01 00:00:00',null,'stevenb','test',null,null,'active');
--- Geert Gijsbrecht is member of LETS Wieze
+-- Geert Gijsbrecht is member of LETS Appels
 INSERT INTO "parties" VALUES ('c0755044-b0a5-4d36-8396-7bede4f63468','person','Geert Gijsbrecht',null,'1972-09-22 00:00:00',null,'geertg','test',null,null,'active');
 -- Rudi Rudolf is member of LETS Dendermonde
 INSERT INTO "parties" VALUES ('eb6e3ad7-066f-4357-a582-dfb31e173606','person','Rudi Rudolf',null,'1968-10-23 00:00:00',null,'rudir','test',null,null,'active');

@@ -1,30 +1,10 @@
 var common = require('./common.js');
-var Q = require('q');
+var rejectOperation = common.rejectOperation;
 
 exports = module.exports = function (sri4node, extra) {
   'use strict';
   var $s = sri4node.schemaUtils,
     $q = sri4node.queryUtils;
-
-  function rejectOperation(code, description) {
-    return function (database, elements) {
-      var deferred = Q.defer();
-
-      deferred.reject({
-        statusCode: 403,
-        body: {
-          errors: [{
-            code: code,
-            type: 'ERROR',
-            description: description
-          }],
-          document: elements[0]
-        }
-      });
-
-      return deferred.promise;
-    };
-  }
 
   var ret = {
     type: '/transactionrelations',

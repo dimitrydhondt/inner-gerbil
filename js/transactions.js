@@ -47,6 +47,12 @@ exports = module.exports = function (sri4node, extra, logverbose) {
                ' or "to" in (select key from ancestorsOfParties)) ');
   }
 
+  function involvingPartiesReachableFromParties(value, select) {
+    common.reachableFromParties($u, value, select, 'partiesReachableFromParties');
+    select.sql(' and ("from" in (select key from partiesReachableFromParties)' +
+               ' or "to" in (select key from partiesReachableFromParties)) ');
+  }
+
   function fromDescendantsOfParties(value, select) {
     common.descendantsOfParties($u, value, select, 'descendantsOfParties');
     select.sql(' and "from" in (select key from descendantsOfParties) ');
@@ -485,6 +491,7 @@ exports = module.exports = function (sri4node, extra, logverbose) {
 
       involvingAncestorsOfParties: involvingAncestorsOfParties,
       involvingDescendantsOfParties: involvingDescendantsOfParties,
+      involvingPartiesReachableFromParties: involvingPartiesReachableFromParties,
 
       fromDescendantsOfParties: fromDescendantsOfParties,
       toDescendantsOfParties: toDescendantsOfParties,
