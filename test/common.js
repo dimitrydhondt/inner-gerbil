@@ -50,6 +50,8 @@ exports = module.exports = {
     PARTY_JOMMEKE: '/parties/7495029b-1dc5-4eaa-baa6-8f2af029b2b6',
     PARTY_FILIBERKE: '/parties/c512a350-0d55-4ddb-ab49-5e0c6645a0a6',
 
+    PARTYRELATION_ANNA_LETSLEBBEKE: '/partyrelations/419e6446-9b3e-4e7d-9381-0c38af0b316a',
+
     PLUGIN_MAIL: '/plugins/7bd68a4b-138e-4228-9826-a002468222de',
 
     CONTACTDETAIL_ADDRESS_ANNA: '/contactdetails/843437b3-29dd-4704-afa8-6b06824b2e92',
