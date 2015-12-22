@@ -34,6 +34,7 @@ exports = module.exports = function (base, logverbose) {
           debug('response of PUT');
           debug(response.body);
           assert.equal(response.statusCode, 409);
+          assert.equal(response.body.errors[0].code, 'no.route.found');
           return doGet(base + '/transactions/' + uuid, 'annadv', 'test');
         }).then(function (response) {
           assert.equal(response.statusCode, 404);
