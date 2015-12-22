@@ -416,6 +416,5 @@ exports = module.exports = function (base, logverbose) {
       });
     });
   });
-
-  // TODO : Check that update of balance on /partyrelations are ignored !
+  // TODO : Check return code when no route is found == 409 !
 };

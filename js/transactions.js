@@ -90,12 +90,13 @@ exports = module.exports = function (sri4node, extra, logverbose) {
     var i;
     var msg;
 
-    nonrecursive.sql('select "key","from","to","balance" from partyrelations ' +
+    nonrecursive.sql('select "key","from","to","balance","upperlimit","lowerlimit" from partyrelations ' +
     'where "from" in (').values(partyKeys).sql(')');
-    recursive.sql('select pr."key",pr."from",pr."to",pr."balance" from partyrelations pr, ' +
-                  'parentpartyrelations ppr where pr."from" = ppr."to"');
+    recursive.sql('select pr."key",pr."from",pr."to",pr."balance",pr."upperlimit",pr."lowerlimit" ' +
+                  'from partyrelations pr, parentpartyrelations ppr ' +
+                  'where pr."from" = ppr."to"');
     q.with(nonrecursive, 'UNION', recursive, 'parentpartyrelations');
-    q.sql('select "key","from","to","balance" from parentpartyrelations');
+    q.sql('select "key","from","to","balance","upperlimit","lowerlimit" from parentpartyrelations');
     debug(q);
     return $u.executeSQL(database, q).then(function (result) {
       for (i = 0; i < result.rows.length; i++) {
@@ -274,6 +275,40 @@ exports = module.exports = function (sri4node, extra, logverbose) {
     return ret;
   }
 
+  function limitsExceededOnRoute(route, amount) {
+    var i, newBalance, partyrelation;
+
+    for (i = 0; i < route.from.length; i++) {
+      partyrelation = route.from[i];
+      newBalance = partyrelation.balance - amount;
+      if (newBalance < partyrelation.lowerlimit || newBalance > partyrelation.upperlimit) {
+        debug('Rejecting route because new balance [' + newBalance + '] exceeds limits ' +
+          'on /partyrelations/' + partyrelation.key + '.');
+        debug('Lower limit is [' + partyrelation.lowerlimit +
+          '] and upper limit is [' + partyrelation.upperlimit + ']');
+        debug('Route : ');
+        debug(route);
+        return true;
+      }
+    }
+
+    for (i = 0; i < route.to.length; i++) {
+      partyrelation = route.from[i];
+      newBalance = partyrelation.balance + amount;
+      if (newBalance < partyrelation.lowerlimit || newBalance > partyrelation.upperlimit) {
+        debug('Rejecting route because new balance [' + newBalance + '] exceeds limits ' +
+          'on /partyrelations/' + partyrelation.key + '.');
+        debug('Lower limit is [' + partyrelation.lowerlimit +
+          '] and upper limit is [' + partyrelation.upperlimit + ']');
+        debug('Route : ');
+        debug(route);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   // Returns an object of form :
   // { from : [ partyrelation1, partyrelation2 ], to: [partyrelation3] }
   // All /partyrelations in the 'from' result their balance should be REDUCED with the amount of the transaction.
@@ -287,7 +322,10 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       route = possibleRoutes[i];
       length = route.from.length + route.to.length;
       if (minimumLength === -1 || length < minimumLength) {
-        currentRoute = route;
+        // Check all balances on this route. If limits are not exceeded, proceed.
+        if (!limitsExceededOnRoute(route, transaction.amount)){
+          currentRoute = route;
+        }
       }
     }
 
@@ -405,12 +443,27 @@ exports = module.exports = function (sri4node, extra, logverbose) {
         transaction = elements[i].body;
         path = elements[i].path;
         route = findRouteForTransaction(paths, transaction);
-        debug('DETERMINED ROUTE for transaction : ');
-        debug(route);
-        // Now generate the necessary update statements on the balances of the partyrelations
-        updatePartyRelationsForRoute(database, transaction, route, promises);
-        // And insert the necessary /transactionrelations to log this route.
-        insertTransactionRelationsForRoute(database, path, transaction, route, promises);
+        if (route) {
+          debug('DETERMINED ROUTE for transaction : ');
+          debug(route);
+          // Now generate the necessary update statements on the balances of the partyrelations
+          updatePartyRelationsForRoute(database, transaction, route, promises);
+          // And insert the necessary /transactionrelations to log this route.
+          insertTransactionRelationsForRoute(database, path, transaction, route, promises);
+        } else {
+          throw {
+            statusCode: 409,
+            body: {
+              errors: [
+                {
+                  code: 'no.route.found',
+                  description: 'No valid route (without exceeding limits on partyrelations) was ' +
+                    'found for this transaction. The transaction was not created.'
+                }
+              ]
+            }
+          };
+        }
       }
 
       return Q.allSettled(promises);
@@ -468,7 +521,7 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       cl(msg);
       cl(error);
       cl(error.stack);
-      throw new Error(msg);
+      throw error;
     });
   }
 

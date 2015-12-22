@@ -64,7 +64,7 @@ CREATE TABLE "partyrelations" (
     "from" uuid references "parties"(key) not null,
     "to" uuid references "parties"(key) not null,
     "type" text not null,
-    "balance" integer,
+    "balance" integer default(0),
     "code" text,
     "upperlimit" integer default(180000), /* 50 hours, in seconds */
     "lowerlimit" integer default(-180000), /* 50 hours, in seconds */

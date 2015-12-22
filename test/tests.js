@@ -29,6 +29,7 @@ describe('Inner gerbil : ', function () {
 
   require('./testTransactions.js')(base, verbose);
   require('./testTransactionCreate.js')(base, verbose);
+  require('./testTransactionLimits.js')(base, verbose);
   require('./testContactdetails.js')(base, verbose);
   require('./testParties.js')(base, verbose);
   require('./testMessages.js')(base, verbose);
