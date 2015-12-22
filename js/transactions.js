@@ -323,7 +323,7 @@ exports = module.exports = function (sri4node, extra, logverbose) {
       length = route.from.length + route.to.length;
       if (minimumLength === -1 || length < minimumLength) {
         // Check all balances on this route. If limits are not exceeded, proceed.
-        if (!limitsExceededOnRoute(route, transaction.amount)){
+        if (!limitsExceededOnRoute(route, transaction.amount)) {
           currentRoute = route;
         }
       }
@@ -402,6 +402,7 @@ exports = module.exports = function (sri4node, extra, logverbose) {
     var transaction, path;
     var route;
     var promises = [];
+    var noRouteError;
 
     // For backwards compatibility.
     if (elems && !elems.length && elems.path && elems.body) {
@@ -451,7 +452,7 @@ exports = module.exports = function (sri4node, extra, logverbose) {
           // And insert the necessary /transactionrelations to log this route.
           insertTransactionRelationsForRoute(database, path, transaction, route, promises);
         } else {
-          throw {
+          noRouteError = {
             statusCode: 409,
             body: {
               errors: [
@@ -463,6 +464,7 @@ exports = module.exports = function (sri4node, extra, logverbose) {
               ]
             }
           };
+          throw noRouteError;
         }
       }
 
