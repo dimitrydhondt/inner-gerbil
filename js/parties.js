@@ -1,13 +1,44 @@
 var Q = require('q');
 var common = require('./common.js');
 var cl = common.cl;
+var multer = require('multer');
+//var multerAutoReap = require('multer-autoreap');
 
-exports = module.exports = function (sri4node, extra) {
+var MAX_FILESIZE_MB = 10;
+
+// Use disk storage, limit to 5 files of max X Mb each.
+// Avoids DoS attacks, or other service unavailability.
+// Files are streamed from network -> temporary disk files.
+// This requires virtually no memory on the server.
+var diskstorage = multer.diskStorage({
+  destination: '/tmp/innergerbil'
+});
+
+var upload = multer({
+  storage: diskstorage,
+  limits: {
+    fieldNameSize: 256,
+    fieldSize: 1024,
+    fields: 5,
+    fileSize: MAX_FILESIZE_MB * 1024 * 1024,
+    files: 5,
+    parts: 10,
+    headerPairs: 100
+  }
+});
+
+exports = module.exports = function (sri4node, extra, logdebug) {
   'use strict';
   var $u = sri4node.utils,
     $m = sri4node.mapUtils,
     $s = sri4node.schemaUtils,
     $q = sri4node.queryUtils;
+
+  function debug(x) {
+    if (logdebug) {
+      cl(x);
+    }
+  }
 
   function addLinks(database, elements) { /* eslint-disable-line */
     elements.forEach(function (element) {
@@ -70,6 +101,12 @@ exports = module.exports = function (sri4node, extra) {
   function inLatLong(value, select) {
     common.filterLatLong($u, value, select, 'parties', 'latlongcontactdetails');
     select.sql(' and key in (select key from latlongcontactdetails) ');
+  }
+
+  function handleFileUpload(req, res) {
+    debug('handling file upload !');
+    debug(req.files);
+    res.sendStatus(201);
   }
 
   var ret = {
@@ -193,7 +230,15 @@ exports = module.exports = function (sri4node, extra) {
     ],
     afterupdate: [],
     afterinsert: [],
-    afterdelete: []
+    afterdelete: [],
+    customroutes: [
+      {
+        route: '/parties/:key/:filename',
+        method: 'PUT',
+        middleware: upload.any(),
+        handler: handleFileUpload
+      }
+    ]
   };
 
   common.objectMerge(ret, extra);

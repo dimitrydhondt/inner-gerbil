@@ -45,6 +45,12 @@ CREATE TABLE "parties" (
     "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 
+CREATE TABLE "partyattachments" (
+    "key" uuid unique not null,
+    "filename" text,
+    "party" uuid references "parties"(key) not null
+);
+
 CREATE TABLE "partycontactdetails" (
     "key" uuid unique not null,
     "party" uuid references "parties"(key) not null,
