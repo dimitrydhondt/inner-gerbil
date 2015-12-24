@@ -1,5 +1,6 @@
 var Q = require('q');
 var qfs = require('q-io/fs');
+var fs = require('fs');
 var common = require('./common.js');
 var cl = common.cl;
 var s3 = require('s3');
@@ -226,7 +227,8 @@ exports = module.exports = function (sri4node, extra, logdebug) {
     } else {
       cl('WARNING : Reading files from temporary storage. SHOULD NOT BE USED IN PRODUCTION !');
       remoteFilename = path + '/' + req.params.key + '-' + req.params.filename;
-      res.sendStatus(200);
+      res.setHeader('content-type', 'image/png');
+      fs.createReadStream(remoteFilename).pipe(res);
     }
   }
 

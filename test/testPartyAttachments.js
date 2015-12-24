@@ -64,9 +64,12 @@ exports = module.exports = function (base, logverbose) {
           return doGet(base + '/parties/' + uuid + '/profile.png', 'annadv', 'test');
         }).then(function (response) {
           debug('Retrieving of file done');
-          debug(response.statusCode);
-          debug(response.body);
+          debug('status code : ' + response.statusCode);
+          debug('body length : ' + response.body.length);
           assert.equal(response.statusCode, 200);
+          if (response.body.length && response.body.length < 10000) {
+            assert.fail('Response too small, it should be the 10.x Kb image we sent...');
+          }
         });
       });
     });
