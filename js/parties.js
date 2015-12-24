@@ -2,7 +2,8 @@ var Q = require('q');
 var common = require('./common.js');
 var cl = common.cl;
 var multer = require('multer');
-//var multerAutoReap = require('multer-autoreap');
+var multerAutoReap = require('multer-autoreap');
+multerAutoReap.options.reapOnError = true;
 
 var MAX_FILESIZE_MB = 10;
 
@@ -235,7 +236,10 @@ exports = module.exports = function (sri4node, extra, logdebug) {
       {
         route: '/parties/:key/:filename',
         method: 'PUT',
-        middleware: upload.any(),
+        middleware: [
+          multerAutoReap,
+          upload.any()
+        ],
         handler: handleFileUpload
       }
     ]
