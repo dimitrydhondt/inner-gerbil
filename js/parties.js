@@ -1,6 +1,8 @@
 var Q = require('q');
+var qfs = require('q-io/fs');
 var common = require('./common.js');
 var cl = common.cl;
+var s3 = require('s3');
 var multer = require('multer');
 var multerAutoReap = require('multer-autoreap');
 multerAutoReap.options.reapOnError = true;
@@ -104,10 +106,128 @@ exports = module.exports = function (sri4node, extra, logdebug) {
     select.sql(' and key in (select key from latlongcontactdetails) ');
   }
 
+  function createS3Client() {
+    var s3key = process.env.S3_KEY; // eslint-disable-line
+    var s3secret = process.env.S3_SECRET; // eslint-disable-line
+
+    if (s3key && s3secret) {
+      return s3.createClient({
+        maxAsyncS3: 20,     // this is the default
+        s3RetryCount: 3,    // this is the default
+        s3RetryDelay: 1000, // this is the default
+        multipartUploadThreshold: 20971520, // this is the default (20 MB)
+        multipartUploadSize: 15728640, // this is the default (15 MB)
+        s3Options: {
+          accessKeyId: s3key,
+          secretAccessKey: s3secret,
+          region: 'eu-west-1'
+        }
+      });
+    }
+
+    return null;
+  }
+
+  function uploadToS3(s3client, fromFilename, toFilename) {
+    var deferred = Q.defer();
+    var msg, params;
+    var s3bucket = process.env.S3_BUCKET; // eslint-disable-line
+
+    params = {
+      localFile: fromFilename,
+      s3Params: {
+        Bucket: s3bucket,
+        Key: toFilename
+      }
+    };
+
+    var uploader = s3client.uploadFile(params);
+
+    uploader.on('error', function (err) {
+      msg = 'All attempts to uploads failed!';
+      cl(msg);
+      cl(err);
+      cl(err.stack);
+      deferred.reject(msg);
+    });
+    uploader.on('end', function () {
+      debug('Upload of file [' + fromFilename + '] was successful.');
+      deferred.resolve();
+    });
+
+    return deferred.promise;
+  }
+
+  function downloadFromS3(s3client, response, filename) {
+    var s3bucket = process.env.S3_BUCKET; // eslint-disable-line
+    var stream, msg;
+
+    var params = {
+      Bucket: s3bucket,
+      Key: filename
+    };
+    stream = s3client.downloadStream(params);
+    stream.pipe(response);
+    stream.on('error', function (err) {
+      msg = 'All attempts to download failed!';
+      cl(msg);
+      cl(err);
+      cl(err.stack);
+      response.sendStatus(500);
+    });
+  }
+
   function handleFileUpload(req, res) {
+    var path = process.env.TMP ? process.env.TMP : '/tmp'; // eslint-disable-line
+    var s3client = createS3Client();
+    var i;
+    var fromFilename;
+    var toFilename;
+    var promises = [];
+
     debug('handling file upload !');
     debug(req.files);
-    res.sendStatus(201);
+
+    if (s3client) {
+      for (i = 0; i < req.files.length; i++) {
+        fromFilename = req.files[i].path;
+        toFilename = req.params.key + '-' + req.params.filename;
+        promises.push(uploadToS3(s3client, fromFilename, toFilename));
+      }
+    } else {
+      cl('WARNING : Sending files to temporary storage. SHOULD NOT BE USED IN PRODUCTION !');
+      for (i = 0; i < req.files.length; i++) {
+        fromFilename = req.files[i].path;
+        toFilename = path + '/' + req.params.key + '-' + req.params.filename;
+        promises.push(qfs.copy(fromFilename, toFilename));
+      }
+    }
+    Q.all(promises).then(function () {
+      // Acknowledge to the client that the files were stored.
+      res.sendStatus(201);
+    }).catch(function (err) {
+      cl('ERROR : Unable to upload all files...');
+      cl(err);
+      cl(err.stack);
+      // Notify the client that a problem occured.
+      res.sendStatus(500);
+    });
+  }
+
+  function handleFileDownload(req, res) {
+    var path = process.env.TMP ? process.env.TMP : '/tmp'; // eslint-disable-line
+    var s3client = createS3Client();
+    var remoteFilename;
+
+    debug('handling file download !');
+    if (s3client) {
+      remoteFilename = req.params.key + '-' + req.params.filename;
+      downloadFromS3(s3client, res, remoteFilename);
+    } else {
+      cl('WARNING : Reading files from temporary storage. SHOULD NOT BE USED IN PRODUCTION !');
+      remoteFilename = path + '/' + req.params.key + '-' + req.params.filename;
+      res.sendStatus(200);
+    }
   }
 
   var ret = {
@@ -241,6 +361,11 @@ exports = module.exports = function (sri4node, extra, logdebug) {
           upload.any()
         ],
         handler: handleFileUpload
+      },
+      {
+        route: '/parties/:key/:filename',
+        method: 'GET',
+        handler: handleFileDownload
       }
     ]
   };

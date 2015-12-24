@@ -4,7 +4,8 @@
   "description": "The core API for a next generation mutual credit system",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "env $(cat .env) mocha",
+    "test-dev": "env $(cat .env) mocha --debug-brk",
     "dev": "env $(cat .env) nodemon --debug --watch ./js js/server.js",
     "lint": "eslint js test",
     "start": "node js/server.js",
@@ -23,7 +24,9 @@
     "moment": "2.10.x",
     "multer": "1.1.x",
     "multer-autoreap": "0.0.x",
-    "needle": "0.x"
+    "needle": "0.x",
+    "s3": "4.4.x",
+    "q-io": "1.13.x"
   },
   "engines": {
     "node": "4.x",

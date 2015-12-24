@@ -1,6 +1,6 @@
 var assert = require('assert');
 var sriclient = require('sri4node-client');
-//var doGet = sriclient.get;
+var doGet = sriclient.get;
 var doPut = sriclient.put;
 var common = require('./common.js');
 var common2 = require('../js/common.js');
@@ -61,6 +61,12 @@ exports = module.exports = function (base, logverbose) {
           return doPutFile(base + '/parties/' + uuid + '/profile.png', file, 'annadv', 'test');
         }).then(function (response) {
           assert.equal(response.statusCode, 201);
+          return doGet(base + '/parties/' + uuid + '/profile.png', 'annadv', 'test');
+        }).then(function (response) {
+          debug('Retrieving of file done');
+          debug(response.statusCode);
+          debug(response.body);
+          assert.equal(response.statusCode, 200);
         });
       });
     });
