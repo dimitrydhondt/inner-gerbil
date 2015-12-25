@@ -3,17 +3,34 @@ var sriclient = require('sri4node-client');
 var doGet = sriclient.get;
 var doPut = sriclient.put;
 var common = require('./common.js');
-var common2 = require('../js/common.js');
-var cl = common2.cl;
 var needle = require('needle');
 var Q = require('q');
+var useWinston = true;
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base, winston) {
   'use strict';
+/*
+  function warn(x) {
+    if (!useWinston) {
+      console.log(x); // eslint-disable-line
+    } else {
+      winston.log('warn', x);
+    }
+  }
 
+  function error(x) {
+    if (!useWinston) {
+      console.log(x); // eslint-disable-line
+    } else {
+      winston.log('error', x);
+    }
+  }
+*/
   function debug(x) {
-    if (logverbose) {
-      cl(x);
+    if (!useWinston) {
+      console.log(x); // eslint-disable-line
+    } else {
+      winston.log('debug', x);
     }
   }
 

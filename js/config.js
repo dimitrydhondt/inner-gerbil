@@ -6,7 +6,7 @@ var cl = common.cl;
 var knownIdentities = {};
 var knownPasswords = {};
 
-exports = module.exports = function (sri4node, verbose) {
+exports = module.exports = function (sri4node, verbose, winston) {
   'use strict';
   var $u = sri4node.utils;
 
@@ -130,7 +130,7 @@ exports = module.exports = function (sri4node, verbose) {
     defaultdatabaseurl: 'postgres://gerbil:inner@localhost:5432/postgres',
     description: description,
     resources: [
-      require('./parties')(sri4node, extraResourceConfig, verbose),
+      require('./parties')(sri4node, extraResourceConfig, winston),
       require('./partyrelations')(sri4node, extraResourceConfig),
       require('./contactdetails')(sri4node, extraResourceConfig),
       require('./partycontactdetails')(sri4node, extraResourceConfig),

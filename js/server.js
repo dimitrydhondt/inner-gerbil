@@ -1,18 +1,24 @@
 /*eslint-env node */
-var express = require('express'),
-  pg = require('pg');
-
+var express = require('express');
+var pg = require('pg');
 var sri4node = require('sri4node');
-var common = require('./common.js');
-var cl = common.cl;
-var verbose = false;
-var mapping = require('./config.js')(sri4node, verbose);
 var app = express();
+
+var verbose = false;
+var winston = require('winston');
+winston.level = verbose ? 'debug' : 'info';
+
+var mapping = require('./config.js')(sri4node, verbose, winston);
 
 var c9hostname = process.env.C9_HOSTNAME; // eslint-disable-line
 
+function info(x) {
+  'use strict';
+  winston.log('info', x);
+}
+
 if (c9hostname) {
-  cl('https://' + c9hostname);
+  info('https://' + c9hostname);
 }
 
 function allowCrossDomain(req, res, next) {
@@ -52,5 +58,5 @@ app.get('/', function (request, response) {
 
 app.listen(app.get('port'), function () {
   'use strict';
-  cl('Node app is running on port ' + app.get('port'));
+  info('Node app is running on port ' + app.get('port'));
 });

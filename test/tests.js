@@ -3,17 +3,27 @@
 var express = require('express');
 //var compress = require('compression');
 var pg = require('pg');
-
 var sri4node = require('sri4node');
-var common = require('./common.js');
-var cl = common.cl;
-
-var verbose = false;
 
 var app = express();
-var mapping = require('../js/config.js')(sri4node, verbose);
+
+var verbose = false;
+var winston = require('winston');
+winston.level = verbose ? 'debug' : 'info';
+
+var mapping = require('../js/config.js')(sri4node, verbose, winston);
 var port = 5000;
 var base = 'http://localhost:' + port;
+
+function info(x) {
+  'use strict';
+  winston.log('info', x);
+}
+
+function error(x) {
+  'use strict';
+  winston.log('error', x);
+}
 
 describe('Inner gerbil : ', function () {
   'use strict';
@@ -21,9 +31,14 @@ describe('Inner gerbil : ', function () {
     sri4node.configure(app, pg, mapping).then(function () {
       app.set('port', port);
       app.listen(port, function () {
-        cl('Node app is running at localhost:' + port);
+        info('Node app is running at localhost:' + port);
         done();
       });
+    }).catch(function (err) {
+      error('Unable to start server.');
+      error(err);
+      error(err.stack);
+      done();
     });
   });
 
@@ -32,11 +47,11 @@ describe('Inner gerbil : ', function () {
   require('./testTransactionLimits.js')(base, verbose);
   require('./testContactdetails.js')(base, verbose);
   require('./testParties.js')(base, verbose);
-  require('./testPartyAttachments.js')(base, verbose);
+  require('./testPartyAttachments.js')(base, winston);
   require('./testMessages.js')(base, verbose);
   require('./testPlugins.js')(base, verbose);
   require('./elas-import/testImport.js')(base, verbose);
 
-//  require('./testPartyAttachments.js')(base, verbose);
+//  require('./testPartyAttachments.js')(base, winston);
 //  require('./testIsolated.js')(base, verbose);
 });
