@@ -9,23 +9,7 @@ var useWinston = true;
 
 exports = module.exports = function (base, winston) {
   'use strict';
-/*
-  function warn(x) {
-    if (!useWinston) {
-      console.log(x); // eslint-disable-line
-    } else {
-      winston.log('warn', x);
-    }
-  }
 
-  function error(x) {
-    if (!useWinston) {
-      console.log(x); // eslint-disable-line
-    } else {
-      winston.log('error', x);
-    }
-  }
-*/
   function debug(x) {
     if (!useWinston) {
       console.log(x); // eslint-disable-line
@@ -60,6 +44,7 @@ exports = module.exports = function (base, winston) {
     return deferred.promise;
   }
 
+  // Only basic test case for attachments, assuming sri4node-attachments is covered.
   describe('/parties', function () {
     describe('PUT', function () {
       it('should allow adding of profile picture as attachment.', function () {
@@ -74,7 +59,7 @@ exports = module.exports = function (base, winston) {
         return doPut(base + '/parties/' + uuid, body, 'annadv', 'test').then(function (response) {
           assert.equal(response.statusCode, 201);
           debug('PUTting the profile image as attachment.');
-          var file = '/home/ubuntu/workspace/inner-gerbil/test/orange-boy-icon.png';
+          var file = 'test/orange-boy-icon.png';
           return doPutFile(base + '/parties/' + uuid + '/profile.png', file, 'annadv', 'test');
         }).then(function (response) {
           assert.equal(response.statusCode, 201);
@@ -92,6 +77,3 @@ exports = module.exports = function (base, winston) {
     });
   });
 };
-
-// TODO : Test replacing of profile image.
-// TODO : Test removing of profile image.
