@@ -2,7 +2,8 @@
 var path = require('path');
 var Q = require('q');
 var importer = require('../../elas-import/importer.js');
-var importUser = require('../../elas-import/importUsers.js');
+var importUsers = require('../../elas-import/importUsers.js');
+var importUser = importUsers.addUserToParty;
 var importMessage = require('../../elas-import/importMessages.js');
 var assert = require('assert');
 var common = require('../common.js');
@@ -22,7 +23,7 @@ exports = module.exports = function (base, logverbose) {
     }
   }
 
-  describe('Elas import testing', function () {
+  describe('Elas import', function () {
 
     describe('CSV Importer', function () {
       it('should call function for each entry in CSV file', function () {
@@ -40,7 +41,7 @@ exports = module.exports = function (base, logverbose) {
         });
       });
     });
-    describe('Import users', function () {
+    describe('Users', function () {
       var cleanUp = function (jsonArray) {
         var promises = [];
         jsonArray.forEach(function (user) {
@@ -77,7 +78,7 @@ exports = module.exports = function (base, logverbose) {
         });
       };
       before(function () {
-        logverbose = true;
+        //logverbose = true;
         // clean up parties and partyrelations from previous run
         return cleanUpParties()
           .then(cleanUpPartyRelations)
@@ -194,8 +195,27 @@ exports = module.exports = function (base, logverbose) {
           return validateParty(adminUser);
         });
       });
+      it('should create group if it does not exist', function () {
+        var regularUser = {
+          id: 1,
+          status: 1,
+          name: 'Jeff the tester',
+          fullname: '',
+          login: 'tester',
+          password: 'a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d' +
+            '364677d8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
+          accountrole: 'user',
+          letscode: 101,
+          minlimit: -400,
+          maxlimit: 400
+        };
+        logverbose = true;
+        return importUsers.addUserToGroup(regularUser, 'LM').then(function () {
+          return validateParty(regularUser);
+        });
+      });
     });
-    describe('Import messages', function () {
+    describe('Messages', function () {
       it('should load messages from CSV file', function () {
         //return messagesImporter(path.join(__dirname, PATH_TO_MSGS_FILE), common.hrefs.PARTY_LETSDENDERMONDE)
         return importer(path.join(__dirname, PATH_TO_MSGS_FILE), function (message) {
