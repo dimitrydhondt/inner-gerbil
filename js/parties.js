@@ -14,7 +14,7 @@ exports = module.exports = function (sri4node, extra, winston) {
     s3key: process.env.S3_KEY, // eslint-disable-line
     s3secret: process.env.S3_SECRET, // eslint-disable-line
     s3bucket: process.env.S3_BUCKET, // eslint-disable-line
-    folder: '/tmp/inner-gerbil'
+    folder: '/tmp'
   });
 
   function addLinks(database, elements) { /* eslint-disable-line */
