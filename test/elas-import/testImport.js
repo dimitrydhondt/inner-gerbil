@@ -4,8 +4,10 @@ var Q = require('q');
 var importer = require('../../elas-import/importer.js');
 var importUsers = require('../../elas-import/importUsers.js');
 var importUser = importUsers.addUserToParty;
+var checkPartyExists = importUsers.checkPartyExists;
 var importMessage = require('../../elas-import/importMessages.js');
-var assert = require('assert');
+//var assert = require('assert');
+var assert = require('chai').assert;
 var common = require('../common.js');
 var sriclient = require('sri4node-client');
 var doGet = sriclient.get;
@@ -22,6 +24,41 @@ exports = module.exports = function (base, logverbose) {
       console.log(x); // eslint-disable-line
     }
   }
+  var cleanUp = function (jsonArray) {
+    var promises = [];
+    jsonArray.forEach(function (user) {
+      debug('Start delete');
+      promises.push(doDelete(base + user.href, 'annadv', 'test').then(
+        function (deleteResponse) {
+          if (deleteResponse.statusCode === 200) {
+            debug('End delete');
+
+          } else {
+            debug('Delete failed (' + deleteResponse.statusCode + '): ' +
+              deleteResponse.statusMessage);
+            throw Error('Unable to delete ' + deleteResponse.req.path);
+          }
+
+        }));
+    });
+    return Q.all(promises).then(function () {
+      debug('All deletes completed');
+    });
+  };
+  var cleanUpParties = function () {
+    return doGet(base + '/parties?aliasIn=LM,LM-1,LM-2', 'annadv', 'test').then(function (response) {
+      var jsonArray = response.body.results;
+      debug('Parties to be removed: ' + jsonArray);
+      return cleanUp(jsonArray);
+    });
+  };
+  var cleanUpPartyRelations = function () {
+    return doGet(base + '/partyrelations?codeIn=100,101', 'annadv', 'test').then(function (response) {
+      var jsonArray = response.body.results;
+      debug('Partyrelations to be removed: ' + jsonArray);
+      return cleanUp(jsonArray);
+    });
+  };
 
   describe('Elas import', function () {
 
@@ -42,41 +79,6 @@ exports = module.exports = function (base, logverbose) {
       });
     });
     describe('Users', function () {
-      var cleanUp = function (jsonArray) {
-        var promises = [];
-        jsonArray.forEach(function (user) {
-          debug('Start delete');
-          promises.push(doDelete(base + user.href, 'annadv', 'test').then(
-            function (deleteResponse) {
-              if (deleteResponse.statusCode === 200) {
-                debug('End delete');
-
-              } else {
-                debug('Delete failed (' + deleteResponse.statusCode + '): ' +
-                  deleteResponse.statusMessage);
-                throw Error('Unable to delete ' + deleteResponse.req.path);
-              }
-
-            }));
-        });
-        return Q.all(promises).then(function () {
-          debug('All deletes completed');
-        });
-      };
-      var cleanUpParties = function () {
-        return doGet(base + '/parties?aliasIn=100,101', 'annadv', 'test').then(function (response) {
-          var jsonArray = response.body.results;
-          debug('Parties to be removed: ' + jsonArray);
-          return cleanUp(jsonArray);
-        });
-      };
-      var cleanUpPartyRelations = function () {
-        return doGet(base + '/partyrelations?codeIn=100,101', 'annadv', 'test').then(function (response) {
-          var jsonArray = response.body.results;
-          debug('Partyrelations to be removed: ' + jsonArray);
-          return cleanUp(jsonArray);
-        });
-      };
       before(function () {
         //logverbose = true;
         // clean up parties and partyrelations from previous run
@@ -87,14 +89,16 @@ exports = module.exports = function (base, logverbose) {
             debug(err);
           });
       });
-      var validatePartyRelation = function (party, user) {
+      var validatePartyRelation = function (party, user, toRef) {
         return doGet(base + '/partyrelations?code=' + user.letscode, 'annadv', 'test')
           .then(function (responsePartyRel) {
             var partyrelations = responsePartyRel.body;
             var partyRel = partyrelations.results[0].$$expanded;
             debug(partyRel);
             assert.equal(partyRel.from.href, party.$$meta.permalink);
-            assert.equal(partyRel.to.href, common.hrefs.PARTY_LETSDENDERMONDE);
+            if (typeof toRef !== 'undefined' && toRef) {
+              assert.equal(partyRel.to.href, toRef);
+            }
             if (user.accountrole === 'admin') {
               assert.equal(partyRel.type, 'administrator');
             } else {
@@ -104,28 +108,28 @@ exports = module.exports = function (base, logverbose) {
             assert.equal(partyRel.status, 'active');
           });
       };
-      var validateParty = function (user) {
-        return doGet(base + '/parties?alias=' + user.letscode, 'annadv', 'test').then(function (
+      var validateParty = function (user, groupAlias) {
+        return doGet(base + '/parties?alias=' + groupAlias + '-' + user.id, 'annadv', 'test').then(function (
           responseParty) {
           if (responseParty.statusCode !== 200) {
             debug('Error in get parties: ' + responseParty.statusCode);
           }
           var parties = responseParty.body;
           if (parties.$$meta.count === 0) {
-            debug('No parties with alias 100 found !!');
-            throw Error('No parties with alias 100 found');
+            debug('No parties with alias ' + user.letscode + ' found !!');
+            throw Error('No parties with alias ' + user.letscode + ' found');
           }
           debug('parties=' + JSON.stringify(parties));
           var party = parties.results[0].$$expanded;
           debug(party);
           assert.equal(party.type, 'person');
           assert.equal(party.name, user.name);
-          assert.equal(party.alias, user.letscode);
+          assert.equal(party.alias, 'LM-' + user.id);
           //assert.equal(party.dateofbirth, user.?);
           assert.equal(party.login, user.login);
           //assert.equal(party.password, user.password); //unable to test, password not included in get
           assert.equal(party.status, 'active');
-          return validatePartyRelation(party, user);
+          return party;
         });
       };
       it('should load users from CSV file', function () {
@@ -174,9 +178,12 @@ exports = module.exports = function (base, logverbose) {
           minlimit: -400,
           maxlimit: 400
         };
+        var groupAlias = 'LM';
 
-        return importUser(regularUser, common.hrefs.PARTY_LETSDENDERMONDE).then(function () {
-          return validateParty(regularUser);
+        return importUser(regularUser, common.hrefs.PARTY_LETSDENDERMONDE, groupAlias).then(function () {
+          return validateParty(regularUser, groupAlias);
+        }).then(function (party) {
+          return validatePartyRelation(party, regularUser, common.hrefs.PARTY_LETSDENDERMONDE);
         });
       });
       it('should import an admin user', function () {
@@ -191,8 +198,11 @@ exports = module.exports = function (base, logverbose) {
           accountrole: 'admin',
           letscode: 100
         };
-        return importUser(adminUser, common.hrefs.PARTY_LETSDENDERMONDE).then(function () {
-          return validateParty(adminUser);
+        var groupAlias = 'LM';
+        return importUser(adminUser, common.hrefs.PARTY_LETSDENDERMONDE, groupAlias).then(function () {
+          return validateParty(adminUser, groupAlias);
+        }).then(function (party) {
+          return validatePartyRelation(party, adminUser, common.hrefs.PARTY_LETSDENDERMONDE);
         });
       });
       it('should create group if it does not exist', function () {
@@ -209,9 +219,26 @@ exports = module.exports = function (base, logverbose) {
           minlimit: -400,
           maxlimit: 400
         };
+        var groupAlias = 'LM';
         logverbose = true;
-        return importUsers.addUserToGroup(regularUser, 'LM').then(function () {
-          return validateParty(regularUser);
+        return importUsers.addUserToGroup(regularUser, groupAlias).then(function () {
+          return validateParty(regularUser, groupAlias);
+        }).then(function (party) {
+          return validatePartyRelation(party, regularUser, null);
+        });
+      });
+      it('should check that LM party exists', function () {
+        logverbose = true;
+        var url = base + '/parties?alias=LM';
+        return checkPartyExists(url).then(function (partyUrl) {
+          debug('Party Url = ' + partyUrl);
+          assert.ok(partyUrl, 'party should be found');
+        });
+      });
+      it('should check that UNKNOWN party does not exists', function () {
+        var url = base + '/parties?alias=UNKNOWN';
+        return checkPartyExists(url).then(function (partyUrl) {
+          assert.isFalse(partyUrl, 'party should not be found');
         });
       });
     });

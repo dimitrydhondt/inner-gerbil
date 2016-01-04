@@ -14,18 +14,20 @@ var doPut = sriclient.put;
 exports = module.exports = function (msg, partyUrl) {
   'use strict';
   var uuid = common.generateUUID();
-  return doGet(base + '/parties?alias=' + msg.letscode, 'annadv', 'test').then(function (responseGet) {
+  var alias = 'LM' + '-' + msg.id_user;
+  return doGet(base + '/parties?alias=' + alias, 'annadv', 'test').then(function (responseGet) {
     var message;
     var user;
     if (responseGet.statusCode !== 200) {
       console.log('GET failed, response = ' + JSON.stringify(responseGet));
     } else {
-      console.log('GET successful for user with letscode ' + msg.letscode);
+      console.log('GET successful for user with alias ' + alias);
 
       if (responseGet.body.$$meta.count > 0) {
         user = responseGet.body.results[0].href;
       } else {
-        console.log('No user found with letscode ' + msg.letscode + ' -> skipping import of message ' + msg.content);
+        console.log('No user found with alias ' + alias + ' -> skipping import of message ' + msg.content);
+        return;
       }
       message = {
         author: {
