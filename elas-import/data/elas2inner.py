@@ -9,10 +9,10 @@ import re
 import datetime
 
 def createCSVs(infile, outpath):
-    SQLtable2CSV(infile, outpath, 'users', ["id","status","name","fullname","birthday","PictureFile","login","password","accountrole","letscode","minlimit","maxlimit"])
-    SQLtable2CSV(infile, outpath, 'messages', ["id","id_user","content","Description","amount","units","msg_type","id_category","cdate","mdate","validity"])
-    SQLtable2CSV(infile, outpath, 'transactions', ["id","id_from","id_to","amount","description"])
-    SQLtable2CSV(infile, outpath, 'contact', ["id","id_type_contact","value","flag_public","id_user"])
+    SQLtable2CSV(infile, outpath, 'users', ["id","status","name","fullname","birthday","PictureFile","login","password","accountrole","letscode","minlimit","maxlimit"], "\t")
+    SQLtable2CSV(infile, outpath, 'messages', ["id","id_user","content","Description","amount","units","msg_type","id_category","cdate","mdate","validity"], "\t")
+    SQLtable2CSV(infile, outpath, 'transactions', ["id","id_from","id_to","amount","description"], "\t")
+    SQLtable2CSV(infile, outpath, 'contact', ["id","id_type_contact","value","flag_public","id_user"], "\t")
     
     print('Hope this works too.')
     
