@@ -15,23 +15,23 @@ INSERT INTO "parties" VALUES ('4a3cabca-ecde-4fc3-830f-050891affbce','connector'
 
 -- People
 -- Anna De Vlaming is member of LETS Lebbeke
-INSERT INTO "parties" VALUES ('5df52f9f-e51f-4942-a810-1496c51e64db','person','Anna De Vlaming',null,'1980-10-11 00:00:00',null,'annadv','test',null,null,'active');
+INSERT INTO "parties" VALUES ('5df52f9f-e51f-4942-a810-1496c51e64db','person','Anna De Vlaming',null,'1980-10-11 00:00:00',null,'annadv','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Steven Butink is member of LETS Lebbeke
-INSERT INTO "parties" VALUES ('fa17e7f5-ade9-49d4-abf3-dc3722711504','person','Steven Buytink',null,'1979-04-01 00:00:00',null,'stevenb','test',null,null,'active');
+INSERT INTO "parties" VALUES ('fa17e7f5-ade9-49d4-abf3-dc3722711504','person','Steven Buytink',null,'1979-04-01 00:00:00',null,'stevenb','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Geert Gijsbrecht is member of LETS Appels
-INSERT INTO "parties" VALUES ('c0755044-b0a5-4d36-8396-7bede4f63468','person','Geert Gijsbrecht',null,'1972-09-22 00:00:00',null,'geertg','test',null,null,'active');
+INSERT INTO "parties" VALUES ('c0755044-b0a5-4d36-8396-7bede4f63468','person','Geert Gijsbrecht',null,'1972-09-22 00:00:00',null,'geertg','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Rudi Rudolf is member of LETS Dendermonde
-INSERT INTO "parties" VALUES ('eb6e3ad7-066f-4357-a582-dfb31e173606','person','Rudi Rudolf',null,'1968-10-23 00:00:00',null,'rudir','test',null,null,'active');
+INSERT INTO "parties" VALUES ('eb6e3ad7-066f-4357-a582-dfb31e173606','person','Rudi Rudolf',null,'1968-10-23 00:00:00',null,'rudir','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Eddy is not a member of any group/subgroup/...
-INSERT INTO "parties" VALUES ('437d9b64-a3b4-467c-9abe-e9410332c1e5','person','Eddy Merckx',null,'1963-01-03',null,'eddym','test',null,null,'active');
+INSERT INTO "parties" VALUES ('437d9b64-a3b4-467c-9abe-e9410332c1e5','person','Eddy Merckx',null,'1963-01-03',null,'eddym','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Leen De Baere of LETS Hamme
-INSERT INTO "parties" VALUES ('abcb3c6e-721e-4f7c-ae4a-935e1980f15e','person','Leen De Baere',null,'1980-04-01',null,'leendb','test',null,null,'active');
+INSERT INTO "parties" VALUES ('abcb3c6e-721e-4f7c-ae4a-935e1980f15e','person','Leen De Baere',null,'1980-04-01',null,'leendb','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Emmanuella of LETS Hamme
-INSERT INTO "parties" VALUES ('508f9ec9-df73-4a55-ad42-32839abd1760','person','Emmanuella',null,'1982-05-01',null,'emmanuella','test',null,null,'active');
+INSERT INTO "parties" VALUES ('508f9ec9-df73-4a55-ad42-32839abd1760','person','Emmanuella',null,'1982-05-01',null,'emmanuella','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Jommeke is part of LETS Zonnedorp
-INSERT INTO "parties" VALUES ('7495029b-1dc5-4eaa-baa6-8f2af029b2b6','person','Jommeke',null,'1955-10-30',null,'jommeke','test',null,null,'active');
+INSERT INTO "parties" VALUES ('7495029b-1dc5-4eaa-baa6-8f2af029b2b6','person','Jommeke',null,'1955-10-30',null,'jommeke','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Filiberke is part of LETS Maandorp
-INSERT INTO "parties" VALUES ('c512a350-0d55-4ddb-ab49-5e0c6645a0a6','person','Filiberke',null,'1955-10-30',null,'filiberke','test',null,null,'active');
+INSERT INTO "parties" VALUES ('c512a350-0d55-4ddb-ab49-5e0c6645a0a6','person','Filiberke',null,'1955-10-30',null,'filiberke','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 
 -- partyrelations -- key, from, to, type, balance, status
 -- LETS Lebbeke is a member of LETS Dendermonde
