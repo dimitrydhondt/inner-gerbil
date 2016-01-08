@@ -11,46 +11,46 @@ exports = module.exports = function (sri4node, verbose, winston) {
   'use strict';
   var $u = sri4node.utils;
 
- var saltedPasswordAuthenticator = function (db, username, password) {
-      var deferred = Q.defer();
-        var q;
-        if (hashCache[username]) {
-            if (bcrypt.compareSync(password, hashCache[username])) {
-              cl('login succeed');
-                deferred.resolve(true);
-            } else {
-              cl('login fail');
-                deferred.resolve(false);
-            }
+  var saltedPasswordAuthenticator = function (db, username, password) {
+    var deferred = Q.defer();
+    var q;
+    if (hashCache[username]) {
+      if (bcrypt.compareSync(password, hashCache[username])) {
+        cl('login succeed');
+        deferred.resolve(true);
+      } else {
+        cl('login fail');
+        deferred.resolve(false);
+      }
+    } else {
+      q = $u.prepareSQL('select-count-from-persons-where-email-and-password');
+      q.sql('select password from parties where login = ')
+        .param(username)
+        .sql(' and status = ')
+        .param('active')
+        .sql(' and "$$meta.deleted" <> true');
+      $u.executeSQL(db, q).then(function (result) {
+        var count = parseInt(result.rows.length, 10);
+        if (count === 1) {
+          // Found matching record, add to cache for subsequent requests.
+          hashCache[username] = result.rows[0].password;
+          if (bcrypt.compareSync(password, hashCache[username])) {
+            cl('login succeed');
+            deferred.resolve(true);
+          } else {
+            cl('login fail');
+            deferred.resolve(false);
+          }
         } else {
-            q = $u.prepareSQL('select-count-from-persons-where-email-and-password');
-            q.sql('select password from parties where login = ')
-             .param(username)
-             .sql(' and status = ')
-             .param('active')
-             .sql(' and "$$meta.deleted" <> true');
-            $u.executeSQL(db, q).then(function (result) {
-                var count = parseInt(result.rows.length, 10);
-                if (count === 1) {
-                    // Found matching record, add to cache for subsequent requests.
-                    hashCache[username] = result.rows[0].password;
-                    if (bcrypt.compareSync(password, hashCache[username])) {
-                      cl('login succeed');
-                        deferred.resolve(true);
-                    } else {
-                       cl('login fail');
-                        deferred.resolve(false);
-                    }
-                }else {
-                    deferred.resolve(false);
-                }
-            }).fail(function (err) {
-                cl('Error checking user on database : ');
-                cl(err);
-                deferred.reject(err);
-            });
+          deferred.resolve(false);
         }
-        return deferred.promise;
+      }).fail(function (err) {
+        cl('Error checking user on database : ');
+        cl(err);
+        deferred.reject(err);
+      });
+    }
+    return deferred.promise;
   };
 
   var identity = function (username, database) {
@@ -70,11 +70,21 @@ exports = module.exports = function (sri4node, verbose, winston) {
         alias: row.alias,
         dateofbirth: row.dateofbirth,
         imageurl: row.imageurl,
-        messages: {href: '/messages?postedByParties=/parties/' + row.key},
-        transactions: {href: '/transactions?involvingParties=/parties/' + row.key},
-        contactdetails: {href: '/contactdetails?forParties=/parties/' + row.key},
-        parents: {href: '/parties?ancestorsOfParties=/parties/' + row.key},
-        partyrelations: {href: '/partyrelations?from=/parties/' + row.key}
+        messages: {
+          href: '/messages?postedByParties=/parties/' + row.key
+        },
+        transactions: {
+          href: '/transactions?involvingParties=/parties/' + row.key
+        },
+        contactdetails: {
+          href: '/contactdetails?forParties=/parties/' + row.key
+        },
+        parents: {
+          href: '/parties?ancestorsOfParties=/parties/' + row.key
+        },
+        partyrelations: {
+          href: '/partyrelations?from=/parties/' + row.key
+        }
       };
       if (ret.imageurl === null) {
         delete ret.imageurl;
@@ -123,7 +133,7 @@ exports = module.exports = function (sri4node, verbose, winston) {
 
 
   var extraResourceConfig = {
-    cacheconfig: {  
+    cacheconfig: {
       ttl: 60,
       type: 'local'
     }

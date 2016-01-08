@@ -21,13 +21,21 @@ exports = module.exports = function (sri4node, extra, winston) {
   function addLinks(database, elements) { /* eslint-disable-line */
     elements.forEach(function (element) {
       if (element.type && element.type !== 'person') {
-        element.$$messagesPostedHere = {href: '/messages?postedInParties=' + element.$$meta.permalink};
+        element.$$messagesPostedHere = {
+          href: '/messages?postedInParties=' + element.$$meta.permalink
+        };
       }
       if (element.type && element.type === 'person') {
-        element.$$messagesPostedBy = {href: '/messages?postedByParties=' + element.$$meta.permalink};
-        element.$$transactions = {href: '/transactions?involvingParties=' + element.$$meta.permalink};
+        element.$$messagesPostedBy = {
+          href: '/messages?postedByParties=' + element.$$meta.permalink
+        };
+        element.$$transactions = {
+          href: '/transactions?involvingParties=' + element.$$meta.permalink
+        };
       }
-      element.$$allParents = {href: '/parties?ancestorsOfParties=' + element.$$meta.permalink};
+      element.$$allParents = {
+        href: '/parties?ancestorsOfParties=' + element.$$meta.permalink
+      };
     });
   }
 
@@ -53,7 +61,9 @@ exports = module.exports = function (sri4node, extra, winston) {
         if (!element.$$directParents) {
           element.$$directParents = [];
         }
-        element.$$directParents.push({href: '/parties/' + to});
+        element.$$directParents.push({
+          href: '/parties/' + to
+        });
       });
       deferred.resolve();
     });
@@ -80,8 +90,8 @@ exports = module.exports = function (sri4node, extra, winston) {
     common.filterLatLong($u, value, select, 'parties', 'latlongcontactdetails');
     select.sql(' and key in (select key from latlongcontactdetails) ');
   }
-  
-  function conditionLogin(key,e){
+
+  function conditionLogin(key, e) {
     if (!e[key] || e.type !== 'person') {
       $m.remove(key, e);
     }
