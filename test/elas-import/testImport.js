@@ -1,11 +1,13 @@
 /*eslint-env node, mocha */
 var path = require('path');
 var Q = require('q');
+var deferred = Q.defer();
 var importer = require('../../elas-import/importer.js');
 var importUsers = require('../../elas-import/importUsers.js');
 var importUser = importUsers.addUserToParty;
 var checkPartyExists = importUsers.checkPartyExists;
 var importMessage = require('../../elas-import/importMessages.js');
+var importTransactions = require('../../elas-import/importTransactions.js');
 //var assert = require('assert');
 var assert = require('chai').assert;
 var common = require('../common.js');
@@ -259,6 +261,71 @@ exports = module.exports = function (base, logverbose) {
             //assert.equal(message.title, '100');
             //assert.equal(message.description, 'test message');
           });
+        });
+      });
+      it('should not fail with TypeError', function () {
+        // Increase loop to 100 to reproduce the error
+        logverbose = true;
+        var jsonObj = {
+          id: 28,
+          id_user: 1, // eslint-disable-line
+          content: 'Te leen: Franstalige strips voor volwassenen',
+          Description: 'Heb strips liggen van Garulfo, Largo Winch, Lanfeust de Troy in de franstalige versie.',
+          amount: 5,
+          units: 'week',
+          msg_type: 1, // eslint-disable-line
+          id_category: 37, // eslint-disable-line
+          cdate: '2011-04-03 22:51:29',
+          mdate: '2014-02-15 19:42:55',
+          validity: '2015-02-10 19:42:55'
+        };
+        var hrefs = {
+          PARTY_LETSDENDERMONDE: '/parties/8bf649b4-c50a-4ee9-9b02-877aa0a71849'
+        };
+        var importMethod = function (message) {
+          return importMessage(message, hrefs.PARTY_LETSDENDERMONDE);
+        };
+
+        var logEndImport = function () {
+          debug('End import');
+        };
+        var logImportError = function (error) {
+          debug('Import failed with error: ' + error + ' (jsonObj=' + JSON.stringify(
+              jsonObj) +
+            ')');
+          throw error;
+        };
+        var promises = [];
+        var i = 0;
+        for (i = 0; i < 10; i++) {
+          debug('Start import');
+          promises.push(importMethod(jsonObj).then(logEndImport).catch(logImportError));
+        }
+        return Q.all(promises).then(function () {
+          deferred.resolve();
+        }).catch(function (e) {
+          debug('Q.all failed !');
+          debug(e);
+          throw e;
+        });
+      });
+    });
+    describe.skip('Transactions', function () {
+      it('should import a transaction', function () {
+        var transaction = {
+          id: 687,
+          id_from: 1, // eslint-disable-line
+          id_to: 2, // eslint-disable-line
+          amount: 20,
+          description: 'Ikea rekje'
+        };
+        var groupAlias = 'LM';
+        logverbose = true;
+        return importTransactions(transaction, groupAlias).then(function () {
+          // FIXME: add assertions to validate successful import of transaction
+          //          return validateTransaction(transaction, groupAlias);
+          //        }).then(function (party) {
+          //          return validateTransactionRelation(party, regularUser, null);
         });
       });
     });
