@@ -6,15 +6,11 @@ var moment = require('moment');
 var common = require('./common.js');
 var createHrefArray = common.createHrefArray;
 var expect = require('chai').expect;
+var c2 = require('../js/common.js');
+var debug = c2.debug;
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base) {
   'use strict';
-
-  function debug(x) {
-    if (logverbose) {
-      console.log(x); // eslint-disable-line
-    }
-  }
 
   describe('/messages', function () {
     describe('GET', function () {
@@ -40,139 +36,139 @@ exports = module.exports = function (base, logverbose) {
       it('should support ?postedInDescendantsOfParties=LEBBEKE', function () {
         return doGet(base + '/messages?postedInDescendantsOfParties=' +
           common.hrefs.PARTY_LETSLEBBEKE, 'annadv', 'test').then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          // All messages were posted to LETS Lebbeke, or LETS Dendermonde (Rudi's messages)
-          // So don't expect anything to return...
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            // All messages were posted to LETS Lebbeke, or LETS Dendermonde (Rudi's messages)
+            // So don't expect anything to return...
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
+          });
       });
 
       it('should support ?postedInDescendantsOfParties=DENDERMONDE', function () {
         return doGet(base + '/messages?postedInDescendantsOfParties=' +
           common.hrefs.PARTY_LETSDENDERMONDE, 'annadv', 'test').then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          // All messages were posted in LETS Lebbeke, so do expect those to be returned
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
-          // Rudi's message was posted in LETS Dendermonde, so do not expect this to be returned
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
-          // Messages from a different, isolated group, should not return, obviously.
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            // All messages were posted in LETS Lebbeke, so do expect those to be returned
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
+            // Rudi's message was posted in LETS Dendermonde, so do not expect this to be returned
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
+            // Messages from a different, isolated group, should not return, obviously.
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
+          });
       });
 
       it('should support ?postedInDescendantsOfParties=HAMME', function () {
         return doGet(base + '/messages?postedInDescendantsOfParties=' +
           common.hrefs.PARTY_LETSHAMME, 'annadv', 'test').then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
-          // Leen posted here message in LETS Hamme,
-          // and we are asking messages posted to descendants of LETS Hamme... So not expected..
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
+            // Leen posted here message in LETS Hamme,
+            // and we are asking messages posted to descendants of LETS Hamme... So not expected..
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
+          });
       });
 
       it('should support ?postedByDescendantsOfParties=LEBBEKE', function () {
         return doGet(base + '/messages?postedByDescendantsOfParties=' +
           common.hrefs.PARTY_LETSLEBBEKE, 'annadv', 'test').then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
+          });
       });
 
       it('should support ?postedByDescendantsOfParties=DENDERMONDE', function () {
         return doGet(base + '/messages?postedByDescendantsOfParties=' +
           common.hrefs.PARTY_LETSDENDERMONDE, 'annadv', 'test').then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
+          });
       });
 
       it('should support ?descendantsOfMessages=x', function () {
         return doGet(base + '/messages?descendantsOfMessages=' +
           common.hrefs.MESSAGE_ANNA_ASPERGES, 'annadv', 'test').then(function (response) {
-          debug(response.statusCode);
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_REPLY_TO_ASPERGES);
-        });
+            debug(response.statusCode);
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_REPLY_TO_ASPERGES);
+          });
       });
 
       it('should support ?postedInPartiesReachableFromParties=ANNA', function () {
         return doGet(base + '/messages?postedInPartiesReachableFromParties=' +
           common.hrefs.PARTY_ANNA, 'annadv', 'test').then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
+          });
       });
 
 
       it('should support ?postedInAncestorsOfParties=ANNA', function () {
         return doGet(base + '/messages?postedInAncestorsOfParties=' +
           common.hrefs.PARTY_ANNA, 'annadv', 'test').then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          var hrefs = createHrefArray(response);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
-          expect(hrefs).to.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
-          expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            var hrefs = createHrefArray(response);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_ASPERGES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_CHUTNEY);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_VEGGIE_KOOKLES);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_ANNA_WINDOWS);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_INDISCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_STEVEN_SWITCH);
+            expect(hrefs).to.contain(common.hrefs.MESSAGE_RUDI_WEBSITE);
+            expect(hrefs).to.not.contain(common.hrefs.MESSAGE_LEEN_PLANTS);
+          });
       });
 
       it('should support ?postedByPartiesInLatLong=...', function () {

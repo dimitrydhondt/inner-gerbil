@@ -1,4 +1,8 @@
 var uuid = require('uuid');
+/*
+var common = require('../js/common.js');
+var cl = common.info;
+*/
 
 exports = module.exports = {
   createHrefArray: function (response) {
@@ -13,16 +17,12 @@ exports = module.exports = {
   getResultForHref: function (response, href) {
     'use strict';
     var index;
+
     for (index = 0; index < response.body.results.length; ++index) {
       if (response.body.results[index].href.valueOf() === href) {
         return response.body.results[index];
       }
     }
-  },
-
-  cl: function (x) {
-    'use strict';
-    console.log(x); // eslint-disable-line
   },
 
   generateUUID: function () {

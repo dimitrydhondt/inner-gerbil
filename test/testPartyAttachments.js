@@ -5,15 +5,11 @@ var doPut = sriclient.put;
 var common = require('./common.js');
 var needle = require('needle');
 var Q = require('q');
+var c2 = require('../js/common.js');
+var debug = c2.debug;
 
-exports = module.exports = function (base, verbose) {
+exports = module.exports = function (base) {
   'use strict';
-
-  function debug(x) {
-    if (verbose) {
-      console.log(x); // eslint-disable-line
-    }
-  }
 
   function doPutFile(url, filename, user, pwd) {
     var deferred = Q.defer();

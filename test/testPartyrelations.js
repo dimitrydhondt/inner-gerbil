@@ -2,20 +2,14 @@ var assert = require('assert');
 var sriclient = require('sri4node-client');
 var doGet = sriclient.get;
 var common = require('./common.js');
-var cl = common.cl;
-
 var createHrefArray = common.createHrefArray;
 var getResultForHref = common.getResultForHref;
 var expect = require('chai').expect;
+var c2 = require('../js/common.js');
+var debug = c2.debug;
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base) {
   'use strict';
-
-  function debug(x) {
-    if (logverbose) {
-      cl(x); // eslint-disable-line
-    }
-  }
 
   describe('/partyrelations', function () {
     describe('GET', function () {

@@ -1,21 +1,16 @@
 var common = require('./common.js');
-var cl = common.cl;
+var cl = common.info;
+var debug = common.debug;
 var rejectOperation = common.rejectOperation;
 var Q = require('q');
 var uuid = require('uuid');
 
-exports = module.exports = function (sri4node, extra, logverbose) {
+exports = module.exports = function (sri4node, extra) {
   'use strict';
   var $m = sri4node.mapUtils,
     $s = sri4node.schemaUtils,
     $q = sri4node.queryUtils,
     $u = sri4node.utils;
-
-  function debug(x) {
-    if (logverbose) {
-      console.log(x); // eslint-disable-line
-    }
-  }
 
   function addLinks(database, elements) { /* eslint-disable-line */
     elements.forEach(function (element) {

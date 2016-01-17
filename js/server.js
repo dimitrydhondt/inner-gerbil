@@ -3,19 +3,11 @@ var express = require('express');
 var pg = require('pg');
 var sri4node = require('sri4node');
 var app = express();
-
-var verbose = false;
-var winston = require('winston');
-winston.level = verbose ? 'debug' : 'info';
-
-var mapping = require('./config.js')(sri4node, verbose, winston);
+var common = require('./common.js');
+var info = common.info;
+var mapping = require('./config.js')(sri4node);
 
 var c9hostname = process.env.C9_HOSTNAME; // eslint-disable-line
-
-function info(x) {
-  'use strict';
-  winston.log('info', x);
-}
 
 if (c9hostname) {
   info('https://' + c9hostname);

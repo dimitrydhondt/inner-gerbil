@@ -4,19 +4,14 @@ var doGet = sriclient.get;
 var doPut = sriclient.put;
 //var doDelete = sriclient.delete;
 var common = require('./common.js');
-var common2 = require('../js/common.js');
-var cl = common2.cl;
+var c2 = require('../js/common.js');
+var cl = c2.info;
+var debug = c2.debug;
 //var createHrefArray = common.createHrefArray;
 //var expect = require('chai').expect;
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base) {
   'use strict';
-
-  function debug(x) {
-    if (logverbose) {
-      cl(x);
-    }
-  }
 
   describe('/transactions', function () {
     describe('PUT', function () {

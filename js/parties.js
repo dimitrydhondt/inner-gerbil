@@ -1,17 +1,17 @@
 var Q = require('q');
 var common = require('./common.js');
 var bcrypt = require('bcrypt');
-var cl = common.cl;
+var cl = common.info;
 var sri4nodeAttachments = require('sri4node-attachments');
 
-exports = module.exports = function (sri4node, extra, winston) {
+exports = module.exports = function (sri4node, extra) {
   'use strict';
   var $u = sri4node.utils,
     $m = sri4node.mapUtils,
     $s = sri4node.schemaUtils,
     $q = sri4node.queryUtils;
 
-  var attachments = sri4nodeAttachments.configure(winston, {
+  var attachments = sri4nodeAttachments.configure({
     s3key: process.env.S3_KEY, // eslint-disable-line
     s3secret: process.env.S3_SECRET, // eslint-disable-line
     s3bucket: process.env.S3_BUCKET, // eslint-disable-line

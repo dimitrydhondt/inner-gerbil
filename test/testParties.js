@@ -5,15 +5,11 @@ var doPut = sriclient.put;
 var common = require('./common.js');
 var createHrefArray = common.createHrefArray;
 var expect = require('chai').expect;
+var c2 = require('../js/common.js');
+var debug = c2.debug;
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base) {
   'use strict';
-
-  function debug(x) {
-    if (logverbose) {
-      console.log(x); // eslint-disable-line
-    }
-  }
 
   describe('/parties', function () {
     describe('GET', function () {

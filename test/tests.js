@@ -1,32 +1,16 @@
 /*eslint-env node, mocha */
-
 var express = require('express');
-//var compress = require('compression');
 var pg = require('pg');
 var sri4node = require('sri4node');
-
+var verbose = process.env.LOG_VERBOSE ? true : false; // eslint-disable-line
 var app = express();
-
-var verbose = false;
-var winston = require('winston');
-winston.level = verbose ? 'debug' : 'info';
-
-var mapping = require('../js/config.js')(sri4node, verbose, winston);
+var mapping = require('../js/config.js')(sri4node, verbose);
 var port = 5000;
 var base = 'http://localhost:' + port;
 //var base = 'https://inner-gerbil-test.herokuapp.com';
-
-function info(x) {
-  'use strict';
-  console.log(x); // eslint-disable-line
-}
-
-function error(x) {
-  'use strict';
-  if (verbose) {
-    console.log(x); // eslint-disable-line
-  }
-}
+var c2 = require('../js/common.js');
+var info = c2.info;
+var error = c2.error;
 
 describe('Inner gerbil : ', function () {
   'use strict';
@@ -45,16 +29,16 @@ describe('Inner gerbil : ', function () {
     });
   });
 
-  require('./testTransactions.js')(base, verbose);
-  require('./testTransactionCreate.js')(base, verbose);
-  require('./testTransactionLimits.js')(base, verbose);
-  require('./testContactdetails.js')(base, verbose);
-  require('./testParties.js')(base, verbose);
-  require('./testPartyAttachments.js')(base, verbose);
-  require('./testMessages.js')(base, verbose);
-  require('./testPlugins.js')(base, verbose);
-  require('./elas-import/testImport.js')(base, verbose);
+  require('./testTransactions.js')(base);
+  require('./testTransactionCreate.js')(base);
+  require('./testTransactionLimits.js')(base);
+  require('./testContactdetails.js')(base);
+  require('./testParties.js')(base);
+  require('./testPartyAttachments.js')(base);
+  require('./testMessages.js')(base);
+  require('./testPlugins.js')(base);
+  require('./elas-import/testImport.js')(base);
 
-//  require('./testPartyAttachments.js')(base, winston);
-//  require('./testIsolated.js')(base, verbose);
+//  require('./testPartyAttachments.js')(base);
+//  require('./testIsolated.js')(base);
 });

@@ -4,15 +4,11 @@ var doGet = sriclient.get;
 var common = require('./common.js');
 var createHrefArray = common.createHrefArray;
 var expect = require('chai').expect;
+var c2 = require('../js/common.js');
+var debug = c2.debug;
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base) {
   'use strict';
-
-  function debug(x) {
-    if (logverbose) {
-      console.log(x); // eslint-disable-line
-    }
-  }
 
   describe('/contactdetails', function () {
     describe('GET', function () {
@@ -33,10 +29,10 @@ exports = module.exports = function (base, logverbose) {
         return doGet(base + '/contactdetails?forMessages=' +
                      '/messages/d1c23a0c-4420-4bd3-9fa0-d542b0155a15', 'annadv', 'test')
           .then(function (response) {
-          debug(response.body);
-          assert.equal(response.statusCode, 200);
-          assert.equal(response.body.results[0].href, '/contactdetails/3362d325-cf19-4730-8490-583da50e114e');
-        });
+            debug(response.body);
+            assert.equal(response.statusCode, 200);
+            assert.equal(response.body.results[0].href, '/contactdetails/3362d325-cf19-4730-8490-583da50e114e');
+          });
       });
 
       it('should support ?forDescendantsOfParties=', function () {
