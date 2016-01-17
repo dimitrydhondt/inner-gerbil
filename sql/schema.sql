@@ -5,22 +5,22 @@ SET search_path TO innergerbil;
 -- Contactdetails
 CREATE TABLE "contactdetails" (
     "key" uuid unique not null,
-    
-    "type" text not null,   
+
+    "type" text not null,
     "label" text,
 
     "street" text,
     "streetnumber" text,
     "streetbus" text,
-    "zipcode" text,
+    "postalcode" text,
     "city" text,
     "latitude" double precision,
     "longitude" double precision,
 
     "value" text,
-    
+
     "public" boolean not null,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
     "$$meta.created" timestamp with time zone not null default current_timestamp
@@ -39,7 +39,7 @@ CREATE TABLE "parties" (
     "secondsperunit" integer,
     "currencyname" text,
     "status" text not null, /* active, inactive, ... */
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
     "$$meta.created" timestamp with time zone not null default current_timestamp
@@ -90,10 +90,10 @@ CREATE TABLE "transactions" (
     "to" uuid references "parties"(key) not null,
     "amount" integer not null,
     "description" text,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
-    "$$meta.created" timestamp with time zone not null default current_timestamp  
+    "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 CREATE INDEX "transactions-from" ON "transactions"("from");
 CREATE INDEX "transactions-to" ON "transactions"("to");
@@ -103,7 +103,7 @@ CREATE TABLE "transactionrelations" (
     "transaction" uuid references "transactions"(key) not null,
     "partyrelation" uuid references "partyrelations"(key) not null,
     "amount" integer not null,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
     "$$meta.created" timestamp with time zone not null default current_timestamp
@@ -125,10 +125,10 @@ CREATE TABLE "messages" (
     "created" timestamp with time zone not null default (now() at time zone 'utc'),
     "modified" timestamp with time zone not null default (now() at time zone 'utc'),
     "expires" timestamp with time zone, -- not required for responses.
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
-    "$$meta.created" timestamp with time zone not null default current_timestamp  
+    "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 CREATE INDEX "messages-author" ON "messages"("author");
 
@@ -142,10 +142,10 @@ CREATE TABLE "messagecontactdetails" (
     "key" uuid unique not null,
     "message" uuid references "messages"(key) not null,
     "contactdetail" uuid references "contactdetails"(key) not null,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
-    "$$meta.created" timestamp with time zone not null default current_timestamp  
+    "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 CREATE INDEX "messagecontactdetails-message" ON "messagecontactdetails"("message");
 CREATE INDEX "messagecontactdetails-contactdetail" ON "messagecontactdetails"("contactdetail");
@@ -154,10 +154,10 @@ CREATE TABLE "messageparties" (
     "key" uuid unique not null,
     "message" uuid references "messages"(key) not null,
     "party" uuid references "parties"(key) not null,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
-    "$$meta.created" timestamp with time zone not null default current_timestamp  
+    "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 CREATE INDEX "messageparties-message" ON "messageparties"("message");
 CREATE INDEX "messageparties-party" ON "messageparties"("party");
@@ -166,10 +166,10 @@ CREATE TABLE "messagetransactions" (
     "key" uuid unique not null,
     "message" uuid references "messages"(key),
     "transaction" uuid references "transactions"(key) not null,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
-    "$$meta.created" timestamp with time zone not null default current_timestamp  
+    "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 CREATE INDEX "messagetransactions-party" ON "messagetransactions"("message");
 CREATE INDEX "messagetransactions-transaction" ON "messagetransactions"("transaction");
@@ -179,7 +179,7 @@ CREATE TABLE "messagerelations" (
     "from" uuid references "messages"(key) not null,
     "to" uuid references "messages"(key) not null,
     "type" text not null,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
     "$$meta.created" timestamp with time zone not null default current_timestamp
@@ -195,10 +195,10 @@ CREATE TABLE "plugins" (
     "apikey" uuid unique not null,
     "permissions" text[] not null,
     "configurationschema" text,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
-    "$$meta.created" timestamp with time zone not null default current_timestamp  
+    "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 
 CREATE TABLE "pluginauthorisations" (
@@ -218,10 +218,10 @@ CREATE TABLE "plugindata" (
     "plugin" uuid references "plugins"(key) not null,
     "resource" text not null,
     "data" jsonb not null,
-  
+
     "$$meta.deleted" boolean not null default false,
     "$$meta.modified" timestamp with time zone not null default current_timestamp,
-    "$$meta.created" timestamp with time zone not null default current_timestamp  
+    "$$meta.created" timestamp with time zone not null default current_timestamp
 );
 CREATE INDEX "plugindata-plugin" ON "plugindata"("plugin");
 CREATE INDEX "plugindata-resource" ON "plugindata"("resource");

@@ -14,15 +14,18 @@ winston.level = verbose ? 'debug' : 'info';
 var mapping = require('../js/config.js')(sri4node, verbose, winston);
 var port = 5000;
 var base = 'http://localhost:' + port;
+//var base = 'https://inner-gerbil-test.herokuapp.com';
 
 function info(x) {
   'use strict';
-  winston.log('info', x);
+  console.log(x); // eslint-disable-line
 }
 
 function error(x) {
   'use strict';
-  winston.log('error', x);
+  if (verbose) {
+    console.log(x); // eslint-disable-line
+  }
 }
 
 describe('Inner gerbil : ', function () {
@@ -47,7 +50,7 @@ describe('Inner gerbil : ', function () {
   require('./testTransactionLimits.js')(base, verbose);
   require('./testContactdetails.js')(base, verbose);
   require('./testParties.js')(base, verbose);
-  require('./testPartyAttachments.js')(base, winston);
+  require('./testPartyAttachments.js')(base, verbose);
   require('./testMessages.js')(base, verbose);
   require('./testPlugins.js')(base, verbose);
   require('./elas-import/testImport.js')(base, verbose);

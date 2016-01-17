@@ -80,8 +80,8 @@ exports = module.exports = function (sri4node, extra, winston) {
     common.filterLatLong($u, value, select, 'parties', 'latlongcontactdetails');
     select.sql(' and key in (select key from latlongcontactdetails) ');
   }
-  
-  function conditionLogin(key,e){
+
+  function conditionLogin(key, e) {
     if (!e[key] || e.type !== 'person') {
       $m.remove(key, e);
     }
@@ -96,7 +96,6 @@ exports = module.exports = function (sri4node, extra, winston) {
       $m.remove(key, e);
     }
   }
-
 
   var ret = {
     // Base url, maps 1:1 with a table in postgres

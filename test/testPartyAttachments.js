@@ -5,16 +5,13 @@ var doPut = sriclient.put;
 var common = require('./common.js');
 var needle = require('needle');
 var Q = require('q');
-var useWinston = true;
 
-exports = module.exports = function (base, winston) {
+exports = module.exports = function (base, verbose) {
   'use strict';
 
   function debug(x) {
-    if (!useWinston) {
+    if (verbose) {
       console.log(x); // eslint-disable-line
-    } else {
-      winston.log('debug', x);
     }
   }
 

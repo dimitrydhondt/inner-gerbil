@@ -77,7 +77,7 @@ exports = module.exports = function (sri4node, extra) {
         street: $s.string('Streetname of an address.'),
         streetnumber: $s.string('Street number of an address.'),
         streetbus: $s.string('Postal box of an address.'),
-        zipcode: $s.belgianzipcode('4 digit postal code of the city for an address.'),
+        postalcode: $s.belgianzipcode('4 digit postal code of the city for an address.'),
         city: $s.string('City for an address.'),
         latitude: $s.numeric('Latitude of an address.'),
         longitude: $s.numeric('Longitude of an address.'),
@@ -106,7 +106,7 @@ exports = module.exports = function (sri4node, extra) {
       streetbus: {
         onread: $m.removeifnull
       },
-      zipcode: {
+      postalcode: {
         onread: $m.removeifnull
       },
       city: {
