@@ -33,7 +33,10 @@ exports = module.exports = function (msg, partyUrl) {
         author: {
           href: user
         },
-        description: msg.content,
+        title: msg.content,
+        description: msg.Description,
+        amount: msg.amount,
+        unit: msg.units,
         tags: [],
         photos: [],
         created: moment(msg.cdate),
@@ -63,14 +66,17 @@ exports = module.exports = function (msg, partyUrl) {
 
       return doPut(base + '/batch', batchBody, 'annadv', 'test')
         .then(function (responsePut) {
-          if (responsePut.statusCode !== 200 && responsePut.statusCode !== 201) {
-            throw Error('PUT failed, response = ' + JSON.stringify(responsePut));
-          }
-          console.log('PUT to messages and messageparties successful (batch)');
-        }, function (err) {
-          console.log('Batch PUT failed');
-          throw err;
-        });
+            if (responsePut.statusCode !== 200 && responsePut.statusCode !== 201) {
+              var errorMsg = 'PUT failed, response = ' + JSON.stringify(responsePut);
+              console.log(errorMsg);
+              throw Error(errorMsg);
+            }
+            console.log('PUT to messages and messageparties successful (batch=' + JSON.stringify(batchBody) + ')');
+          },
+          function (err) {
+            console.log('Batch PUT failed');
+            throw err;
+          });
     }
   });
 };

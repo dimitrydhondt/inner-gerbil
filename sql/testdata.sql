@@ -1,5 +1,12 @@
 SET search_path TO innergerbil;
 
+-- Empty tables
+TRUNCATE "contactdetails" CASCADE;
+TRUNCATE "plugins" CASCADE;
+TRUNCATE "parties" CASCADE;
+TRUNCATE "transactions" CASCADE;
+TRUNCATE "messages" CASCADE;
+
 -- Parties
 -- key, type, name, alias, dateofbirth, imageurl, login, password, secondsperunit, currencyname, status
 -- LETS Groups

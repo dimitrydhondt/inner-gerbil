@@ -21,7 +21,9 @@ exports = module.exports = function (fileName, importMethod) {
 
   //Converter Class
   var Converter = require('csvtojson').Converter;
-  var converter = new Converter({});
+  var converter = new Converter({
+    delimiter: "\t"
+  });
 
   // record_parsed will be emitted each csv row being processed
   converter.on('record_parsed', function (jsonObj) {
@@ -30,7 +32,7 @@ exports = module.exports = function (fileName, importMethod) {
     promises.push(importMethod(jsonObj).then(function () {
       console.log('End import');
     }).catch(function (error) {
-      console.log('Import failed with error: ' + error);
+      console.log('Import failed with error: ' + error + ' (jsonObj=' + JSON.stringify(jsonObj) + ')');
     }));
   });
 

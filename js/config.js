@@ -25,10 +25,17 @@ exports = module.exports = function (sri4node, verbose) {
     } else {
       q = $u.prepareSQL('select-count-from-persons-where-email-and-password');
       q.sql('select password from parties where login = ')
+<<<<<<< HEAD
        .param(username)
        .sql(' and status = ')
        .param('active')
        .sql(' and "$$meta.deleted" <> true');
+=======
+        .param(username)
+        .sql(' and status = ')
+        .param('active')
+        .sql(' and "$$meta.deleted" <> true');
+>>>>>>> 42e7a1b23e20a7f71d462e9d9fc7b42735b15201
       $u.executeSQL(db, q).then(function (result) {
         var count = parseInt(result.rows.length, 10);
         if (count === 1) {
@@ -41,7 +48,11 @@ exports = module.exports = function (sri4node, verbose) {
             cl('login fail');
             deferred.resolve(false);
           }
+<<<<<<< HEAD
         }else {
+=======
+        } else {
+>>>>>>> 42e7a1b23e20a7f71d462e9d9fc7b42735b15201
           deferred.resolve(false);
         }
       }).fail(function (err) {
@@ -70,11 +81,21 @@ exports = module.exports = function (sri4node, verbose) {
         alias: row.alias,
         dateofbirth: row.dateofbirth,
         imageurl: row.imageurl,
-        messages: {href: '/messages?postedByParties=/parties/' + row.key},
-        transactions: {href: '/transactions?involvingParties=/parties/' + row.key},
-        contactdetails: {href: '/contactdetails?forParties=/parties/' + row.key},
-        parents: {href: '/parties?ancestorsOfParties=/parties/' + row.key},
-        partyrelations: {href: '/partyrelations?from=/parties/' + row.key}
+        messages: {
+          href: '/messages?postedByParties=/parties/' + row.key
+        },
+        transactions: {
+          href: '/transactions?involvingParties=/parties/' + row.key
+        },
+        contactdetails: {
+          href: '/contactdetails?forParties=/parties/' + row.key
+        },
+        parents: {
+          href: '/parties?ancestorsOfParties=/parties/' + row.key
+        },
+        partyrelations: {
+          href: '/partyrelations?from=/parties/' + row.key
+        }
       };
       if (ret.imageurl === null) {
         delete ret.imageurl;
