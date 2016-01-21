@@ -2,9 +2,11 @@
 
 The core API for a next generation of mutual credit systems.
 
-Link to [documentation](http://dimitrydhondt.github.io/inner-gerbil). (under construction)
+Link to the [repository](https://github.com/dimitrydhondt/inner-gerbil) on Github.com.
 
-### Documentation contribution
+Link to the [documentation](http://dimitrydhondt.github.io/inner-gerbil). (under construction)
+
+### Contribute to the documentation!
 
 Pull first the latest version from master.
 ```shell
