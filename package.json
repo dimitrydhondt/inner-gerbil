@@ -9,7 +9,11 @@
     "dev": "env $(cat .env) nodemon --debug --watch ./js js/server.js",
     "lint": "eslint js test",
     "start": "node js/server.js",
-    "createdb": "./create-database.sh"
+    "createdb": "./create-database.sh",
+    "docs:prepare": "gitbook install",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:build": "npm run docs:prepare && rm -rf _book && gitbook build",
+    "docs:publish": "npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update docs' && git checkout -b gh-pages && git add --all && git commit -am 'update docs' && git push https://github.com/dimitrydhondt/inner-gerbil.git gh-pages --force"
   },
   "dependencies": {
     "compression": "1.5.2",
@@ -44,6 +48,7 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "eslint": "1.4.3",
+    "gitbook-cli": "^1.0.1",
     "grunt": "^0.4.5",
     "grunt-eslint": "^17.1.0",
     "jake": "^8.0.12",
