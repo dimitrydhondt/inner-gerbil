@@ -2,7 +2,7 @@
 
 The core API for a next generation of mutual credit systems.
 
-Link to [documentation](dimitrydhondt.github.io/inner-gerbil). (under construction)
+Link to [documentation](http://dimitrydhondt.github.io/inner-gerbil). (under construction)
 
 ### Documentation contribution
 
@@ -21,7 +21,7 @@ It can be served at localhost:4000
 npm run docs:watch
 ```
 
-Build static html and publish [online](dimitrydhondt.github.io/inner-gerbil) (gh-pages branch)
+Build static html and publish [online](http://dimitrydhondt.github.io/inner-gerbil) (gh-pages branch)
 ```shell
 npm run docs:publish
 ```
