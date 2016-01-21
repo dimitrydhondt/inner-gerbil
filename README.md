@@ -6,7 +6,7 @@ Link to [documentation](http://dimitrydhondt.github.io/inner-gerbil). (under con
 
 ### Documentation contribution
 
-Get gitbook-cli in your local repo:
+Pull the latest version from master and get gitbook-cli in your local repo:
 
 
 ```shell
