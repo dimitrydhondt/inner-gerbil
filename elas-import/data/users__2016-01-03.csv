@@ -1,0 +1,4 @@
+"id","status","name","fullname","birthday","PictureFile","login","password","accountrole","letscode","minlimit","maxlimit"
+"192","1","test","test tester","\N","\N","test","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","user","LM888","-200","200"
+"24","1","eeeee","ssss ddddddddd","\N","\N","aaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","user","LM222","-200","200"
+"178","1","Abc T.","xx ddddddddddddd","\N","\N","ddddddddddddddd","ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","user","LM111","-200","200"

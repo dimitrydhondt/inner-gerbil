@@ -1,0 +1,7 @@
+{
+  "name": "Inner Gerbil",
+  "description": "The core API for a next generation mutual credit software",
+  "repository": "https://github.com/dimitrydhondt/inner-gerbil.git",
+  "logo": "",
+  "keywords": ["node", "express"]
+}

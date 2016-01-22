@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{39331d79-f9db-4602-afc5-ae3e5944a150}</ProjectGuid>
+    <ProjectHome />
+    <ProjectView>ShowAllFiles</ProjectView>
+    <StartupFile>js\server.js</StartupFile>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <StartWebBrowser>True</StartWebBrowser>
+    <Environment>DATABASE_URL=pg://gerbil:inner@localhost:5432/postgres?searchpath=innergerbil</Environment>
+    <NodejsPort>5000</NodejsPort>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Compile Include="elas-import\import.js" />
+    <Compile Include="elas-import\importMessages.js" />
+    <Compile Include="elas-import\importUsers.js" />
+    <Compile Include="Gruntfile.js" />
+    <Compile Include="Jakefile.js" />
+    <Compile Include="js\common.js" />
+    <Compile Include="js\config.js" />
+    <Compile Include="js\contactdetails.js" />
+    <Compile Include="js\messagecontactdetails.js" />
+    <Compile Include="js\messageparties.js" />
+    <Compile Include="js\messagerelations.js" />
+    <Compile Include="js\messages.js" />
+    <Compile Include="js\messagetransactions.js" />
+    <Compile Include="js\parties.js" />
+    <Compile Include="js\partycontactdetails.js" />
+    <Compile Include="js\partyrelations.js" />
+    <Compile Include="js\pluginauthorisations.js" />
+    <Compile Include="js\pluginconfigurations.js" />
+    <Compile Include="js\plugindata.js" />
+    <Compile Include="js\plugins.js" />
+    <Compile Include="js\server.js" />
+    <Compile Include="js\transactionrelations.js" />
+    <Compile Include="js\transactions.js" />
+    <Compile Include="test\common.js" />
+    <Compile Include="test\elas-import\testImportUsers.js" />
+    <Compile Include="test\testContactdetails.js" />
+    <Compile Include="test\testIsolated.js" />
+    <Compile Include="test\testMessages.js" />
+    <Compile Include="test\testParties.js" />
+    <Compile Include="test\testPartyrelations.js" />
+    <Compile Include="test\testPlugins.js" />
+    <Compile Include="test\tests.js" />
+    <Compile Include="test\testTransactions.js" />
+    <Content Include=".eslintrc" />
+    <Content Include="app.json" />
+    <Content Include="js\api-description.html" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <Content Include="sql\clean-database.sql" />
+    <Content Include="sql\privileges.sql" />
+    <Content Include="sql\schema.sql" />
+    <Content Include="sql\testdata.sql" />
+    <Content Include="test\.eslintrc" />
+    <Content Include="test\elas-import\elas-users-2015-10-14.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="elas-import\" />
+    <Folder Include="js\" />
+    <Folder Include="sql" />
+    <Folder Include="test\" />
+    <Folder Include="test\elas-import\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

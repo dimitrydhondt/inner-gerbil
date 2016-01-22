@@ -1,0 +1,4 @@
+#eslint file for tests
+
+rules:
+  no-unused-expressions: 0 #disallow usage of expressions in statement position

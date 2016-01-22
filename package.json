@@ -1,0 +1,59 @@
+{
+  "name": "inner-gerbil",
+  "version": "0.1.0",
+  "description": "The core API for a next generation mutual credit system",
+  "main": "index.js",
+  "scripts": {
+    "test": "env $(cat .env) mocha",
+    "test-dev": "env $(cat .env) mocha --debug-brk",
+    "dev": "env $(cat .env) nodemon --debug --watch ./js js/server.js",
+    "lint": "eslint js test",
+    "start": "node js/server.js",
+    "createdb": "./create-database.sh",
+    "docs:prepare": "gitbook install",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:build": "npm run docs:prepare && rm -rf _book && gitbook build",
+    "docs:publish": "npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update docs' && git checkout -b gh-pages && git add --all && git commit -am 'update docs' && git push https://github.com/dimitrydhondt/inner-gerbil.git gh-pages --force"
+  },
+  "dependencies": {
+    "compression": "1.5.2",
+    "express": "4.13.3",
+    "node-logentries": "0.1.4",
+    "pg": "4.4.1",
+    "q": "1.4.1",
+    "sri4node": "1.2.x",
+    "sri4node-client": "1.0.1",
+    "uuid": "2.0.x",
+    "csvtojson": "0.4.3",
+    "moment": "2.10.x",
+    "needle": "0.x",
+    "q-io": "1.13.x",
+    "winston": "2.x",
+    "sri4node-attachments": "0.1.x",
+    "bcrypt": "^0.8.5"
+  },
+  "engines": {
+    "node": "4.x",
+    "npm": "2.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dimitrydhondt/inner-gerbil.git"
+  },
+  "keywords": [
+    "node",
+    "heroku"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "eslint": "1.4.3",
+    "gitbook-cli": "^1.0.1",
+    "grunt": "^0.4.5",
+    "grunt-eslint": "^17.1.0",
+    "jake": "^8.0.12",
+    "load-grunt-tasks": "^3.2.0",
+    "mocha": "^2.2.5",
+    "nodemon": "1.7.0"
+  }
+}
