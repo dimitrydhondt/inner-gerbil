@@ -20,7 +20,10 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Compile Include="elas-import\import.js" />
+    <Compile Include="elas-import\importer.js" />
+    <Compile Include="elas-import\importLauncher.js" />
     <Compile Include="elas-import\importMessages.js" />
+    <Compile Include="elas-import\importTransactions.js" />
     <Compile Include="elas-import\importUsers.js" />
     <Compile Include="Gruntfile.js" />
     <Compile Include="Jakefile.js" />
@@ -48,12 +51,35 @@
     <Compile Include="test\testIsolated.js" />
     <Compile Include="test\testMessages.js" />
     <Compile Include="test\testParties.js" />
+    <Compile Include="test\testPartyAttachments.js" />
     <Compile Include="test\testPartyrelations.js" />
     <Compile Include="test\testPlugins.js" />
     <Compile Include="test\tests.js" />
+    <Compile Include="test\testTransactionCreate.js" />
+    <Compile Include="test\testTransactionLimits.js" />
     <Compile Include="test\testTransactions.js" />
     <Content Include=".eslintrc" />
     <Content Include="app.json" />
+    <Content Include="docs\img\connector.dia" />
+    <Content Include="docs\img\connector.svg" />
+    <Content Include="docs\img\intergroup-transaction.dia" />
+    <Content Include="docs\img\intergroup-transaction.svg" />
+    <Content Include="docs\img\membership.dia" />
+    <Content Include="docs\img\membership.svg" />
+    <Content Include="docs\img\multiple-membership.dia" />
+    <Content Include="docs\img\multiple-membership.svg" />
+    <Content Include="docs\img\subgroup.dia" />
+    <Content Include="docs\img\subgroup.svg" />
+    <Content Include="docs\img\transaction.dia" />
+    <Content Include="docs\img\transaction.svg" />
+    <Content Include="docs\parties-and-relations.md" />
+    <Content Include="docs\SUMMARY.md" />
+    <Content Include="docs\transactions.md" />
+    <Content Include="elas-import\data\elas2inner.py" />
+    <Content Include="elas-import\data\messages_2015-12-27.csv" />
+    <Content Include="elas-import\data\messages__2016-01-03.csv" />
+    <Content Include="elas-import\data\users_2015-12-27.csv" />
+    <Content Include="elas-import\data\users__2016-01-03.csv" />
     <Content Include="js\api-description.html" />
     <Content Include="package.json" />
     <Content Include="README.md" />
@@ -63,9 +89,13 @@
     <Content Include="sql\testdata.sql" />
     <Content Include="test\.eslintrc" />
     <Content Include="test\elas-import\elas-users-2015-10-14.csv" />
+    <Content Include="test\orange-boy-icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="docs\" />
+    <Folder Include="docs\img\" />
     <Folder Include="elas-import\" />
+    <Folder Include="elas-import\data\" />
     <Folder Include="js\" />
     <Folder Include="sql" />
     <Folder Include="test\" />
