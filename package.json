@@ -7,7 +7,7 @@
     "test": "env $(cat .env) mocha",
     "test-dev": "env $(cat .env) mocha --debug-brk",
     "dev": "env $(cat .env) nodemon --debug --watch ./js js/server.js",
-    "lint": "eslint js test elas-import",
+    "lint": "eslint js test elas-import test/elas-import",
     "start": "env $(cat .env) node js/server.js",
     "createdb": "./create-database.sh",
     "docs:prepare": "gitbook install",
