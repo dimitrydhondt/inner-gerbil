@@ -41,12 +41,15 @@ app.set('port', process.env.PORT || 5000); // eslint-disable-line
 sri4node.configure(app, pg, mapping);
 
 var welcome =
-  '<script>location.replace("/docs");</script>';
+  '<script>location.replace("/overview");</script>';
 
 app.get('/', function (request, response) {
   'use strict';
   response.send(welcome);
 });
+console.log(__dirname);
+
+app.use('/overview', express.static(__dirname + '/../docs'));
 
 app.listen(app.get('port'), function () {
   'use strict';
