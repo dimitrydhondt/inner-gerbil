@@ -1,5 +1,6 @@
 /*eslint-env node*/
 var generateUUID = require('../test/common.js').generateUUID;
+var Q = require('q');
 var common = require('../js/common.js');
 var debug = common.debug;
 var warn = common.warn;
@@ -19,10 +20,29 @@ var doPut = sriclient.put;
 function validUser(user) {
   'use strict';
   // check mandatory fields are available
-  if ((typeof user.letscode !== 'undefined' || typeof user.id !== 'undefined') &&
-    typeof user.login !== 'undefined' &&
-    typeof user.name !== 'undefined' &&
-    typeof user.status !== 'undefined') {
+  if (typeof user.letscode === 'undefined' && typeof user.id === 'undefined') {
+    return false;
+  }
+
+  if (typeof user.login === 'undefined') {
+    return false;
+  }
+
+  if (typeof user.name === 'undefined') {
+    return false;
+  }
+
+  if (typeof user.status === 'undefined') {
+    return false;
+  }
+
+  return true;
+}
+
+function interletsUser(user) {
+  'use strict';
+  // Import of interlets users not supported
+  if (user.accountrole === 'interlets') {
     return true;
   }
   return false;
@@ -91,8 +111,21 @@ exports = module.exports = {
   },
   addUserToParty: function (user, partyUrl, groupAlias) {
     'use strict';
+    var partyPassword;
+    var alias;
+
     if (!validUser(user)) {
-      throw new Error('Invalid user: ' + JSON.stringify(user));
+      warn('invalid user - missing mandatory data for ' + JSON.stringify(user));
+      return Q.fcall(function () {
+        throw new Error('Invalid user');
+      });
+    }
+    if (interletsUser(user)) {
+      warn('Import of Interlets user not supported. Skipping user ' + JSON.stringify(user));
+      //return deferred.resolve('Not supported');
+      return Q.fcall(function () {
+        return 'Not supported';
+      });
     }
     var uuid = generateUUID();
     var convUserStatusToPartyStatus = function (status) {
@@ -124,21 +157,26 @@ exports = module.exports = {
         return 'administrator';
       }
     };
-    var alias;
     if (user.id) {
       alias = groupAlias + '-' + user.id.toString();
     } else {
       alias = user.letscode;
     }
+    if (typeof user.password === 'undefined' || user.password === '\\N' || user.password === '') {
+      partyPassword = 'dummy';
+    } else {
+      partyPassword = user.password;
+    }
+    warn('partyPassword = ' + partyPassword);
     var party = {
       type: 'person',
       name: user.name,
       alias: alias,
       login: user.login,
-      password: user.password,
+      password: partyPassword,
       status: convUserStatusToPartyStatus(user.status)
     };
-    debug('party: ' + party);
+    debug('party: ' + JSON.stringify(party));
     // check party already exists??
     return exports.checkPartyExists(base + '/parties?alias=' + party.alias).then(function (partyHref) {
       if (!partyHref) {
@@ -183,6 +221,7 @@ exports = module.exports = {
         debug('PUT successful');
       }
     }).catch(function (e) {
+      debug('error catched:' + e);
       if (e.message === 'party already exists') {
         return;
       }

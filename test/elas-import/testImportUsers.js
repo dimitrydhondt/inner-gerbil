@@ -7,20 +7,17 @@ var importUser = importUsers.addUserToParty;
 var checkPartyExists = importUsers.checkPartyExists;
 var assert = require('chai').assert;
 var common = require('../common.js');
+var debug = require('../../js/common.js').debug;
+var info = require('../../js/common.js').info;
 var sriclient = require('sri4node-client');
 var doGet = sriclient.get;
 var doDelete = sriclient.delete;
 
 var PATH_TO_USERS_FILE = 'elas-users-2015-10-14.csv';
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base) {
   'use strict';
 
-  function debug(x) {
-    if (logverbose) {
-      console.log(x); // eslint-disable-line
-    }
-  }
   var cleanUp = function (jsonArray) {
     var promises = [];
     jsonArray.forEach(function (user) {
@@ -35,11 +32,10 @@ exports = module.exports = function (base, logverbose) {
               deleteResponse.statusMessage);
             throw Error('Unable to delete ' + deleteResponse.req.path);
           }
-
         }));
     });
     return Q.all(promises).then(function () {
-      debug('All deletes completed');
+      info('All deletes completed\n\n');
     });
   };
   var cleanUpParties = function () {
@@ -88,7 +84,7 @@ exports = module.exports = function (base, logverbose) {
             assert.equal(partyRel.status, 'active');
           });
       };
-      var validateParty = function (user, groupAlias) {
+      var validateParty = function (user, groupAlias, expectedParty) {
         return doGet(base + '/parties?alias=' + groupAlias + '-' + user.id, 'annadv', 'test').then(function (
           responseParty) {
           if (responseParty.statusCode !== 200) {
@@ -102,20 +98,39 @@ exports = module.exports = function (base, logverbose) {
           debug('parties=' + JSON.stringify(parties));
           var party = parties.results[0].$$expanded;
           debug(party);
-          assert.equal(party.type, 'person');
-          assert.equal(party.name, user.name);
-          assert.equal(party.alias, 'LM-' + user.id);
+          if (typeof expectedParty != 'undefined' && expectedParty.type) {
+            assert.equal(party.type, expectedParty.type);
+          } else {
+            assert.equal(party.type, 'person');
+          }
+          if (typeof expectedParty != 'undefined' && expectedParty.name) {
+            assert.equal(party.name, expectedParty.name);
+          } else {
+            assert.equal(party.name, user.name);
+          }
+          if (typeof expectedParty != 'undefined' && expectedParty.alias) {
+            assert.equal(party.alias, expectedParty.alias);
+          } else {
+            assert.equal(party.alias, 'LM-' + user.id);
+          }
           //assert.equal(party.dateofbirth, user.?);
-          assert.equal(party.login, user.login);
+          if (typeof expectedParty != 'undefined' && expectedParty.login) {
+            assert.equal(party.login, expectedParty.login);
+          } else {
+            assert.equal(party.login, user.login);
+          }
           //assert.equal(party.password, user.password); //unable to test, password not included in get
-          assert.equal(party.status, 'active');
+          if (typeof expectedParty != 'undefined' && expectedParty.status) {
+            assert.equal(party.status, expectedParty.status);
+          } else {
+            assert.equal(party.status, 'active');
+          }
           return party;
         });
       };
       it('should load users from CSV file', function () {
         var partyUrl = common.hrefs.PARTY_LETSDENDERMONDE;
         return importer(path.join(__dirname, PATH_TO_USERS_FILE), function (user) {
-          logverbose = true;
           debug('User to import:' + JSON.stringify(user));
           return importUser(user, partyUrl, 'LM').then(function () {
             // Get and validate imported user
@@ -142,7 +157,6 @@ exports = module.exports = function (base, logverbose) {
       });
 
       it('should import a regular user', function () {
-        logverbose = true;
         var regularUser = {
           id: 1,
           status: 1,
@@ -159,7 +173,14 @@ exports = module.exports = function (base, logverbose) {
         var groupAlias = 'LM';
 
         return importUser(regularUser, common.hrefs.PARTY_LETSDENDERMONDE, groupAlias).then(function () {
-          return validateParty(regularUser, groupAlias);
+          var expectedParty = {
+            type: 'person',
+            name: 'Jeff the tester',
+            alias: 'LM-1',
+            login: 'tester',
+            status: 'active'
+          };
+          return validateParty(regularUser, groupAlias, expectedParty);
         }).then(function (party) {
           return validatePartyRelation(party, regularUser, common.hrefs.PARTY_LETSDENDERMONDE);
         });
@@ -178,11 +199,67 @@ exports = module.exports = function (base, logverbose) {
         };
         var groupAlias = 'LM';
         return importUser(adminUser, common.hrefs.PARTY_LETSDENDERMONDE, groupAlias).then(function () {
-          return validateParty(adminUser, groupAlias);
+          var expectedParty = {
+            type: 'person',
+            name: 'Jules the admin',
+            alias: 'LM-2',
+            login: 'admin',
+            status: 'active'
+          };
+          return validateParty(adminUser, groupAlias, expectedParty);
         }).then(function (party) {
           return validatePartyRelation(party, adminUser, common.hrefs.PARTY_LETSDENDERMONDE);
         });
       });
+      it('should skip import of interlets user', function () {
+        var interletsUser = {
+          id: 2,
+          status: 7,
+          name: 'Interlets group',
+          fullname: '\N',
+          login: 'lap',
+          password: 'a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d364677d' +
+            '8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
+          accountrole: 'interlets',
+          letscode: 'LM200',
+          minlimit: '-2000',
+          maxlimit: '2000'
+        };
+        var groupAlias = 'LM';
+        return importUser(interletsUser, common.hrefs.PARTY_LETSDENDERMONDE, groupAlias).then(function (
+          result) {
+          debug('result:' + result);
+          assert.equal(result, 'Not supported');
+        });
+      });
+      it('should import users with no password', function () {
+        var inactiveUser = {
+          id: 9999,
+          status: 6,
+          name: 'Inactive user',
+          fullname: '\\N',
+          login: 'inactive',
+          password: '\\N',
+          accountrole: 'user',
+          letscode: 'LM095',
+          minlimit: '-200',
+          maxlimit: '200'
+        };
+        var groupAlias = 'LM';
+        return importUser(inactiveUser, common.hrefs.PARTY_LETSDENDERMONDE, groupAlias).then(function () {
+          var expectedParty = {
+            type: 'person',
+            name: 'Inactive user',
+            alias: 'LM-9999',
+            login: 'inactive',
+            status: 'inactive'
+          };
+          return validateParty(inactiveUser, groupAlias, expectedParty);
+          //}).then(function (party) {
+          //return validatePartyRelation(party, inactiveUser, null);
+        });
+      });
+
       it('should create group if it does not exist', function () {
         var regularUser = {
           id: 1,
@@ -198,7 +275,6 @@ exports = module.exports = function (base, logverbose) {
           maxlimit: 400
         };
         var groupAlias = 'LM';
-        logverbose = true;
         return importUsers.addUserToGroup(regularUser, groupAlias).then(function () {
           return validateParty(regularUser, groupAlias);
         }).then(function (party) {
@@ -206,7 +282,6 @@ exports = module.exports = function (base, logverbose) {
         });
       });
       it('should check that LM party exists', function () {
-        logverbose = true;
         var url = base + '/parties?alias=LM';
         return checkPartyExists(url).then(function (partyUrl) {
           debug('Party Url = ' + partyUrl);
