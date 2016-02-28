@@ -47,7 +47,6 @@ app.get('/', function (request, response) {
   'use strict';
   response.send(welcome);
 });
-console.log(__dirname);
 
 app.use('/overview', express.static(__dirname + '/../docs'));
 

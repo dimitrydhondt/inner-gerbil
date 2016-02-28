@@ -43,6 +43,43 @@ exports = module.exports = function (base, logverbose) {
           debug('error: ' + err);
         });
       });
+      it('should accept null amount', function () {
+        var message = {
+          id: '2191',
+          id_user: '1',
+          content: 'plastieken papfles',
+          Description: 'wie heeft er per toeval zo\'n plastieken papfles liggen',
+          amount: '\\N',
+          units: 'stuk',
+          msg_type: '0',
+          id_category: '18',
+          cdate: '2014-06-10 17:52:34',
+          mdate: '\\N',
+          validity: '2014-07-10 17:52:34'
+        };
+        return importMessage(message, common.hrefs.PARTY_LETSDENDERMONDE).then(function () {
+          debug('import completed');
+        });
+      });
+      it('should accept any value as unit', function () {
+        var message = {
+          id: '1466',
+          id_user: '2',
+          content: 'scharreleitjes 6 voor 5 blussers',
+          Description: '',
+          amount: '5',
+          units: 6,
+          msg_type: '1',
+          id_category: '15',
+          cdate: '2013-06-13 21:09:45',
+          mdate: '2013-06-27 14:33:05',
+          validity: '2018-06-01 14:33:05'
+        };
+        return importMessage(message, common.hrefs.PARTY_LETSDENDERMONDE).then(function () {
+          debug('import completed');
+        });
+
+      });
       it.skip('should not fail with TypeError', function () {
         // Increase loop to 100 to reproduce the error
         logverbose = true;

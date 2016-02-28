@@ -54,6 +54,23 @@ var addMessageBatch = function (message, partyUrl) {
 
 };
 */
+var validMessage = function (message) {
+  'use strict';
+  if (typeof message.id_user === 'undefined') {
+    return false;
+  }
+
+  // Convert \N strings into null
+  if (typeof message.amount !== 'undefined' && message.amount === '\\N') {
+    message.amount = null;
+  }
+
+  // Convert unit to string if required
+  if (typeof message.units !== 'undefined' && message.units !== 'string') {
+    message.units = 'test';
+  }
+  return true;
+};
 var checkMessageExists = function (message) {
   'use strict';
   debug('TODO: check if message exist: ' + message);
@@ -96,12 +113,20 @@ var addMessage = function (message, partyUrl) {
 
     }).catch(function (err) {
       error('PUT of message or messageparty failed with error: ' + err);
+      throw err;
     });
 };
 
 exports = module.exports = function (msg, partyUrl) {
   'use strict';
   var alias = 'LM' + '-' + msg.id_user;
+  debug('msg=' + JSON.stringify(msg));
+  if (!validMessage(msg)) {
+    warn('invalid message - missing mandatory data for ' + JSON.stringify(msg));
+    return Q.fcall(function () {
+      throw new Error('Invalid message');
+    });
+  }
   return doGet(base + '/parties?alias=' + alias, 'annadv', 'test').then(function (responseGet) {
     var message;
     var user;
