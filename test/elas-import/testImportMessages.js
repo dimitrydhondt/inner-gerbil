@@ -6,19 +6,14 @@ var importer = require('../../elas-import/importer.js');
 var importMessage = require('../../elas-import/importMessages.js');
 //var assert = require('chai').assert;
 var common = require('../common.js');
+var debug = require('../../js/common.js').debug;
 var sriclient = require('sri4node-client');
 var doGet = sriclient.get;
 
 var PATH_TO_MSGS_FILE = 'elas-messages-2015-10-26.csv';
 
-exports = module.exports = function (base, logverbose) {
+exports = module.exports = function (base) {
   'use strict';
-
-  function debug(x) {
-    if (logverbose) {
-      console.log(x); // eslint-disable-line
-    }
-  }
 
   describe('Elas import', function () {
 
@@ -46,13 +41,13 @@ exports = module.exports = function (base, logverbose) {
       it('should accept null amount', function () {
         var message = {
           id: '2191',
-          id_user: '1',
+          id_user: '1', // eslint-disable-line
           content: 'plastieken papfles',
           Description: 'wie heeft er per toeval zo\'n plastieken papfles liggen',
           amount: '\\N',
           units: 'stuk',
-          msg_type: '0',
-          id_category: '18',
+          msg_type: '0', // eslint-disable-line
+          id_category: '18', // eslint-disable-line
           cdate: '2014-06-10 17:52:34',
           mdate: '\\N',
           validity: '2014-07-10 17:52:34'
@@ -64,13 +59,13 @@ exports = module.exports = function (base, logverbose) {
       it('should accept any value as unit', function () {
         var message = {
           id: '1466',
-          id_user: '2',
+          id_user: '2', // eslint-disable-line
           content: 'scharreleitjes 6 voor 5 blussers',
           Description: '',
           amount: '5',
           units: 6,
-          msg_type: '1',
-          id_category: '15',
+          msg_type: '1', // eslint-disable-line
+          id_category: '15', // eslint-disable-line
           cdate: '2013-06-13 21:09:45',
           mdate: '2013-06-27 14:33:05',
           validity: '2018-06-01 14:33:05'
@@ -82,7 +77,6 @@ exports = module.exports = function (base, logverbose) {
       });
       it.skip('should not fail with TypeError', function () {
         // Increase loop to 100 to reproduce the error
-        logverbose = true;
         var jsonObj = {
           id: 28,
           id_user: 3, // eslint-disable-line

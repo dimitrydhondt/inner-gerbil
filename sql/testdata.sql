@@ -17,6 +17,7 @@ INSERT INTO "parties" VALUES ('63f34927-0b86-4753-aaa3-02920a9660a5','subgroup',
 INSERT INTO "parties" VALUES ('0a98e68d-1fb9-4a31-a4e2-9289ee2dd301','group','LETS Hamme',null,null,null,null,null,180,'zaadje','active');
 INSERT INTO "parties" VALUES ('bf5995c1-802c-4b69-a5ad-6f193d40c6e3','group','LETS Zonnedorp',null,null,null,null,null,180,'medaille','active');
 INSERT INTO "parties" VALUES ('25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','group','LETS Maandorp',null,null,null,null,null,180,'apollo','active');
+INSERT INTO "parties" VALUES ('2633a7d7-1a6e-40d7-8c55-36d6bf39ff79','group','LETS Import','LI',null,null,null,null,180,'impjes','active');
 -- Connector group 'Jef Nys'
 INSERT INTO "parties" VALUES ('4a3cabca-ecde-4fc3-830f-050891affbce','connector','Connector Jef Nys',null,null,null,null,null,null,null,'active');
 
@@ -39,6 +40,12 @@ INSERT INTO "parties" VALUES ('508f9ec9-df73-4a55-ad42-32839abd1760','person','E
 INSERT INTO "parties" VALUES ('7495029b-1dc5-4eaa-baa6-8f2af029b2b6','person','Jommeke',null,'1955-10-30',null,'jommeke','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 -- Filiberke is part of LETS Maandorp
 INSERT INTO "parties" VALUES ('c512a350-0d55-4ddb-ab49-5e0c6645a0a6','person','Filiberke',null,'1955-10-30',null,'filiberke','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
+-- Jan is part of LETS Import
+INSERT INTO "parties" VALUES ('4291fad0-b392-461e-bb1a-7118d26c3f55','person','Jan','LI-1','1955-10-30',null,'jan','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
+-- Vince is part of LETS Import
+INSERT INTO "parties" VALUES ('22e973bd-d661-489e-bd5e-61efa0f6931b','person','Vince','LI-2','1955-10-30',null,'vince','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
+-- Patrick is part of LETS Import
+INSERT INTO "parties" VALUES ('08e4b8ee-8a16-47d5-8167-1e3723e5f7c6','person','Patrick','LI-100','1955-10-30',null,'patrick','$2a$10$opK7EbDDgHsyClvsh5lun.VISomjnv/RXifFpWAlasVL7pxPnlY4y',null,null,'active');
 
 -- partyrelations -- key, from, to, type, balance, status
 -- LETS Lebbeke is a member of LETS Dendermonde
@@ -67,6 +74,13 @@ INSERT INTO "partyrelations" VALUES('d3bed9ac-5b10-4561-803f-930aa6f086a3','c512
 INSERT INTO "partyrelations" VALUES('a87dd13f-4f81-4761-b150-d0612aac72ed','bf5995c1-802c-4b69-a5ad-6f193d40c6e3','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,180000,-180000,'active');
 -- LETS Maandorp is member of connector 'Conector Jef Nys'
 INSERT INTO "partyrelations" VALUES('21b0fba9-336e-49b8-afa5-3b6a7988bdc1','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,180000,-180000,'active');
+-- Jan is member of LETS Import
+INSERT INTO "partyrelations" VALUES('cf2a1e4a-de38-4c58-820e-ce5185a57b78','4291fad0-b392-461e-bb1a-7118d26c3f55','2633a7d7-1a6e-40d7-8c55-36d6bf39ff79','member',0,null,180000,-180000,'active');
+-- Vince is member of LETS Import
+INSERT INTO "partyrelations" VALUES('9f783e82-e455-4240-877a-c2c9b878923a','22e973bd-d661-489e-bd5e-61efa0f6931b','2633a7d7-1a6e-40d7-8c55-36d6bf39ff79','member',0,null,180000,-180000,'active');
+-- Patrick is admin of LETS Import
+INSERT INTO "partyrelations" VALUES('b67a5b3c-724e-4183-ae7b-c05ba258c5d2','08e4b8ee-8a16-47d5-8167-1e3723e5f7c6','2633a7d7-1a6e-40d7-8c55-36d6bf39ff79','member',0,null,180000,-180000,'active');
+INSERT INTO "partyrelations" VALUES('225b99f8-4742-4d0f-95b3-4421df0b48c8','08e4b8ee-8a16-47d5-8167-1e3723e5f7c6','2633a7d7-1a6e-40d7-8c55-36d6bf39ff79','administrator',0,null,180000,-180000,'active');
 
 -- Contactdetails key,type,label,street,streetnumber,streetbus,postalcode,city,latitude,longitude,value,public
 -- Partycontactdetails key,party,contactdetail
