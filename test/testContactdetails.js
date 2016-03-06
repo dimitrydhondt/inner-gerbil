@@ -37,8 +37,7 @@ exports = module.exports = function (base) {
 
       it('should support ?forDescendantsOfParties=', function () {
         return doGet(base + '/contactdetails?forDescendantsOfParties=' + common.hrefs.PARTY_LETSDENDERMONDE,
-                    'annadv', 'test')
-          .then(function (response) {
+                    'annadv', 'test').then(function (response) {
           debug(response.body);
           assert.equal(response.statusCode, 200);
           var hrefs = createHrefArray(response);

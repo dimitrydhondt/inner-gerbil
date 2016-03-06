@@ -69,16 +69,21 @@ INSERT INTO "partyrelations" VALUES('a87dd13f-4f81-4761-b150-d0612aac72ed','bf59
 INSERT INTO "partyrelations" VALUES('21b0fba9-336e-49b8-afa5-3b6a7988bdc1','25416be3-850d-4a70-8f4e-bb4c2ef7b0f5','4a3cabca-ecde-4fc3-830f-050891affbce','member',0,null,180000,-180000,'active');
 
 -- Contactdetails key,type,label,street,streetnumber,streetbus,postalcode,city,latitude,longitude,value,public
+-- Partycontactdetails key,party,contactdetail
 -- Anna De Vlaming
 INSERT INTO "contactdetails" VALUES('843437b3-29dd-4704-afa8-6b06824b2e92','address','thuis','Ijzerenweg','14',null,'9280','Lebbeke',50.9961341,4.1464628,null,true);
 INSERT INTO "partycontactdetails" VALUES('986b91dd-1bcc-4703-ae8d-6799442a7518','5df52f9f-e51f-4942-a810-1496c51e64db','843437b3-29dd-4704-afa8-6b06824b2e92');
 INSERT INTO "contactdetails" VALUES('b059ef61-340c-45d8-be4f-02436bcc03d9','email',null,null,null,null,null,null,null,null,'anna@email.be',true);
 INSERT INTO "partycontactdetails" VALUES('469062e5-0c7c-4c0b-9db9-6e1e1676da9c','5df52f9f-e51f-4942-a810-1496c51e64db','b059ef61-340c-45d8-be4f-02436bcc03d9');
+INSERT INTO "contactdetails" VALUES('4559f794-82e1-4540-86da-a5ed50e223ba','phone',null,null,null,null,null,null,null,null,'0492792059',true);
+INSERT INTO "partycontactdetails" VALUES('368596cb-7f84-4233-9ff3-9557608f9aca','5df52f9f-e51f-4942-a810-1496c51e64db','4559f794-82e1-4540-86da-a5ed50e223ba');
 -- Steven Buytink
 INSERT INTO "contactdetails" VALUES('3266043e-c70d-4bb4-b0ee-6ff0ae42ce44','address','thuis','Stationstraat','34',null,'9280','Lebbeke',51.0025491,4.1311224,null,true);
 INSERT INTO "partycontactdetails" VALUEs('494367e8-4f7a-4e2a-98c1-d33da8c92257','fa17e7f5-ade9-49d4-abf3-dc3722711504','3266043e-c70d-4bb4-b0ee-6ff0ae42ce44');
 INSERT INTO "contactdetails" VALUES('77818c02-b15c-4304-9ac1-776dbb376770','email',null,null,null,null,null,null,null,null,'steven@email.be',true);
 INSERT INTO "partycontactdetails" VALUES('1cd5baa2-7838-4d84-8a6b-78a85892425c','fa17e7f5-ade9-49d4-abf3-dc3722711504','77818c02-b15c-4304-9ac1-776dbb376770');
+INSERT INTO "contactdetails" VALUES('a1939161-ab12-4352-b2eb-989e36c57961','phone',null,null,null,null,null,null,null,null,'0495997755',true);
+INSERT INTO "partycontactdetails" VALUES('8140a52f-0201-47ea-85d6-11d853c5940a','fa17e7f5-ade9-49d4-abf3-dc3722711504','a1939161-ab12-4352-b2eb-989e36c57961');
 -- Rudi Rudolf has only an email
 INSERT INTO "contactdetails" VALUES('351cbc67-fb30-4e2e-afd8-f02243148c26','email',null,null,null,null,null,null,null,null,'rudi@email.be',true);
 INSERT INTO "partycontactdetails" VALUES('d9a89658-a873-4d53-ab43-5fd4c57a45b8','eb6e3ad7-066f-4357-a582-dfb31e173606','351cbc67-fb30-4e2e-afd8-f02243148c26');
