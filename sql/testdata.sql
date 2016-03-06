@@ -75,7 +75,7 @@ INSERT INTO "contactdetails" VALUES('843437b3-29dd-4704-afa8-6b06824b2e92','addr
 INSERT INTO "partycontactdetails" VALUES('986b91dd-1bcc-4703-ae8d-6799442a7518','5df52f9f-e51f-4942-a810-1496c51e64db','843437b3-29dd-4704-afa8-6b06824b2e92');
 INSERT INTO "contactdetails" VALUES('b059ef61-340c-45d8-be4f-02436bcc03d9','email',null,null,null,null,null,null,null,null,'anna@email.be',true);
 INSERT INTO "partycontactdetails" VALUES('469062e5-0c7c-4c0b-9db9-6e1e1676da9c','5df52f9f-e51f-4942-a810-1496c51e64db','b059ef61-340c-45d8-be4f-02436bcc03d9');
-INSERT INTO "contactdetails" VALUES('4559f794-82e1-4540-86da-a5ed50e223ba','phone',null,null,null,null,null,null,null,null,'0492792059',true);
+INSERT INTO "contactdetails" VALUES('4559f794-82e1-4540-86da-a5ed50e223ba','phone',null,null,null,null,null,null,null,null,'0492791237',true);
 INSERT INTO "partycontactdetails" VALUES('368596cb-7f84-4233-9ff3-9557608f9aca','5df52f9f-e51f-4942-a810-1496c51e64db','4559f794-82e1-4540-86da-a5ed50e223ba');
 -- Steven Buytink
 INSERT INTO "contactdetails" VALUES('3266043e-c70d-4bb4-b0ee-6ff0ae42ce44','address','thuis','Stationstraat','34',null,'9280','Lebbeke',51.0025491,4.1311224,null,true);
