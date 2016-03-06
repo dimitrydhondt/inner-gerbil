@@ -86,10 +86,10 @@ exports = module.exports = function (sri4node, extra) {
     var msg;
 
     nonrecursive.sql('select "key","from","to","balance","upperlimit","lowerlimit" from partyrelations ' +
-    'where "from" in (').values(partyKeys).sql(')');
+    'where "from" in (').values(partyKeys).sql(') and type = \'member\' ');
     recursive.sql('select pr."key",pr."from",pr."to",pr."balance",pr."upperlimit",pr."lowerlimit" ' +
                   'from partyrelations pr, parentpartyrelations ppr ' +
-                  'where pr."from" = ppr."to"');
+                  'where pr."from" = ppr."to" and pr.type = \'member\' ');
     q.with(nonrecursive, 'UNION', recursive, 'parentpartyrelations');
     q.sql('select "key","from","to","balance","upperlimit","lowerlimit" from parentpartyrelations');
     debug(q);

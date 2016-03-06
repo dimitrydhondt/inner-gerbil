@@ -41,6 +41,6 @@ describe('Inner gerbil : ', function () {
   require('./elas-import/testImportUsers.js')(base);
   require('./elas-import/testImportMessages.js')(base);
 
-  //  require('./testPartyAttachments.js')(base);
-  //  require('./testIsolated.js')(base);
+//  require('./testPartyAttachments.js')(base);
+//  require('./testIsolated.js')(base);
 });

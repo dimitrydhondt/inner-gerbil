@@ -65,7 +65,7 @@ exports = module.exports = function (sri4node, extra) {
         type: {
           type: 'string',
           description: 'The type of contactdetail.',
-          enum: ['address', 'email', 'facebook', 'website']
+          enum: ['address', 'email', 'phone', 'facebook', 'website']
         },
         label: $s.string('A display label for this contact detail.'),
 
