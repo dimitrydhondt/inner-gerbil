@@ -64,7 +64,9 @@ exports = module.exports = function (sri4node, verbose) {
     $u.executeSQL(database, query).then(function (result) {
       row = result.rows[0];
       ret = {
-        permalink: '/parties/' + row.key,
+        $$meta: {
+          permalink: '/parties/' + row.key
+        },
         login: row.login,
         name: row.name,
         alias: row.alias,
