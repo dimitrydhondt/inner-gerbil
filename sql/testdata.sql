@@ -48,9 +48,9 @@ INSERT INTO "partyrelations" VALUES('42bdfaf2-718b-4f92-b90d-810d9f5cb5b3','63f3
 -- Rudi Rudolf is a member of LETS Dendermonde
 INSERT INTO "partyrelations" VALUES('c67139c2-779f-4d5c-9183-bbb9252574de','eb6e3ad7-066f-4357-a582-dfb31e173606','8bf649b4-c50a-4ee9-9b02-877aa0a71849','member',0,null,180000,-180000,'active');
 -- Anna in LETS Lebbeke
-INSERT INTO "partyrelations" VALUES('419e6446-9b3e-4e7d-9381-0c38af0b316a','5df52f9f-e51f-4942-a810-1496c51e64db','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',-20,null,180000,-180000,'active');
+INSERT INTO "partyrelations" VALUES('419e6446-9b3e-4e7d-9381-0c38af0b316a','5df52f9f-e51f-4942-a810-1496c51e64db','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',-10,null,180000,-180000,'active');
 -- Steven in LETS Lebbeke
-INSERT INTO "partyrelations" VALUES('db41c12a-a521-443a-97f1-f0e14658fb78','fa17e7f5-ade9-49d4-abf3-dc3722711504','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',20,null,180000,-180000,'active');
+INSERT INTO "partyrelations" VALUES('db41c12a-a521-443a-97f1-f0e14658fb78','fa17e7f5-ade9-49d4-abf3-dc3722711504','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',10,null,180000,-180000,'active');
 -- Eddy USED to be member of LETS Lebbeke, but is not any longer.
 INSERT INTO "partyrelations" VALUES('cf6267a8-f24e-48fe-a6b8-2356a1ab8e6b','437d9b64-a3b4-467c-9abe-e9410332c1e5','aca5e15d-9f4c-4c79-b906-f7e868b3abc5','member',0,null,180000,-180000,'inactive');
 -- Geert is a member of LETS Appels
@@ -93,10 +93,13 @@ INSERT INTO "transactions" VALUES('e068c284-26f1-4d11-acf3-8942610b26e7','5df52f
 INSERT INTO "transactions" VALUES('1ffc9267-b51f-4970-91a2-ae20f4487f78','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','508f9ec9-df73-4a55-ad42-32839abd1760',20,'Merci voor de courgette');
 -- Steven -> Geert 22
 INSERT INTO "transactions" VALUES('f4967944-e1a4-40b2-aafd-c4c8602bf8c7','fa17e7f5-ade9-49d4-abf3-dc3722711504','eb6e3ad7-066f-4357-a582-dfb31e173606',22,'Bedankt voor het roodneuzig rendier.');
-INSERT INTO "transactions" VALUES('2af8884a-53fd-4231-8a35-49b735716c96','eb6e3ad7-066f-4357-a582-dfb31e173606','fa17e7f5-ade9-49d4-abf3-dc3722711504',22,'Te veel pakskes');
 -- Geert -> Steven 22
+INSERT INTO "transactions" VALUES('2af8884a-53fd-4231-8a35-49b735716c96','eb6e3ad7-066f-4357-a582-dfb31e173606','fa17e7f5-ade9-49d4-abf3-dc3722711504',22,'Te veel pakskes');
+-- Steven -> Anna 10
+INSERT INTO "transactions" VALUES('1ba79d10-ded2-4cd2-a8ae-77f7b175a0fe','fa17e7f5-ade9-49d4-abf3-dc3722711504','5df52f9f-e51f-4942-a810-1496c51e64db',10,'Some love back to you, you big spender..');
 
 -- Transaction trace
+-- key, transaction, partyrelation, amount
 -- Anna -> Steven 20
 INSERT INTO "transactionrelations" VALUES('cd5dfc1a-662d-4fb9-b322-c4676722388a','e068c284-26f1-4d11-acf3-8942610b26e7','419e6446-9b3e-4e7d-9381-0c38af0b316a',-20);
 INSERT INTO "transactionrelations" VALUES('525fbf3b-5886-47e3-a08a-8b5273a944cb','e068c284-26f1-4d11-acf3-8942610b26e7','db41c12a-a521-443a-97f1-f0e14658fb78',20);
@@ -109,6 +112,10 @@ INSERT INTO "transactionrelations" VALUES('75daf7d6-5eea-4d03-a15a-e1afb53eab70'
 -- Geert -> Steven 22
 INSERT INTO "transactionrelations" VALUES('485e8ab7-3385-428a-87b6-9d4b6a3e7c9a','2af8884a-53fd-4231-8a35-49b735716c96','c67139c2-779f-4d5c-9183-bbb9252574de',-22);
 INSERT INTO "transactionrelations" VALUES('2b5a0585-58ec-4d76-8e0f-567ad1517a95','2af8884a-53fd-4231-8a35-49b735716c96','db41c12a-a521-443a-97f1-f0e14658fb78',22);
+-- Steven -> Anna 10
+INSERT INTO "transactionrelations" VALUES('d0601fc6-f039-4ba7-b54b-e3f628ea870d','1ba79d10-ded2-4cd2-a8ae-77f7b175a0fe','db41c12a-a521-443a-97f1-f0e14658fb78',-10);
+INSERT INTO "transactionrelations" VALUES('72169557-eee6-4a3b-b725-77b4ab33fb60','1ba79d10-ded2-4cd2-a8ae-77f7b175a0fe','419e6446-9b3e-4e7d-9381-0c38af0b316a',10);
+
 -- key,author,title,description,eventdate,amount,unit,tags[], photos[], created, modified, expires
 -- Messages
 -- For Anna
