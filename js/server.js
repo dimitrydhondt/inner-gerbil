@@ -5,7 +5,8 @@ var sri4node = require('sri4node');
 var app = express();
 var common = require('./common.js');
 var info = common.info;
-var mapping = require('./config.js')(sri4node);
+var verbose = process.env.LOG_VERBOSE ? true : false; // eslint-disable-line
+var mapping = require('./config.js')(sri4node, verbose);
 
 var c9hostname = process.env.C9_HOSTNAME; // eslint-disable-line
 

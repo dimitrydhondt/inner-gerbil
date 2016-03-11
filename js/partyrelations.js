@@ -2,9 +2,28 @@ var common = require('./common.js');
 
 exports = module.exports = function (sri4node, extra) {
   'use strict';
-  var $s = sri4node.schemaUtils,
-    $q = sri4node.queryUtils,
-    $m = sri4node.mapUtils;
+  var $u = sri4node.utils,
+    $m = sri4node.mapUtils,
+    $s = sri4node.schemaUtils,
+    $q = sri4node.queryUtils;
+
+  function forDescendantsOfParties(value, select) {
+    var keys = common.uuidsFromCommaSeparatedListOfPermalinks(value);
+    common.descendantsOfParties($u, value, select, 'descendantsOfParties');
+    select.sql(' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) ');
+  }
+
+  function forPartiesReachableFromParties(value, select) {
+    var keys = common.uuidsFromCommaSeparatedListOfPermalinks(value);
+    common.reachableFromParties($u, value, select, 'partiesReachableFromParties');
+    select.sql(' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) ');
+  }
+
+  function forAncestorsOfParties(value, select) {
+    var keys = common.uuidsFromCommaSeparatedListOfPermalinks(value);
+    common.ancestorsOfParties($u, value, select, 'ancestorsOfParties');
+    select.sql(' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) ');
+  }
 
   var ret = {
     type: '/partyrelations',
@@ -62,11 +81,24 @@ exports = module.exports = function (sri4node, extra) {
     query: {
       from: $q.filterReferencedType('/parties', 'from'),
       to: $q.filterReferencedType('/parties', 'to'),
+      forPartiesReachableFromParties: forPartiesReachableFromParties,
+      forDescendantsOfParties: forDescendantsOfParties,
+      forAncestorsOfParties: forAncestorsOfParties,
       defaultFilter: $q.defaultFilter
     },
     queryDocs: {
       from: 'Limit the the resource to relations originating in one of a comma separated list of parties.',
-      to: 'Limit the list resource to relations going to one of a comma separated list of parties.'
+      to: 'Limit the list resource to relations going to one of a comma separated list of parties.',
+      forPartiesReachableFromParties: 'Returns contact details that belong to parties that are reachable ' +
+        '(potentially via a parent group / subgroup) from a given (comma separated) list of parties. ' +
+        'The term "reachable" means the graph of parties will be scanned to all top parents of the ' +
+        'given list of parties, and then recursed down to include all parties that are a member ' +
+        '(directly or indirectly) of those parent.',
+      forDescendantsOfParties: 'Returns contact details that belong to  ' +
+        'direct or indirect members of a given (comma separated) list of parties.',
+      forAncestorsOfParties: 'Returns contact details that belong to ancestors ' +
+        '(direct or indirect parents via an "is member of" relation) of a given ' +
+        '(comma separated) list of parties.'
     },
     map: {
       key: {},
