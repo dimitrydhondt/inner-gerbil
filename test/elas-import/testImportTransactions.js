@@ -4,7 +4,6 @@ var importTransactions = require('../../elas-import/importTransactions.js');
 //var assert = require('chai').assert;
 //var common = require('../common.js');
 //var debug = require('../../js/common.js').debug;
-//var info = require('../../js/common.js').info;
 
 exports = module.exports = function () {
   'use strict';
@@ -19,7 +18,8 @@ exports = module.exports = function () {
           id_from: 1, // eslint-disable-line
           id_to: 2, // eslint-disable-line
           amount: 10,
-          description: 'Ikea rekje'
+          description: 'Ikea rekje',
+          transid: 'abcdefghij1@elas.vsbnet.be'
         };
         var groupAlias = 'LI';
         return importTransactions(transaction, groupAlias).then(function () {
@@ -38,7 +38,8 @@ exports = module.exports = function () {
           id_from: 100, // eslint-disable-line
           id_to: 2, // eslint-disable-line
           amount: 20,
-          description: 'ledenbijdrage 2011'
+          description: 'ledenbijdrage 2011',
+          transid: 'abcdefghij2@elas.vsbnet.be'
         };
         var groupAlias = 'LI';
         return importTransactions(transaction, groupAlias).then(function () {

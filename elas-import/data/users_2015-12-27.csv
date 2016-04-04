@@ -1,3 +1,0 @@
-"id","status","name","fullname","birthday","picturefile","login","password","accountrole","letscode","minlimit","maxlimit"
-"1","1","admin","admin","\N","\N","admin","a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d364677d8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b","admin","100","-1","1"
-"2","1","test","tester","\N","\N","test","a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d364677d8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b","user","101","-100","100"
