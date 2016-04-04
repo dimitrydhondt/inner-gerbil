@@ -167,7 +167,8 @@ exports = module.exports = {
       alias: alias,
       login: user.login,
       password: partyPassword,
-      status: convUserStatusToPartyStatus(user.status)
+      //status: convUserStatusToPartyStatus(user.status)
+      status: 'active' // force active to allow import of transactions
     };
     debug('party: ' + JSON.stringify(party));
     // check party already exists??
@@ -191,7 +192,8 @@ exports = module.exports = {
         type: 'member',
         balance: 0,
         code: user.letscode.toString(),
-        status: convUserStatusToPartyStatus(user.status)
+        //status: convUserStatusToPartyStatus(user.status)
+        status: 'active' // force active to allow import of transactions
 
       };
       debug('partyrelation:' + partyrelation);
