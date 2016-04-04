@@ -124,24 +124,24 @@ INSERT INTO "transactionrelations" VALUES('72169557-eee6-4a3b-b725-77b4ab33fb60'
 -- key,author,title,description,eventdate,amount,unit,tags[], photos[], created, modified, expires
 -- Messages
 -- For Anna
-INSERT INTO "messages" VALUES('a998ff05-1291-4399-8604-16001015e147','5df52f9f-e51f-4942-a810-1496c51e64db','Help met windows 8','Ik ben meer vertrouwd met windows 7, en weet soms niet waar iets staat. Wie kan me wat hulp/advies geven.',null,20,'uur',ARRAY['dienst','vraag'],null,'2015-01-13','2015-01-14','2016-01-13');
-INSERT INTO "messages" VALUES('b7c41d85-687d-4f9e-a4ef-0c67515cbb63','5df52f9f-e51f-4942-a810-1496c51e64db','Rabarberchutnet','Zelfgemaakte chutney van rabarber met abrikoos, limoen, gember, pepertjes en nog andere kruiden.',null,5,'potje (150gr)',ARRAY['goed','aanbod','artisanaal'],null,'2015-01-13','2015-01-14','2016-01-13');
-INSERT INTO "messages" VALUES('1f2e1d34-c3b7-42e8-9478-45cdc0839427','5df52f9f-e51f-4942-a810-1496c51e64db','Vegetarisch kookles','Ben je pas veggie, of wil je dat graag worden ? Ik geef je graag wat meer uitleg, onder het bereiden van een lekker gerecht. Leer zélf lekker eten klaar te maken !',null,20,'uur',ARRAY['dienst','aanbod','huishoudelijk','koken'],null,'2015-01-13','2015-01-14','2016-01-13');
-INSERT INTO "messages" VALUES('0cc3d15f-47ef-450a-a0ac-518202d7a67b','5df52f9f-e51f-4942-a810-1496c51e64db','Bio Asperges','Ik heb, zoals elk voorjaar, een overproductie aan zelfgekweekte bio-asperges. Wie wil er een bussel ? Ik kan ze komen brengen (per fiets).',null,15,'bussel',ARRAY['goed','aanbod','artisanaal','tuin'],null,'2015-01-23','2015-01-25','2015-05-01');
+INSERT INTO "messages" VALUES('a998ff05-1291-4399-8604-16001015e147','5df52f9f-e51f-4942-a810-1496c51e64db','Help met windows 8','Ik ben meer vertrouwd met windows 7, en weet soms niet waar iets staat. Wie kan me wat hulp/advies geven.',null,20,'uur',ARRAY['Dienst','Vraag'],null,'2015-01-13','2015-01-14','2016-01-13');
+INSERT INTO "messages" VALUES('b7c41d85-687d-4f9e-a4ef-0c67515cbb63','5df52f9f-e51f-4942-a810-1496c51e64db','Rabarberchutnet','Zelfgemaakte chutney van rabarber met abrikoos, limoen, gember, pepertjes en nog andere kruiden.',null,5,'potje (150gr)',ARRAY['Goed','Aanbod','Artisanaal'],null,'2015-01-13','2015-01-14','2016-01-13');
+INSERT INTO "messages" VALUES('1f2e1d34-c3b7-42e8-9478-45cdc0839427','5df52f9f-e51f-4942-a810-1496c51e64db','Vegetarisch kookles','Ben je pas veggie, of wil je dat graag worden ? Ik geef je graag wat meer uitleg, onder het bereiden van een lekker gerecht. Leer zélf lekker eten klaar te maken !',null,20,'uur',ARRAY['Dienst','Aanbod','Huishoudelijk','Koken'],null,'2015-01-13','2015-01-14','2016-01-13');
+INSERT INTO "messages" VALUES('0cc3d15f-47ef-450a-a0ac-518202d7a67b','5df52f9f-e51f-4942-a810-1496c51e64db','Bio Asperges','Ik heb, zoals elk voorjaar, een overproductie aan zelfgekweekte bio-asperges. Wie wil er een bussel ? Ik kan ze komen brengen (per fiets).',null,15,'bussel',ARRAY['Goed','Aanbod','Artisanaal','Tuin'],null,'2015-01-23','2015-01-25','2015-05-01');
 -- reply by Steven to previous message from Anna.
 -- no tags, no pictures, no expiry, no amount.
 INSERT INTO "messages" VALUES('e8a73a40-bfcd-4f5a-9f8a-9355cc956af0','fa17e7f5-ade9-49d4-abf3-dc3722711504',null,'Ik wil wel een aantal asperges letsen.',null,null,null,ARRAY[]::text[],ARRAY[]::text[],'2015-01-27','2015-01-27',null);
 INSERT INTO "messagerelations" VALUES('cc03a9d4-1aef-4c8f-9b05-7b39be514a67','e8a73a40-bfcd-4f5a-9f8a-9355cc956af0','0cc3d15f-47ef-450a-a0ac-518202d7a67b','response_private');
 
 -- For Steven
-INSERT INTO "messages" VALUES('642f3d85-a21e-44d0-b6b3-969746feee9b','fa17e7f5-ade9-49d4-abf3-dc3722711504','Indisch Veggie Etentje','Wie heeft er zin om mee aan te schuiven aan ons veggie Indisch buffet ? Er is plaats voor maximum 16 personen.','2015-04-04',15,'persoon',ARRAY['dienst','aanbod','evenement','eten'],null,'2015-02-03','2015-02-03','2015-04-04');
-INSERT INTO "messages" VALUES('d1c23a0c-4420-4bd3-9fa0-d542b0155a15','fa17e7f5-ade9-49d4-abf3-dc3722711504','Defecte schakelaar','Eén van de schakelaars in mijn living is defect... Wie zou dat voor mij kunnen herstellen ?', null, 20, 'uur',ARRAY['dienst','vraag','herstellen'],null,'2015-02-03','2015-02-03','2015-04-01');
+INSERT INTO "messages" VALUES('642f3d85-a21e-44d0-b6b3-969746feee9b','fa17e7f5-ade9-49d4-abf3-dc3722711504','Indisch Veggie Etentje','Wie heeft er zin om mee aan te schuiven aan ons veggie Indisch buffet ? Er is plaats voor maximum 16 personen.','2015-04-04',15,'persoon',ARRAY['Dienst','Aanbod','Evenement','Eten'],null,'2015-02-03','2015-02-03','2015-04-04');
+INSERT INTO "messages" VALUES('d1c23a0c-4420-4bd3-9fa0-d542b0155a15','fa17e7f5-ade9-49d4-abf3-dc3722711504','Defecte schakelaar','Eén van de schakelaars in mijn living is defect... Wie zou dat voor mij kunnen herstellen ?', null, 20, 'uur',ARRAY['Dienst','Vraag','Herstellen'],null,'2015-02-03','2015-02-03','2015-04-01');
 
 -- For Leen
-INSERT INTO "messages" VALUES('e24528a5-b12f-417a-a489-913d5879b895','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','Mooie planten in de aanbieding',null,null,5,'plant',ARRAY['goed','aanbod'],null,'2015-01-11','2015-01-11','2016-01-11');
+INSERT INTO "messages" VALUES('e24528a5-b12f-417a-a489-913d5879b895','abcb3c6e-721e-4f7c-ae4a-935e1980f15e','Mooie planten in de aanbieding',null,null,5,'plant',ARRAY['Goed','Aanbod'],null,'2015-01-11','2015-01-11','2016-01-11');
 
 -- For Rudi
-INSERT INTO "messages" VALUES('11f2229f-1dea-4c5a-8abe-2980b2812cc4','eb6e3ad7-066f-4357-a582-dfb31e173606','Website op maat maken','Ik maak een eenvoudige, moderne website, op maat voor jouw project, organisatie of activiteit',null,20,'uur',ARRAY['dienst','aanbod'],null,'2015-06-01','2015-06-01','2016-06-01');
+INSERT INTO "messages" VALUES('11f2229f-1dea-4c5a-8abe-2980b2812cc4','eb6e3ad7-066f-4357-a582-dfb31e173606','Website op maat maken','Ik maak een eenvoudige, moderne website, op maat voor jouw project, organisatie of activiteit',null,20,'uur',ARRAY['Dienst','Aanbod'],null,'2015-06-01','2015-06-01','2016-06-01');
 
 -- Contact details for event
 INSERT INTO "contactdetails" VALUES('3362d325-cf19-4730-8490-583da50e114e','address',null,'Stationstraat','15',null,'9280','Lebbeke',51.0018547,4.1304841,null,true);
