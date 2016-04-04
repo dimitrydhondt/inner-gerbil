@@ -150,13 +150,6 @@ exports = module.exports = {
         return 'inactive';
       }
     };
-    var convElasAccountroleToPartyrelType = function (accountrole) {
-      if (accountrole === 'user') {
-        return 'member';
-      } else if (accountrole === 'admin') {
-        return 'administrator';
-      }
-    };
     if (user.id) {
       alias = groupAlias + '-' + user.id.toString();
     } else {
@@ -186,6 +179,8 @@ exports = module.exports = {
       warn('party already exists (url = ' + partyHref + ') -> skipping creation');
       throw new Error('party already exists');
     }).then(function () {
+      var partyrelationAdmin;
+      var adminRelation;
       var partyrelation = {
         from: {
           href: '/parties/' + uuid
@@ -193,7 +188,7 @@ exports = module.exports = {
         to: {
           href: partyUrl // FIXME: should be partyHref but not in scope??
         },
-        type: convElasAccountroleToPartyrelType(user.accountrole),
+        type: 'member',
         balance: 0,
         code: user.letscode.toString(),
         status: convUserStatusToPartyStatus(user.status)
@@ -212,6 +207,28 @@ exports = module.exports = {
           body: partyrelation
         }
       ];
+
+      if (user.accountrole === 'admin') {
+        // create admin relationship
+        partyrelationAdmin = {
+          from: {
+            href: '/parties/' + uuid
+          },
+          to: {
+            href: partyUrl // FIXME: should be partyHref but not in scope??
+          },
+          type: 'administrator',
+          balance: 0,
+          code: user.letscode.toString(),
+          status: convUserStatusToPartyStatus(user.status)
+        };
+        adminRelation = {
+          href: '/partyrelations/' + generateUUID(),
+          verb: 'PUT',
+          body: partyrelationAdmin
+        };
+        batchBody.push(adminRelation);
+      }
       return doPut(base + '/batch', batchBody, 'annadv', 'test');
     }).then(function (
       response) {
