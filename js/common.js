@@ -76,8 +76,10 @@ exports = module.exports = {
       });
 
       var q = $u.prepareSQL();
-      q.sql('select ' + remoteKey + ',' + localKey +
-            ' from ' + relationTable + ' where ' + localKey + ' in (').array(keys).sql(')');
+      q.sql('select "' + remoteKey + '","' + localKey + '"' +
+            ' from "' + relationTable + '" where "' + localKey + '" in (').array(keys).sql(')');
+      console.info('Query :');
+      console.info(q);
       $u.executeSQL(database, q).then(function (results) {
         results.rows.forEach(function (row) {
           element = keyToElement[row[localKey]];
@@ -87,8 +89,18 @@ exports = module.exports = {
           element[resourceTargetKey].push({href: remoteType + '/' + row[remoteKey]});
         });
         deferred.resolve();
-      }).fail(function () {
-        deferred.reject();
+      }).fail(function (error) {
+        console.error('addRelatedManyToMany failed :');
+        console.error({
+          relationTable: relationTable,
+          localKey: localKey,
+          remoteKey: remoteKey,
+          remoteType: remoteType,
+          resourceTargetKey: resourceTargetKey
+        });
+        console.error('error :');
+        console.error(error);
+        deferred.reject(error);
       });
 
       return deferred.promise;
@@ -119,6 +131,29 @@ exports = module.exports = {
       }
       ret.sql('(').param(key).sql('::uuid)');
     });
+
+    return ret;
+  },
+
+  /* Converts an array of resources into an object that associates key to resource */
+  keyToResource: function(resources) {
+    var ret = [];
+    var i;
+
+    for(i=0; i<resources.length; i++) {
+      ret.push(resources[i].key);
+    }
+
+    return ret;
+  },
+
+  keysFromResources: function(resources) {
+    var ret = [];
+    var i;
+
+    for(i=0; i<resources; i++) {
+      ret.push(resources[i].key);
+    }
 
     return ret;
   },

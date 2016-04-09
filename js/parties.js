@@ -51,9 +51,7 @@ exports = module.exports = function (sri4node, extra) {
 
     var q = $u.prepareSQL('direct-parent-of-parties');
     q.sql('select "from","to" from "partyrelations" where "type" = \'member\' and "from" in (').array(keys).sql(')');
-    cl(q);
     $u.executeSQL(database, q).then(function (result) {
-      cl(result.rows);
       result.rows.forEach(function (row) {
         var from = row.from;
         var to = row.to;
