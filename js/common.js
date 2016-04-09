@@ -228,17 +228,22 @@ exports = module.exports = {
   Adds a CTE to the given select query, and created a virtual table that
   has a single column (the key) of all descendants (recursively) of the given
   value (a comma-separated list of permalinks to /messages).
+
+  INCLUDING THE ORIGINAL MESSAGE(S).
   */
   descendantsOfMessages: function ($u, value, select, virtualtablename) {
     'use strict';
     var nonrecursive = $u.prepareSQL(),
-      recursive = $u.prepareSQL();
+      recursive = $u.prepareSQL(),
+      excluderoots = $u.prepareSQL();
 
     var keys = this.uuidsFromCommaSeparatedListOfPermalinks(value);
     nonrecursive = this.valuesFromKeys($u, keys);
-    recursive.sql('SELECT r."from" FROM messagerelations r, ' + virtualtablename + ' c ' +
+    recursive.sql('SELECT r."from" FROM messagerelations r, ' + virtualtablename + 'withroots c ' +
                   'where r."to" = c.key');
-    select.with(nonrecursive, 'UNION', recursive, virtualtablename + '(key)');
+    select.with(nonrecursive, 'UNION', recursive, virtualtablename + 'withroots(key)');
+    excluderoots.sql('select key from ' + virtualtablename + 'withroots where key not in (').array(keys).sql(')');
+    select.with(excluderoots, virtualtablename);
   },
 
   rejectOperation: function (code, description) {
