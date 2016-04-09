@@ -42,28 +42,6 @@ exports = module.exports = function (sri4node, extra) {
                '(select "key" from partiesforlatlongcontactdetails) ');
   }
 
-  function addParent(database, messages) {
-    var deferred = Q.defer();
-    var keys = common.keysFromResources(messages);
-    var keyToMessage = common.keysFromResources(messages);
-
-    var q = $u.prepareSQL('direct-parents-of-messages');
-    q.sql('select "from","to" from "messagerelations" where "from" in (').array(keys).sql(')');
-    $u.executeSQL(database, q).then(function (result) {
-      result.rows.forEach(function (row) {
-        var from = row.from;
-        var to = row.to;
-        var message = keyToMessage[from];
-        message.$$directParents = {
-          href: '/messages/' + to
-        };
-      });
-      deferred.resolve();
-    });
-
-    return deferred.promise;
-  }
-
   var ret = {
     type: '/messages',
     public: false,
@@ -145,12 +123,12 @@ exports = module.exports = function (sri4node, extra) {
       defaultFilter: $q.defaultFilter
     },
     afterread: [
-/*      common.addRelatedManyToMany($u, 'messagetransactions', 'message', 'transaction',
+      common.addRelatedManyToMany($u, 'messagetransactions', 'message', 'transaction',
                                   '/transactions', '$$transactions'),
       common.addRelatedManyToMany($u, 'messageparties', 'message', 'party',
                                   '/parties', '$$postedInParties'),
       common.addRelatedManyToMany($u, 'messagecontactdetails', 'message', 'contactdetail',
-                                  '/contactdetails', '$$contactdetails'),*/
+                                  '/contactdetails', '$$contactdetails'),
       common.addRelatedManyToMany($u, 'messagerelations', 'to','from', '/messages', '$$reactions')
     ],
     afterupdate: [],
