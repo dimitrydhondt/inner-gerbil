@@ -31,6 +31,7 @@
     "sri4node-attachments": "0.1.5",
     "sri4node-client": "1.0.1",
     "uuid": "2.0.x",
+    "uuid-1345": "^0.99.6",
     "winston": "2.x"
   },
   "engines": {

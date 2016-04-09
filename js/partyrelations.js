@@ -8,21 +8,24 @@ exports = module.exports = function (sri4node, extra) {
     $q = sri4node.queryUtils;
 
   function forDescendantsOfParties(value, select) {
-    var keys = common.uuidsFromCommaSeparatedListOfPermalinks(value);
     common.descendantsOfParties($u, value, select, 'descendantsOfParties');
-    select.sql(' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) ');
+    select.sql(
+      ' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) '
+    );
   }
 
   function forPartiesReachableFromParties(value, select) {
-    var keys = common.uuidsFromCommaSeparatedListOfPermalinks(value);
     common.reachableFromParties($u, value, select, 'partiesReachableFromParties');
-    select.sql(' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) ');
+    select.sql(
+      ' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) '
+    );
   }
 
   function forAncestorsOfParties(value, select) {
-    var keys = common.uuidsFromCommaSeparatedListOfPermalinks(value);
     common.ancestorsOfParties($u, value, select, 'ancestorsOfParties');
-    select.sql(' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) ');
+    select.sql(
+      ' and ("from" in (select key from descendantsOfParties) or "to" in (select key from descendantsOfParties)) '
+    );
   }
 
   var ret = {
@@ -109,10 +112,19 @@ exports = module.exports = function (sri4node, extra) {
         references: '/parties'
       },
       type: {},
-      balance: {onupdate: $m.remove, oninsert: $m.remove},
-      code: {onread: $m.removeifnull},
-      upperlimit: {onread: $m.removeifnull},
-      lowerlimit: {onread: $m.removeifnull},
+      balance: {
+        onupdate: $m.remove,
+        oninsert: $m.remove
+      },
+      code: {
+        onread: $m.removeifnull
+      },
+      upperlimit: {
+        onread: $m.removeifnull
+      },
+      lowerlimit: {
+        onread: $m.removeifnull
+      },
       status: {}
     },
     afterupdate: [],

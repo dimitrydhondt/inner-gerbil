@@ -70,16 +70,24 @@ exports = module.exports = function (base) {
           .then(function (responsePartyRel) {
             var partyrelations = responsePartyRel.body;
             var partyRel = partyrelations.results[0].$$expanded;
+            var partyRelAdmin;
             debug(partyRel);
             assert.equal(partyRel.from.href, party.$$meta.permalink);
             if (typeof toRef !== 'undefined' && toRef) {
               assert.equal(partyRel.to.href, toRef);
             }
             if (user.accountrole === 'admin') {
-              assert.equal(partyRel.type, 'administrator');
-            } else {
-              assert.equal(partyRel.type, 'member');
+              // check 2 party relations are created for admin users
+              assert.equal(partyrelations.results.length, 2);
+              if (partyRel.type === 'administrator') {
+                partyRelAdmin = partyRel;
+                partyRel = partyrelations.results[1].$$expanded;
+              } else {
+                partyRelAdmin = partyrelations.results[1].$$expanded;
+              }
+              assert.equal(partyRelAdmin.type, 'administrator');
             }
+            assert.equal(partyRel.type, 'member');
             assert.equal(partyRel.code, user.letscode);
             assert.equal(partyRel.status, 'active');
           });
@@ -252,7 +260,7 @@ exports = module.exports = function (base) {
             name: 'Inactive user',
             alias: 'LM-9999',
             login: 'inactive',
-            status: 'inactive'
+            status: 'active' // all users forced to active for transaction import
           };
           return validateParty(inactiveUser, groupAlias, expectedParty);
           //}).then(function (party) {
