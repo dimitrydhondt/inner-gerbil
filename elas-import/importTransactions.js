@@ -14,7 +14,7 @@ var sriclient = require('sri4node-client');
 var doPut = sriclient.put;
 
 var importUsers = require('./importUsers.js');
-var checkPartyExists = importUsers.checkPartyExists;
+var checkPartyWithAliasExists = importUsers.checkPartyWithAliasExists;
 var commonImport = require('./common.js');
 
 var generateUUID = function (trxnId) {
@@ -59,7 +59,7 @@ exports = module.exports = function (trxn, groupAlias) {
   var toPartyHrefGlobal = '';
   var errorMsg;
 
-  return checkPartyExists(base + '/parties?alias=' + fromAlias).then(function (partyUrl) {
+  return checkPartyWithAliasExists(fromAlias).then(function (partyUrl) {
     if (!partyUrl) {
       info('Party with fromAlias ' + fromAlias + ' does not exist');
       throw new Error('\'From\' party (' + fromAlias + ') does not exist, import users first');
@@ -69,7 +69,7 @@ exports = module.exports = function (trxn, groupAlias) {
       return partyUrl;
     }
   }).then(function () {
-    return checkPartyExists(base + '/parties?alias=' + toAlias).then(function (partyUrl) {
+    return checkPartyWithAliasExists(toAlias).then(function (partyUrl) {
       if (!partyUrl) {
         debug('Party with toAlias ' + toAlias + ' does not exist');
         throw new Error('\'To\' party (' + toAlias + ') does not exist, import users first');

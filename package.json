@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "async": "^1.5.2",
-    "bcrypt": "^0.8.5",
+    "bcrypt": "0.8.5",
     "compression": "1.5.2",
     "csvtojson": "^0.4.3",
     "express": "4.13.3",
@@ -32,7 +32,8 @@
     "sri4node-client": "1.0.1",
     "uuid": "2.0.x",
     "uuid-1345": "^0.99.6",
-    "winston": "2.x"
+    "winston": "2.x",
+    "json-stringify-safe" : "5.x"
   },
   "engines": {
     "node": "4.x",

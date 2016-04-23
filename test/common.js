@@ -1,10 +1,43 @@
 var uuid = require('uuid');
-/*
-var common = require('../js/common.js');
-var cl = common.info;
-*/
+var Q = require('q');
+var debug = require('../js/common.js').debug;
+var env = require('./env.js');
 
 exports = module.exports = {
+      // Q wrapper to get a node-postgres client from the client pool.
+      // It returns a Q promise to allow chaining, error handling, etc.. in Q-style.
+  pgConnect: function (pg, configuration) {
+        'use strict';
+        var deferred = Q.defer();
+
+        // ssl=true is required for heruko.com
+        // ssl=false is required for development on local postgres (Cloud9)
+        var databaseUrl = env.databaseUrl;
+        var dbUrl;
+        if (databaseUrl) {
+          dbUrl = databaseUrl;
+        } else {
+          dbUrl = configuration.defaultdatabaseurl;
+        }
+        if (configuration.logsql) {
+          debug('Using database connection string : [' + dbUrl + ']');
+        }
+
+        pg.connect(dbUrl, function (err, client, done) {
+          if (err) {
+            debug('Unable to connect to database on URL : ' + dbUrl);
+            deferred.reject(err);
+          } else {
+            deferred.resolve({
+              client: client,
+              done: done
+            });
+          }
+        });
+
+        return deferred.promise;
+      },
+
   createHrefArray: function (response) {
     'use strict';
     var hrefs = [];

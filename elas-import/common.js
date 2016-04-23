@@ -24,6 +24,10 @@ var archiveTable = function (database, table) {
 exports = module.exports = {
 
 
+  generateUUIDv4: function () {
+    'use strict';
+    return Q.nfcall(UUID.v4);
+  },
   /**
   Returns a promise with resulting UUID as single argument
   usage:
@@ -62,7 +66,7 @@ exports = module.exports = {
     promises.push(archiveTable(db, 'messagecontactdetails'));
     promises.push(archiveTable(db, 'messageparties'));
     promises.push(archiveTable(db, 'messagerelations'));
-    promises.push(archiveTable(db, 'messagestransactions'));
+    promises.push(archiveTable(db, 'messagetransactions'));
     promises.push(archiveTable(db, 'messages'));
     promises.push(archiveTable(db, 'transactionrelations'));
     promises.push(archiveTable(db, 'transactions'));

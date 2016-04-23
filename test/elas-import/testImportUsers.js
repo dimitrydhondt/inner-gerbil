@@ -4,97 +4,153 @@ var Q = require('q');
 var importer = require('../../elas-import/importer.js');
 var importUsers = require('../../elas-import/importUsers.js');
 var importUser = importUsers.addUserToParty;
-var checkPartyExists = importUsers.checkPartyExists;
+//var checkPartyExists = importUsers.checkPartyExists;
 var assert = require('chai').assert;
 var common = require('../common.js');
 var debug = require('../../js/common.js').debug;
 var info = require('../../js/common.js').info;
+var error = require('../../js/common.js').error;
+var commonImport = require('../../elas-import/common.js');
 var sriclient = require('sri4node-client');
 var doGet = sriclient.get;
 var doDelete = sriclient.delete;
+var pg = require('pg');
+var pgConnect = common.pgConnect;
+//var pgExec = sriCommon.pgExec;
 
 var PATH_TO_USERS_FILE = 'elas-users-2015-10-14.csv';
+var db;
 
-exports = module.exports = function (base) {
+var cleanUp = function (base, jsonArray) {
   'use strict';
-
-  var cleanUp = function (jsonArray) {
-    var promises = [];
-    jsonArray.forEach(function (user) {
-      debug('Start delete');
-      promises.push(doDelete(base + user.href, 'annadv', 'test').then(
+  var promises = [];
+  jsonArray.forEach(function (user) {
+    debug('Start delete');
+    promises.push(doDelete(base + user.href, 'annadv', 'test').then(
         function (deleteResponse) {
           if (deleteResponse.statusCode === 200) {
             debug('End delete');
-
           } else {
             debug('Delete failed (' + deleteResponse.statusCode + '): ' +
-              deleteResponse.statusMessage);
+                deleteResponse.statusMessage);
             throw Error('Unable to delete ' + deleteResponse.req.path);
           }
         }));
-    });
-    return Q.all(promises).then(function () {
-      info('All deletes completed\n\n');
-    });
-  };
-  var cleanUpParties = function () {
-    return doGet(base + '/parties?aliasIn=LM,LM-1,LM-2', 'annadv', 'test').then(function (response) {
-      var jsonArray = response.body.results;
-      debug('Parties to be removed: ' + jsonArray);
-      return cleanUp(jsonArray);
-    });
-  };
-  var cleanUpPartyRelations = function () {
-    return doGet(base + '/partyrelations?codeIn=100,101', 'annadv', 'test').then(function (response) {
-      var jsonArray = response.body.results;
-      debug('Partyrelations to be removed: ' + jsonArray);
-      return cleanUp(jsonArray);
-    });
-  };
+  });
+  return Q.all(promises).then(function () {
+    info('All deletes completed\n\n');
+  });
+};
+var cleanUpParties = function (base) {
+  'use strict';
+  return doGet(base + '/parties?aliasIn=LM,LM-1,LM-2', 'annadv', 'test').then(function (response) {
+    var jsonArray = response.body.results;
+    debug('Parties to be removed: ' + jsonArray);
+    return cleanUp(base, jsonArray);
+  }).then(function () {
+    info('Parties removed');
+    return;
+  });
+};
+var cleanUpPartyRelations = function (base) {
+  'use strict';
+  return doGet(base + '/partyrelations?codeIn=100,101', 'annadv', 'test').then(function (response) {
+    var jsonArray = response.body.results;
+    debug('Partyrelations to be removed: ' + jsonArray);
+    return cleanUp(base, jsonArray);
+  }).then(function () {
+    info('Partyrelations removed');
+    return;
+  });
+};
+var cleanUpDeletedParties = function (configuration) {
+  'use strict';
+  return pgConnect(pg, configuration).then(function (database) {
+    db = database;
+    return commonImport.archiveTables(db);
+  }).then(function () {
+    info('archiving of tables completed');
+    return true;
+  }).catch(function (err) {
+    info('problem connecting to database');
+    info(err);
+    throw err;
+  });
+};
+
+// Check if party exists with given url query and ultimately returns:
+// - href if party exist,
+// - false if party not found
+// - undefined in case of error in lookup
+var checkPartyExists = function (url) {
+  'use strict';
+  return doGet(url, 'annadv', 'test').then(function (
+    responseParty) {
+    if (responseParty.statusCode !== 200) {
+      error('Error in get parties: ' + responseParty.statusCode);
+      throw new Error('Unable to get party for url: ' + url + ' - statusCode: ' + responseParty.statusCode);
+    }
+    var parties = responseParty.body;
+    if (parties.$$meta.count === 0) {
+      debug('No parties found with query url ' + url);
+      debug(responseParty.body);
+      return false;
+    }
+    return parties.results[0].href;
+  }).catch(function (err) {
+    debug('Error in checkPartyExists for url ' + url);
+    debug('error: ' + err);
+  });
+};
+
+exports = module.exports = function (base, configuration) {
+  'use strict';
 
   describe('Elas import', function () {
     describe('Users', function () {
       before(function () {
-        //logverbose = true;
-        // clean up parties and partyrelations from previous run
-        return cleanUpParties()
-          .then(cleanUpPartyRelations)
-          .catch(function (err) {
-            debug('Error at clean up');
-            debug(err);
-          });
+        debug('starting clean up');
+        return cleanUpParties(base)
+        .then(function () {
+          return cleanUpPartyRelations(base);
+        }).then(function () {
+          return cleanUpDeletedParties(configuration);
+        }).catch(function (err) {
+          error('Error at clean up');
+          throw err;
+        });
       });
       var validatePartyRelation = function (party, user, toRef) {
         return doGet(base + '/partyrelations?code=' + user.letscode, 'annadv', 'test')
-          .then(function (responsePartyRel) {
-            var partyrelations = responsePartyRel.body;
-            var partyRel = partyrelations.results[0].$$expanded;
-            var partyRelAdmin;
-            debug(partyRel);
-            assert.equal(partyRel.from.href, party.$$meta.permalink);
-            if (typeof toRef !== 'undefined' && toRef) {
-              assert.equal(partyRel.to.href, toRef);
+        .then(function (responsePartyRel) {
+          var partyrelations = responsePartyRel.body;
+          assert.isTrue(partyrelations.$$meta.count > 0);
+          var partyRel = partyrelations.results[0].$$expanded;
+          var partyRelAdmin;
+          debug(partyRel);
+          assert.equal(partyRel.from.href, party.$$meta.permalink);
+          if (typeof toRef !== 'undefined' && toRef) {
+            assert.equal(partyRel.to.href, toRef);
+          }
+          if (user.accountrole === 'admin') {
+            // check 2 party relations are created for admin users
+            assert.equal(partyrelations.results.length, 2);
+            if (partyRel.type === 'administrator') {
+              partyRelAdmin = partyRel;
+              partyRel = partyrelations.results[1].$$expanded;
+            } else {
+              partyRelAdmin = partyrelations.results[1].$$expanded;
             }
-            if (user.accountrole === 'admin') {
-              // check 2 party relations are created for admin users
-              assert.equal(partyrelations.results.length, 2);
-              if (partyRel.type === 'administrator') {
-                partyRelAdmin = partyRel;
-                partyRel = partyrelations.results[1].$$expanded;
-              } else {
-                partyRelAdmin = partyrelations.results[1].$$expanded;
-              }
-              assert.equal(partyRelAdmin.type, 'administrator');
-            }
-            assert.equal(partyRel.type, 'member');
-            assert.equal(partyRel.code, user.letscode);
-            assert.equal(partyRel.status, 'active');
-          });
+            assert.equal(partyRelAdmin.type, 'administrator');
+          }
+          assert.equal(partyRel.type, 'member');
+          assert.equal(partyRel.code, user.letscode);
+          assert.equal(partyRel.status, 'active');
+        });
       };
       var validateParty = function (user, groupAlias, expectedParty) {
         return doGet(base + '/parties?alias=' + groupAlias + '-' + user.id, 'annadv', 'test').then(function (
-          responseParty) {
+            responseParty) {
           if (responseParty.statusCode !== 200) {
             debug('Error in get parties: ' + responseParty.statusCode);
           }
@@ -121,13 +177,14 @@ exports = module.exports = function (base) {
           } else {
             assert.equal(party.alias, 'LM-' + user.id);
           }
-          //assert.equal(party.dateofbirth, user.?);
+          // assert.equal(party.dateofbirth, user.?);
           if (typeof expectedParty != 'undefined' && expectedParty.login) {
             assert.equal(party.login, expectedParty.login);
           } else {
             assert.equal(party.login, user.login);
           }
-          //assert.equal(party.password, user.password); //unable to test, password not included in get
+          // assert.equal(party.password, user.password); //unable to test,
+          // password not included in get
           if (typeof expectedParty != 'undefined' && expectedParty.status) {
             assert.equal(party.status, expectedParty.status);
           } else {
@@ -142,7 +199,7 @@ exports = module.exports = function (base) {
           debug('User to import:' + JSON.stringify(user));
           return importUser(user, partyUrl, 'LM').then(function () {
             // Get and validate imported user
-            // FIXME: get is started before put is completed...
+            // FIXME: get is started before put is completed  .
             return doGet(base + '/parties?alias=LM-10', 'annadv', 'test');
           }).then(function (response) {
             if (response.statusCode !== 200) {
@@ -172,7 +229,7 @@ exports = module.exports = function (base) {
           fullname: '',
           login: 'tester',
           password: 'a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d' +
-            '364677d8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
+          '364677d8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
           accountrole: 'user',
           letscode: 101,
           minlimit: -400,
@@ -201,7 +258,7 @@ exports = module.exports = function (base) {
           fullname: '',
           login: 'admin',
           password: 'a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d364677d' +
-            '8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
+          '8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
           accountrole: 'admin',
           letscode: 100
         };
@@ -227,7 +284,7 @@ exports = module.exports = function (base) {
           fullname: '\N',
           login: 'lap',
           password: 'a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d364677d' +
-            '8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
+          '8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
           accountrole: 'interlets',
           letscode: 'LM200',
           minlimit: '-2000',
@@ -235,7 +292,7 @@ exports = module.exports = function (base) {
         };
         var groupAlias = 'LM';
         return importUser(interletsUser, common.hrefs.PARTY_LETSDENDERMONDE, groupAlias).then(function (
-          result) {
+            result) {
           debug('result:' + result);
           assert.equal(result, 'Not supported');
         });
@@ -260,11 +317,12 @@ exports = module.exports = function (base) {
             name: 'Inactive user',
             alias: 'LM-9999',
             login: 'inactive',
-            status: 'active' // all users forced to active for transaction import
+            status: 'active' // all users forced to active for transaction
+            // import
           };
           return validateParty(inactiveUser, groupAlias, expectedParty);
-          //}).then(function (party) {
-          //return validatePartyRelation(party, inactiveUser, null);
+          // }).then(function (party) {
+          // return validatePartyRelation(party, inactiveUser, null);
         });
       });
 
@@ -276,7 +334,7 @@ exports = module.exports = function (base) {
           fullname: '',
           login: 'tester',
           password: 'a028dd95866a4e56cca1c08290ead1c75da788e68460faf597bd6d' +
-            '364677d8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
+          '364677d8338e682df2ba3addbe937174df040aa98ab222626f224cbccbed6f33c93422406b',
           accountrole: 'user',
           letscode: 101,
           minlimit: -400,

@@ -39,7 +39,7 @@ describe('Inner gerbil : ', function () {
   require('./testPlugins.js')(base);
   require('./elas-import/testCommon.js')(base);
   require('./elas-import/testImport.js')(base);
-  require('./elas-import/testImportUsers.js')(base);
+  require('./elas-import/testImportUsers.js')(base, mapping);
   require('./elas-import/testImportMessages.js')(base);
   require('./elas-import/testImportTransactions.js')(base);
 
