@@ -1,3 +1,4 @@
-"letscode","cdate","validity","id_category","content","msg_type"
-"100","2015-10-26 21:43:11.314028","2016-04-26 21:43:11.314028","1","test msg tags aanbod","0"
-"101","2015-10-26 21:43:11.314795","2016-04-26 21:43:11.314795","29","test msg tags vraag","1"
+"id"	"id_user"	"content"	"Description"	"amount"	"units"	"msg_type"	"id_category"	"cdate"	"mdate"	"validity"
+"13"	"3"	"Ubuntu (linux) support"	"Ubuntu is een besturingsysteem (zoals Windows) gebaseerd op de linux kernel. Het is vrije (en dus ook gratis) software. Wil je die graag eens uitproberen? Of heb je dat gedaan en liep het ergens mis? Dan kan ik je mss verder helpen"	"20"	"uur"	"1"	"24"	"2011-03-11 21:30:45"	"2014-02-15 19:42:59"	"2015-02-10 19:42:59"
+"28"	"3"	"Te leen: Franstalige strips voor volwassenen"	"Heb strips liggen van Garulfo, Largo Winch, Trolls de Troy, Lanfeust de Troy in de franstalige versie.\nIdeaal om je frans weer wat op te frissen"	"5"	"week"	"1"	"37"	"2011-04-03 22:51:29"	"2014-02-15 19:42:55"	"2015-02-10 19:42:55"
+

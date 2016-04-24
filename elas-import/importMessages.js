@@ -4,14 +4,16 @@ var moment = require('moment');
 var generateUUID = require('../test/common.js').generateUUID;
 var common = require('../js/common.js');
 var debug = common.debug;
+var info = common.info;
 var warn = common.warn;
 var error = common.error;
 var port = 5000;
 var base = 'http://localhost:' + port;
 
 var sriclient = require('sri4node-client');
-var doGet = sriclient.get;
 var doPut = sriclient.put;
+var importUsers = require('./importUsers.js');
+var checkPartyWithAliasExists = importUsers.checkPartyWithAliasExists;
 
 /*
 var addMessageBatch = function (message, partyUrl) {
@@ -117,9 +119,22 @@ var addMessage = function (message, partyUrl) {
     });
 };
 
-exports = module.exports = function (msg, partyUrl) {
+var getTagsForElasMessage = function (msg) {
   'use strict';
-  var alias = 'LM' + '-' + msg.id_user;
+  var tags = [];
+  if (msg.msg_type === '1') {
+    tags.push('Aanbod');
+  }
+  if (msg.msg_type === '0') {
+    tags.push('Vraag');
+  }
+  return tags;
+};
+
+exports = module.exports = function (msg, groupPartyUrl) {
+  'use strict';
+  var authorAlias = 'LM' + '-' + msg.id_user;
+//  var partyHrefGlobal;
   debug('msg=' + JSON.stringify(msg));
   if (!validMessage(msg)) {
     warn('invalid message - missing mandatory data for ' + JSON.stringify(msg));
@@ -127,39 +142,33 @@ exports = module.exports = function (msg, partyUrl) {
       throw new Error('Invalid message');
     });
   }
-  return doGet(base + '/parties?alias=' + alias, 'annadv', 'test').then(function (responseGet) {
-    var message;
-    var user;
-    if (responseGet.statusCode !== 200) {
-      error('GET failed, response = ' + JSON.stringify(responseGet));
-      return Q.fcall(function () {
-        throw new Error('Unable to import message - pblm in retrieving party');
-      });
-    }
-    debug('GET successful for user with alias ' + alias);
-
-    if (responseGet.body.$$meta.count > 0) {
-      user = responseGet.body.results[0].href;
+  return checkPartyWithAliasExists(authorAlias).then(function (authorPartyUrl) {
+    if (!authorPartyUrl) {
+      info('Party with alias ' + authorAlias + ' does not exist');
+      throw new Error('Party (' + authorAlias + ') does not exist, import users first');
     } else {
-      warn('No user found with alias ' + alias + ' -> skipping import of message ' + msg.content);
-      return Q.fcall(function () {
-        throw new Error('No user found with alias ' + alias);
-      });
+      info('Party with alias ' + authorAlias + ' already exists with url ' + authorPartyUrl);
+//      partyHrefGlobal = partyUrl;
+      return authorPartyUrl;
     }
-    message = {
+  }).then(function (authorPartyUrl) {
+    var message = {
       author: {
-        href: user
+        href: authorPartyUrl
       },
       title: msg.content,
       description: msg.Description,
       amount: msg.amount,
       unit: msg.units,
-      tags: [],
+      tags: getTagsForElasMessage(msg),
       photos: [],
       created: moment(msg.cdate),
       modified: moment(msg.cdate),
       expires: moment(msg.validity)
     };
-    return addMessage(message, partyUrl);
+    return addMessage(message, groupPartyUrl);
+  }).catch(function (e) {
+    error('importMessage failed with error ' + e);
+    throw e;
   });
 };

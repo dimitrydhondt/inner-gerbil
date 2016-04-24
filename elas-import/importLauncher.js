@@ -1,8 +1,8 @@
 // Generate new data files with data/elas2inner.py script based on an SQL dump
 // e.g. ./elas2inner.py createCSV tmp/elasmechelen-20151102.sql .
-var PATH_TO_USERS_FILE = 'data/tmp/users__2016-01-06.csv';
-var PATH_TO_MSGS_FILE = 'data/tmp/messages__2016-01-06.csv';
-var PATH_TO_TRXNS_FILE = 'data/tmp/transactions__2016-01-06.csv';
+var PATH_TO_USERS_FILE = 'data/tmpusers__2016-04-05.csv';
+var PATH_TO_MSGS_FILE = 'data/tmpmessages__2016-04-05.csv';
+var PATH_TO_TRXNS_FILE = 'data/tmptransactions__2016-04-05.csv';
 var common = require('../js/common.js');
 var info = common.info;
 var error = common.error;
@@ -19,7 +19,6 @@ return importer(process.cwd() + '/' + PATH_TO_USERS_FILE, function (user) {
   'use strict';
   var groupAlias = 'LM';
   return importUsers.addUserToGroup(user, groupAlias);
-  //  return importUser(user, hrefs.PARTY_LETSDENDERMONDE, groupAlias);
 }).then(function () {
   'use strict';
   return importer(process.cwd() + '/' + PATH_TO_MSGS_FILE, function (message) {
