@@ -9,8 +9,10 @@ var warn = common.warn;
 var error = common.error;
 var port = 5000;
 var base = 'http://localhost:' + port;
+var stringify = require('json-stringify-safe');
 
 var sriclient = require('sri4node-client');
+var doGet = sriclient.get;
 var doPut = sriclient.put;
 var importUsers = require('./importUsers.js');
 var checkPartyWithAliasExists = importUsers.checkPartyWithAliasExists;
@@ -69,63 +71,140 @@ var validMessage = function (message) {
 
   // Convert unit to string if required
   if (typeof message.units !== 'undefined' && message.units !== 'string') {
-    message.units = 'test';
+    message.units = String(message.units);
   }
   return true;
 };
+
 var checkMessageExists = function (message) {
   'use strict';
-  debug('TODO: check if message exist: ' + message);
-  return false;
+  var errorMsg;
+  var queryUrl = base + '/messages?title=' + message.title + '&postedByParties=' + message.author.href;
+  debug('checking if message exist with query: ' + queryUrl);
+  return doGet(queryUrl, 'annadv', 'test').then(function (getResponse) {
+    if (getResponse.statusCode !== 200) {
+      errorMsg = 'GET failed, response = ' + stringify(getResponse);
+      error(errorMsg);
+      throw Error(errorMsg);
+    }
+    var getBody = getResponse.body;
+    if (getBody.$$meta.count === 0) {
+      return false;
+    }
+    if (getBody.$$meta.count > 1) {
+      throw Error('Multiple messages already exists');
+    }
+    return getBody.results[0].href;
+  });
 };
 
-var addMessage = function (message, partyUrl) {
+var checkMessagePartyExists = function (messageparty) {
   'use strict';
   var errorMsg;
-
-  if (checkMessageExists(message)) {
-    return true;
-  }
-  var uuid = generateUUID();
-  var messageparty = {
-    message: {
-      href: '/messages/' + uuid
-    },
-    party: {
-      href: partyUrl
+  var queryUrl = base + messageparty.message.href;
+  debug('checking if messageparty exist with query: ' + queryUrl);
+  return doGet(queryUrl, 'annadv', 'test').then(function (getResponse) {
+    var i;
+    if (getResponse.statusCode !== 200) {
+      errorMsg = 'GET failed, response = ' + stringify(getResponse);
+      error(errorMsg);
+      throw Error(errorMsg);
     }
-  };
+    var getBody = getResponse.body;
+    var postedInArray = getBody.$$postedInParties;
+    if (typeof postedInArray === 'undefined' || postedInArray.constructor !== Array) {
+      return false;
+    }
+    if (postedInArray.length === 0) {
+      return false;
+    }
+    for (i = 0; i < postedInArray.length; i++) {
+      if (postedInArray[i].href === messageparty.party.href) {
+        return true;
+      }
+    }
+    debug('postedInArray contains: ' + postedInArray);
+    return false;
+  });
+};
 
-  return doPut(base + '/messages/' + uuid, message, 'annadv', 'test')
-    .then(function (responsePut) {
+var createMessageParty = function (messageparty) {
+  'use strict';
+  var msgpartyHref;
+
+  info('Start import of messageparty ' + stringify(messageparty));
+  return checkMessagePartyExists(messageparty).then(function (msgpartyExists) {
+    var errorMsg;
+    debug('checkMessagePartyExists returned ' + msgpartyExists);
+    if (msgpartyExists) {
+      msgpartyHref = msgpartyExists;
+      debug('messageparty ' + stringify(messageparty) + ' already exists -> skipping creation');
+      return 'OK';
+    }
+    // Messageparty needs to be created -> generate UUID
+    var uuid = generateUUID();
+    msgpartyHref = '/messageparties/' + uuid;
+    debug('messageparty ' + msgpartyHref + ' will be created');
+    return doPut(base + msgpartyHref, messageparty, 'annadv', 'test').then(function (responsePut) {
       if (responsePut.statusCode !== 200 && responsePut.statusCode !== 201) {
-        errorMsg = 'PUT failed, response = ' + JSON.stringify(responsePut);
+        errorMsg = 'PUT failed, response = ' + stringify(responsePut);
         error(errorMsg);
         throw Error(errorMsg);
       }
-      debug('PUT to messages successful (body=' + JSON.stringify(message) + ')');
-      return doPut(base + '/messageparties/' + generateUUID(), messageparty, 'annadv', 'test');
-    }).then(function (responsePutMsgParty) {
-      if (responsePutMsgParty.statusCode !== 200 && responsePutMsgParty.statusCode !== 201) {
-        errorMsg = 'PUT failed, response = ' + JSON.stringify(responsePutMsgParty);
-        error(errorMsg);
-        throw Error(errorMsg);
-      }
-      debug('PUT to messageparties successful (body=' + JSON.stringify(messageparty) + ')');
-
-    }).catch(function (err) {
-      error('PUT of message or messageparty failed with error: ' + err);
-      throw err;
+      debug('PUT to messageparty successful (body=' + stringify(messageparty) + ')');
+      return 'OK';
     });
+  });
+};
+
+var createUpdateMessage = function (message, partyUrl) {
+  'use strict';
+  var msgHref;
+  var uuid;
+
+  info('Start import of message ' + stringify(message) + ' to party ' + partyUrl);
+  return checkMessageExists(message).then(function (msgExists) {
+    debug('checkMessagesExists returned ' + msgExists);
+    if (!msgExists) {
+      // Message needs to be created -> generate UUID
+      uuid = generateUUID();
+      msgHref = '/messages/' + uuid;
+      info('message ' + msgHref + ' will be created (' + message.title + ')');
+    } else {
+      msgHref = msgExists;
+      info('message ' + msgHref + ' already exists -> to be updated (' + message.title + ')');
+    }
+    return doPut(base + msgHref, message, 'annadv', 'test');
+  }).then(function (responsePut) {
+    var errorMsg;
+    if (responsePut.statusCode !== 200 && responsePut.statusCode !== 201) {
+      errorMsg = 'PUT failed, response = ' + stringify(responsePut);
+      error(errorMsg);
+      throw Error(errorMsg);
+    }
+    debug('PUT to messages successful (body=' + stringify(message) + ')');
+    var messageparty = {
+      message: {
+        href: msgHref
+      },
+      party: {
+        href: partyUrl
+      }
+    };
+    return createMessageParty(messageparty);
+  }).catch(function (err) {
+    error('PUT of message or messageparty failed with error: ' + err);
+    throw err;
+  });
 };
 
 var getTagsForElasMessage = function (msg) {
   'use strict';
   var tags = [];
-  if (msg.msg_type === '1') {
+  if (msg.msg_type === 1) {
     tags.push('Aanbod');
   }
-  if (msg.msg_type === '0') {
+  if (msg.msg_type === 0) {
     tags.push('Vraag');
   }
   return tags;
@@ -134,21 +213,18 @@ var getTagsForElasMessage = function (msg) {
 exports = module.exports = function (msg, groupPartyUrl) {
   'use strict';
   var authorAlias = 'LM' + '-' + msg.id_user;
-//  var partyHrefGlobal;
-  debug('msg=' + JSON.stringify(msg));
   if (!validMessage(msg)) {
-    warn('invalid message - missing mandatory data for ' + JSON.stringify(msg));
+    warn('invalid message - missing mandatory data for ' + stringify(msg));
     return Q.fcall(function () {
       throw new Error('Invalid message');
     });
   }
   return checkPartyWithAliasExists(authorAlias).then(function (authorPartyUrl) {
     if (!authorPartyUrl) {
-      info('Party with alias ' + authorAlias + ' does not exist');
+      error('Party with alias ' + authorAlias + ' does not exist');
       throw new Error('Party (' + authorAlias + ') does not exist, import users first');
     } else {
-      info('Party with alias ' + authorAlias + ' already exists with url ' + authorPartyUrl);
-//      partyHrefGlobal = partyUrl;
+      debug('Party with alias ' + authorAlias + ' already exists with url ' + authorPartyUrl);
       return authorPartyUrl;
     }
   }).then(function (authorPartyUrl) {
@@ -166,7 +242,8 @@ exports = module.exports = function (msg, groupPartyUrl) {
       modified: moment(msg.cdate),
       expires: moment(msg.validity)
     };
-    return addMessage(message, groupPartyUrl);
+    debug('Created message=' + stringify(message));
+    return createUpdateMessage(message, groupPartyUrl);
   }).catch(function (e) {
     error('importMessage failed with error ' + e);
     throw e;

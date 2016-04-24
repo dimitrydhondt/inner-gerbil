@@ -2,6 +2,7 @@
 var Q = require('q');
 var common = require('../js/common.js');
 var debug = common.debug;
+var info = common.info;
 var warn = common.warn;
 var error = common.error;
 
@@ -92,10 +93,10 @@ var createPartyFromUser = function (user, groupAlias) {
 
   if (typeof user.password === 'undefined' || user.password === '\\N' || user.password === '') {
     partyPassword = 'dummy';
+    warn('No user password, party password forced to ' + partyPassword);
   } else {
     partyPassword = user.password;
   }
-  warn('partyPassword = ' + partyPassword);
 
   if (user.id) {
     alias = groupAlias + '-' + user.id.toString();
@@ -144,6 +145,7 @@ var checkPartyExists = function (party) {
   }).catch(function (err) {
     debug('Error in checkPartyExists');
     debug('error: ' + err);
+    throw err;
   });
 };
 
@@ -187,7 +189,7 @@ var createUpdateParty = function (party) {
   var partyHref;
   return checkPartyExists(party).then(function (partyExists) {
     if (partyExists) {
-      warn('party already exists -> updating instead (method createUpdateParty)');
+      warn('party already exists -> updating instead');
       return partyExists;
     }
     debug('party does not exist yet -> creating');
@@ -248,8 +250,22 @@ exports = module.exports = {
     };
     return checkPartyExists(party);
   },
+  createGroup: function (groupAlias) {
+    'use strict';
+    info('Creating group ' + groupAlias);
+    var group = {
+      type: 'group',
+      name: groupAlias,
+      alias: groupAlias,
+      status: 'inactive'
+    };
+    return createUpdateParty(group).then(function (partyHref) {
+      return partyHref;
+    });
+  },
   addUserToGroup: function (user, groupAlias) {
     'use strict';
+    info('Importing user ' + user.letscode + ' to group ' + groupAlias);
     var group = {
       type: 'group',
       name: groupAlias,

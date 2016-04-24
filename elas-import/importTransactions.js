@@ -16,6 +16,7 @@ var doPut = sriclient.put;
 var importUsers = require('./importUsers.js');
 var checkPartyWithAliasExists = importUsers.checkPartyWithAliasExists;
 var commonImport = require('./common.js');
+var stringify = require('json-stringify-safe');
 
 var generateUUID = function (trxnId) {
   'use strict';
@@ -107,7 +108,7 @@ exports = module.exports = function (trxn, groupAlias) {
           debug('PUT to transactions successful (body=' + JSON.stringify(transaction) + ')');
         },
         function (err) {
-          error('Batch PUT failed');
+          error('Batch PUT failed' + stringify(err));
           throw err;
         });
   });
