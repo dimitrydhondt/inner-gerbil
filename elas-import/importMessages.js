@@ -180,7 +180,7 @@ var createUpdateMessage = function (message, partyUrl) {
     if (responsePut.statusCode !== 200 && responsePut.statusCode !== 201) {
       errorMsg = 'PUT failed, response = ' + stringify(responsePut);
       error(errorMsg);
-      throw Error(errorMsg);
+      throw new Error(errorMsg);
     }
     debug('PUT to messages successful (body=' + stringify(message) + ')');
     var messageparty = {
@@ -210,9 +210,9 @@ var getTagsForElasMessage = function (msg) {
   return tags;
 };
 
-exports = module.exports = function (msg, groupPartyUrl) {
+exports = module.exports = function (msg, groupPartyUrl, authorGroupAlias) {
   'use strict';
-  var authorAlias = 'LM' + '-' + msg.id_user;
+  var authorAlias = authorGroupAlias + '-' + msg.id_user;
   if (!validMessage(msg)) {
     warn('invalid message - missing mandatory data for ' + stringify(msg));
     return Q.fcall(function () {

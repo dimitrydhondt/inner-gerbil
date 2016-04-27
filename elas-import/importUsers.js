@@ -189,10 +189,10 @@ var createUpdateParty = function (party) {
   var partyHref;
   return checkPartyExists(party).then(function (partyExists) {
     if (partyExists) {
-      warn('party already exists -> updating instead');
+      warn('party already exists (alias ' + party.alias + ') -> updating instead');
       return partyExists;
     }
-    debug('party does not exist yet -> creating');
+    debug('party does not exist yet (alias ' + party.alias + ') -> creating');
     return generateRandomUuid().then(function (uuid) {
       return '/parties/' + uuid;
     });
