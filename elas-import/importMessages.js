@@ -85,14 +85,14 @@ var checkMessageExists = function (message) {
     if (getResponse.statusCode !== 200) {
       errorMsg = 'GET failed, response = ' + stringify(getResponse);
       error(errorMsg);
-      throw Error(errorMsg);
+      throw new Error(errorMsg);
     }
     var getBody = getResponse.body;
     if (getBody.$$meta.count === 0) {
       return false;
     }
     if (getBody.$$meta.count > 1) {
-      throw Error('Multiple messages already exists');
+      throw new Error('Multiple messages already exists');
     }
     return getBody.results[0].href;
   });
@@ -108,7 +108,7 @@ var checkMessagePartyExists = function (messageparty) {
     if (getResponse.statusCode !== 200) {
       errorMsg = 'GET failed, response = ' + stringify(getResponse);
       error(errorMsg);
-      throw Error(errorMsg);
+      throw new Error(errorMsg);
     }
     var getBody = getResponse.body;
     var postedInArray = getBody.$$postedInParties;
@@ -149,7 +149,7 @@ var createMessageParty = function (messageparty) {
       if (responsePut.statusCode !== 200 && responsePut.statusCode !== 201) {
         errorMsg = 'PUT failed, response = ' + stringify(responsePut);
         error(errorMsg);
-        throw Error(errorMsg);
+        throw new Error(errorMsg);
       }
       debug('PUT to messageparty successful (body=' + stringify(messageparty) + ')');
       return 'OK';
