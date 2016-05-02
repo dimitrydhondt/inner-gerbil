@@ -99,7 +99,7 @@ var validTrxn = function (trxn) {
 exports = module.exports = function (trxn, groupHref, groupAlias) {
   'use strict';
   if (!validTrxn(trxn)) {
-    warn('invalid transaction - missing mandatory (id_from, id_to, amount or transid) for ' + JSON.stringify(trxn));
+    warn('invalid transaction - missing mandatory (id_from, id_to, amount or cdate) for ' + JSON.stringify(trxn));
     return Q.fcall(function () {
       throw new Error('Invalid transaction');
     });

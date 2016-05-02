@@ -16,7 +16,15 @@ var doPut = sriclient.put;
 
 var validContact = function (contact) {
   'use strict';
-  // TODO: to be completed - check for valid type, value is not empty
+  if (typeof contact.id_type_contact === 'undefined') {
+    return false;
+  }
+  if (typeof contact.value === 'undefined') {
+    return false;
+  }
+  if (typeof contact.id_user === 'undefined') {
+    return false;
+  }
   return true;
 };
 
@@ -31,14 +39,14 @@ var checkContactdetailExists = function (contactdetail) {
       error('problem when invoking url ' + queryUrl);
       errorMsg = 'GET failed, response = ' + stringify(getResponse.body);
       error(errorMsg);
-      throw Error(errorMsg);
+      throw new Error(errorMsg);
     }
     var getBody = getResponse.body;
     if (getBody.$$meta.count === 0) {
       return false;
     }
     if (getBody.$$meta.count > 1) {
-      throw Error('Multiple contactdetails already exists');
+      throw new Error('Multiple contactdetails already exists');
     }
     return getBody.results[0].href;
   });
@@ -54,7 +62,7 @@ var checkPartyContactDetailExists = function (partycontactdetail) {
     if (getResponse.statusCode !== 200) {
       errorMsg = 'GET failed, response = ' + stringify(getResponse.body);
       error(errorMsg);
-      throw Error(errorMsg);
+      throw new Error(errorMsg);
     }
     var getBody = getResponse.body;
     var postedInArray = getBody.$$parties;
@@ -95,7 +103,7 @@ var createPartyContactDetail = function (partycontactdetail) {
       if (responsePut.statusCode !== 200 && responsePut.statusCode !== 201) {
         errorMsg = 'PUT failed, response = ' + stringify(responsePut);
         error(errorMsg);
-        throw Error(errorMsg);
+        throw new Error(errorMsg);
       }
       info('PUT to partycontactdetail successful (body=' + stringify(partycontactdetail) + ')');
       return 'OK';
@@ -160,15 +168,6 @@ var getContactDetailType = function (idContactType) {
   return 'unknown';
 };
 
-var fillAddressData = function (contactdetail, contact) {
-  'use strict';
-//  contactdetail.street = contact.value;
-//  contactdetail.streetnumber
-//contactdetail.streetbus
-//contactdetail.postalcode
-//contactdetail.city
-  return contactdetail;
-};
 exports = module.exports = function (contact, groupHref, groupAlias) {
   'use strict';
   if (!validContact(contact)) {
@@ -182,9 +181,9 @@ exports = module.exports = function (contact, groupHref, groupAlias) {
     value: contact.value,
     public: true
   };
-  if (contactdetail.type === 'address') {
-    fillAddressData(contactdetail, contact);
-  }
+//  if (contactdetail.type === 'address') {
+//    fillAddressData(contactdetail, contact);
+//  }
   debug('Created contactdetail=' + stringify(contactdetail));
   return createUpdateContactDetail(contactdetail, groupHref, groupAlias).catch(function (e) {
     error('importContact failed with error ' + e);

@@ -70,6 +70,7 @@ exports = module.exports = {
     PARTY_LETSHAMME: '/parties/0a98e68d-1fb9-4a31-a4e2-9289ee2dd301',
     PARTY_LETSZONNEDORP: '/parties/bf5995c1-802c-4b69-a5ad-6f193d40c6e3',
     PARTY_LETSMAANDORP: '/parties/25416be3-850d-4a70-8f4e-bb4c2ef7b0f5',
+    PARTY_LETSIMPORT: '/parties/2633a7d7-1a6e-40d7-8c55-36d6bf39ff79',
 
     PARTY_CONNECTOR_JEF_NYS: '/parties/4a3cabca-ecde-4fc3-830f-050891affbce',
 

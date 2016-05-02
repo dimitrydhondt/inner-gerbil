@@ -21,7 +21,7 @@ exports = module.exports = function (base) {
       it('should load messages from CSV file', function () {
         //return messagesImporter(path.join(__dirname, PATH_TO_MSGS_FILE), common.hrefs.PARTY_LETSDENDERMONDE)
         return importer(path.join(__dirname, PATH_TO_MSGS_FILE), function (message) {
-          return importMessage(message, common.hrefs.PARTY_LETSDENDERMONDE);
+          return importMessage(message, common.hrefs.PARTY_LETSIMPORT);
         }).then(function () {
           // Get and validate imported message
           // TODO: filter get to return newly inserted message
@@ -39,6 +39,7 @@ exports = module.exports = function (base) {
         });
       });
       it('should accept null amount', function () {
+        var groupAlias = 'LI';
         var message = {
           id: '2191',
           id_user: '1', // eslint-disable-line
@@ -52,11 +53,12 @@ exports = module.exports = function (base) {
           mdate: '\\N',
           validity: '2014-07-10 17:52:34'
         };
-        return importMessage(message, common.hrefs.PARTY_LETSDENDERMONDE).then(function () {
+        return importMessage(message, common.hrefs.PARTY_LETSIMPORT, groupAlias).then(function () {
           debug('import completed');
         });
       });
       it('should accept any value as unit', function () {
+        var groupAlias = 'LI';
         var message = {
           id: '1466',
           id_user: '2', // eslint-disable-line
@@ -70,7 +72,7 @@ exports = module.exports = function (base) {
           mdate: '2013-06-27 14:33:05',
           validity: '2018-06-01 14:33:05'
         };
-        return importMessage(message, common.hrefs.PARTY_LETSDENDERMONDE).then(function () {
+        return importMessage(message, common.hrefs.PARTY_LETSIMPORT, groupAlias).then(function () {
           debug('import completed');
         });
 
@@ -94,7 +96,7 @@ exports = module.exports = function (base) {
           PARTY_LETSDENDERMONDE: '/parties/8bf649b4-c50a-4ee9-9b02-877aa0a71849'
         };
         var importMethod = function (message) {
-          return importMessage(message, hrefs.PARTY_LETSDENDERMONDE);
+          return importMessage(message, hrefs.PARTY_LETSIMPORT);
         };
 
         var logEndImport = function () {
